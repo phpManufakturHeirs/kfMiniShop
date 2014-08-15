@@ -1,0 +1,85 @@
+/*
+  miniShop
+
+  @author Team phpManufaktur <team@phpmanufaktur.de>
+  @link https://kit2.phpmanufaktur.de/miniShop
+  @copyright 2014 Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
+  @license MIT License (MIT) http://www.opensource.org/licenses/MIT
+*/
+
+.container {
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/*
+  Label for the form fields
+*/
+label {
+  margin: 0 0 3px 0;
+  width: 100%;
+  text-align: right;
+}
+@media (max-width: 767px) {
+  label {
+    text-align: left;
+  }
+}
+label.required:after {
+  content: '*';
+  color: #da251d;
+  background-color: transparent;
+  font-weight: bold;
+}
+
+fieldset {
+  border: 1px solid #dcdcdc;
+  padding: 10px;
+  margin: 10px 0;
+}
+legend {
+  width: auto;
+  padding: 0 10px;
+  margin-bottom: 0;
+  border-bottom: none;
+  font-size: 12px;
+  color: #dcdcdc;
+}
+
+/*
+  Wrapper for the about dialog
+*/
+#about-wrap {
+  margin: 50px 0 0 0;
+  padding: 0;
+}
+
+/*
+  stripes for the tables
+*/
+.table-striped > tbody > tr:nth-child(odd) > td,
+.table-striped > tbody > tr:nth-child(odd) > th {
+  background-color: #e8e8e8;
+}
+.table-hover > tbody > tr:hover > td,
+.table-hover > tbody > tr:hover > th {
+  background-color: #e0e0e0;
+}
+
+.row {
+  margin: 5px 0;
+}
+
+.create-button {
+  margin-bottom: 20px;
+}
+.create-button:before,
+.create-button:after {
+  display: table;
+  content: " ";
+}
+.create-button:after {
+  clear: both;
+}
