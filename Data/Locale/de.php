@@ -22,7 +22,7 @@ return array(
   'Article group'
     => 'Artikel Gruppe',
   'Article group delete checkbox'
-    => 'diese Artikelgruppe löschen',
+    => 'diese Artikelgruppe und alle verbundenen Artikel löschen',
   'Article groups'
     => 'Artikelgruppen',
   'Article limit'
@@ -38,7 +38,7 @@ return array(
   'Base configuration'
     => 'Basis Einstellungen',
   'Base configuration delete checkbox'
-    => 'diese Basis Einstellung löschen',
+    => 'diese Basis Einstellung und alle verbundenen Artikelgruppen löschen',
   'Base configurations'
     => 'Basis Einstellungen',
   'Base id'
