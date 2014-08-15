@@ -25,6 +25,7 @@
 {% endblock stylesheet %}
 
 {% block content %}
+  <!-- {{ _self.getTemplateName() }} -->
   <div class="container{% if usage != 'framework'%}-fluid{% endif %}">
     {% include '@phpManufaktur/miniShop/Template/default/admin/toolbar.twig' %}
 
@@ -54,7 +55,7 @@
           <tbody>
             {% for item in bases %}
               <tr>
-                <td><a href="{{ FRAMEWORK_URL ~ '/admin/minishop/base/edit/id/' ~ item.id ~ '?usage=' ~ usage }}">{{ item.name|humanize|trans }}</a></td>
+                <td><a href="{{ FRAMEWORK_URL ~ '/admin/minishop/base/edit/id/' ~ item.id ~ '?usage=' ~ usage }}">{{ item.name }}</a></td>
                 <td>{{ item.locale }}</td>
                 <td>{{ 'CURRENCY_NAME_ISO'|trans({},'messages',item.locale|lower) }}</td>
                 <td>{{ item.article_value_added_tax|number_format(2, 'DECIMAL_SEPARATOR'|trans, 'THOUSAND_SEPARATOR'|trans) }}</td>

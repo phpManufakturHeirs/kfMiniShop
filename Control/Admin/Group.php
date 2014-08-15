@@ -116,6 +116,7 @@ class Group extends Admin
 
             // sanitize the name
             $data['name'] = strtoupper($this->app['utils']->sanitizeLink($data['name']));
+            $data['name'] = str_replace('-', '_', $data['name']);
 
             if ($data['id'] < 1) {
                 // this is a new record

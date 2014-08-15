@@ -185,6 +185,7 @@ class Base extends Admin
 
             // sanitize the name
             $data['name'] = strtoupper($this->app['utils']->sanitizeLink($data['name']));
+            $data['name'] = str_replace('-', '_', $data['name']);
             // convert all prices to float values
             $data['article_value_added_tax'] = $this->app['utils']->str2float($data['article_value_added_tax']);
             $data['order_minimum_price'] = $this->app['utils']->str2float($data['order_minimum_price']);
