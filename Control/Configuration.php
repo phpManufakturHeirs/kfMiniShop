@@ -56,6 +56,28 @@ class Configuration
             'locale' => array(
                 'EN',
                 'DE'
+            ),
+            'currency' => array(
+                'EUR' => array(
+                    'name' => 'Euro',
+                    'iso' => 'EUR',
+                    'symbol' => '€'
+                ),
+                'USD' => array(
+                    'name' => 'US-Dollar',
+                    'iso' => 'USD',
+                    'symbol' => '$'
+                ),
+                'CHF' => array(
+                    'name' => 'Schweizer Franken',
+                    'iso' => 'CHF',
+                    'symbol' => 'SFr.'
+                ),
+                'GBP' => array(
+                    'name' => 'Pound Sterling',
+                    'iso' => 'GBP',
+                    'symbol' => '£'
+                )
             )
         );
     }

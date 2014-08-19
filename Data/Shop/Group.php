@@ -49,6 +49,7 @@ class Group
         `status` ENUM ('ACTIVE', 'LOCKED', 'DELETED') DEFAULT 'ACTIVE',
         `timestamp` TIMESTAMP,
         PRIMARY KEY (`id`),
+        UNIQUE (`name`),
         INDEX (`base_id`, `base_name`),
         CONSTRAINT
             FOREIGN KEY (`base_id`)
@@ -79,6 +80,30 @@ EOD;
     public function dropTable()
     {
         $this->app['db.utils']->dropTable(self::$table_name);
+    }
+
+    /**
+     * Get the values for the group status
+     *
+     * @return Ambigous <boolean, array>
+     */
+    public function getStatusTypes()
+    {
+        return $this->app['db.utils']->getEnumValues(self::$table_name, 'status');
+    }
+
+    /**
+     * Count all not deleted records
+     *
+     * @throws \Exception
+     */
+    public function count()
+    {
+        try {
+            return $this->app['db']->fetchColumn("SELECT * FROM `".self::$table_name."` WHERE `status`!='DELETED'");
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            throw new \Exception($e);
+        }
     }
 
     /**

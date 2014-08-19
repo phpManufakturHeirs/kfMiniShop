@@ -93,3 +93,21 @@ $app->post('/admin/minishop/group/edit/check',
 
 $app->get('/admin/minishop/article/list',
     'phpManufaktur\miniShop\Control\Admin\Article::Controller');
+$app->get('/admin/minishop/article/edit/id/{article_id}',
+    'phpManufaktur\miniShop\Control\Admin\Article::ControllerEdit')
+    ->assert('article_id', '\d+')
+    ->value('article_id', -1);
+$app->post('/admin/minishop/article/edit/check',
+    'phpManufaktur\miniShop\Control\Admin\Article::ControllerEditCheck');
+
+$app->post('/admin/minishop/article/edit/permalink/create',
+    'phpManufaktur\miniShop\Control\Admin\PermanentLinkResponse::ControllerPermanentLink');
+
+$app->post('/admin/minishop/article/image/select',
+    'phpManufaktur\miniShop\Control\Admin\Article::ControllerImageSelect');
+$app->get('/admin/minishop/article/image/check/id/{article_id}',
+    'phpManufaktur\miniShop\Control\Admin\Article::ControllerImageCheck')
+    ->assert('article_id', '\d+');
+$app->post('/admin/minishop/article/image/remove/id/{article_id}',
+    'phpManufaktur\miniShop\Control\Admin\Article::ControllerImageRemove')
+    ->assert('article_id', '\d+');

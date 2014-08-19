@@ -41,7 +41,7 @@ class Group extends Admin
     protected function getGroupForm($data=array())
     {
         $status_array = array();
-        $types = $this->dataBase->getStatusTypes();
+        $types = $this->dataGroup->getStatusTypes();
         foreach ($types as $type) {
             $type_name = $this->app['utils']->humanize($type);
             $status_array[$type] = $this->app['translator']->trans($type_name);
@@ -58,21 +58,7 @@ class Group extends Admin
             'choices' => $status_array,
             'empty_value' => false,
             'data' => isset($data['status']) ? $data['status'] : 'ACTIVE'
-        ))
-        ->add('description', 'textarea', array(
-            'data' => isset($data['description']) ? $data['description'] : '',
-            'required' => false
-        ))
-        ->add('base_name', 'choice', array(
-            'choices' => $this->dataBase->selectBaseNames(),
-            'empty_value' => '- please select -',
-            'data' => isset($data['base_name']) ? $data['base_name'] : null,
-            'label' => 'Base configuration'
-        ))
-        ->add('base_id', 'hidden', array(
-            'data' => isset($data['base_id']) ? $data['base_id'] : -1
         ));
-
         if (isset($data['id']) && ($data['id'] > 0)) {
             $form->add('article_group_delete_checkbox', 'checkbox', array(
                 'required' => false
@@ -81,6 +67,22 @@ class Group extends Admin
         else {
             $form->add('article_group_delete_checkbox', 'hidden');
         }
+
+        $form->add('description', 'textarea', array(
+            'data' => isset($data['description']) ? $data['description'] : '',
+            'required' => false
+        ));
+        $form->add('base_name', 'choice', array(
+            'choices' => $this->dataBase->selectBaseNames(),
+            'empty_value' => '- please select -',
+            'data' => isset($data['base_name']) ? $data['base_name'] : null,
+            'label' => 'Base configuration'
+        ));
+        $form->add('base_id', 'hidden', array(
+            'data' => isset($data['base_id']) ? $data['base_id'] : -1
+        ));
+
+
 
         return $form->getForm();
     }
@@ -156,6 +158,7 @@ class Group extends Admin
             '@phpManufaktur/miniShop/Template', 'admin/edit.group.twig'),
             array(
                 'usage' => self::$usage,
+                'usage_param' => self::$usage_param,
                 'toolbar' => $this->getToolbar('group'),
                 'alert' => $this->getAlert(),
                 'form' => $form->createView()
@@ -185,6 +188,7 @@ class Group extends Admin
             '@phpManufaktur/miniShop/Template', 'admin/edit.group.twig'),
             array(
                 'usage' => self::$usage,
+                'usage_param' => self::$usage_param,
                 'toolbar' => $this->getToolbar('group'),
                 'alert' => $this->getAlert(),
                 'form' => $form->createView()
@@ -200,12 +204,18 @@ class Group extends Admin
     {
         $this->initialize($app);
 
-        $groups = $this->dataGroup->selectAll();
+        if (false === ($groups = $this->dataGroup->selectAll())) {
+            // no article groups available, check if a base is defined
+            if ($this->dataBase->count() < 1) {
+                $this->setAlert('Please create a base configuration to start with your miniShop!', array(), self::ALERT_TYPE_INFO);
+            }
+        }
 
         return $this->app['twig']->render($this->app['utils']->getTemplateFile(
             '@phpManufaktur/miniShop/Template', 'admin/list.group.twig'),
             array(
                 'usage' => self::$usage,
+                'usage_param' => self::$usage_param,
                 'toolbar' => $this->getToolbar('group'),
                 'groups' => $groups,
                 'alert' => $this->getAlert()

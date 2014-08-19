@@ -43,6 +43,7 @@ class Base
         `name` VARCHAR(64) NOT NULL DEFAULT 'DEFAULT',
         `description` TEXT NOT NULL,
         `locale` VARCHAR(2) NOT NULL DEFAULT 'EN',
+        `currency_iso` VARCHAR(3) NOT NULL DEFAULT 'EUR',
         `article_value_added_tax` FLOAT(11) NOT NULL DEFAULT 0,
         `article_price_type` ENUM ('NET_PRICE', 'GROSS_PRICE') DEFAULT 'GROSS_PRICE',
         `article_limit` INT(11) NOT NULL DEFAULT 99,
@@ -80,7 +81,7 @@ EOD;
     }
 
     /**
-     * Select all bases entries
+     * Select all bases entries, exclude deleted records
      *
      * @throws \Exception
      * @return Ambigous <boolean, array>
@@ -101,6 +102,20 @@ EOD;
                 }
             }
             return (!empty($bases)) ? $bases : false;
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            throw new \Exception($e);
+        }
+    }
+
+    /**
+     * Count all not deleted records
+     *
+     * @throws \Exception
+     */
+    public function count()
+    {
+        try {
+            return $this->app['db']->fetchColumn("SELECT * FROM `".self::$table_name."` WHERE `status`!='DELETED'");
         } catch (\Doctrine\DBAL\DBALException $e) {
             throw new \Exception($e);
         }

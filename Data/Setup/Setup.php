@@ -15,6 +15,7 @@ use Silex\Application;
 use phpManufaktur\Basic\Control\CMS\InstallAdminTool;
 use phpManufaktur\miniShop\Data\Shop\Base;
 use phpManufaktur\miniShop\Data\Shop\Group;
+use phpManufaktur\miniShop\Data\Shop\Article;
 
 class Setup
 {
@@ -38,6 +39,9 @@ class Setup
 
             $groupTable = new Group($app);
             $groupTable->createTable();
+
+            $articleTable = new Article($app);
+            $articleTable->createTable();
 
             // setup the miniShop as Add-on in the CMS
             $admin_tool = new InstallAdminTool($app);

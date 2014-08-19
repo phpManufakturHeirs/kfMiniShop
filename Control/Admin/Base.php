@@ -42,6 +42,14 @@ class Base extends Admin
             $locale_array[strtoupper($locale)] = $this->app['translator']->trans($locale_name);
         }
 
+        $currency_array = array();
+        $currencies = self::$config['currency'];
+        asort($currencies);
+        foreach ($currencies as $currency) {
+            $currency_name = $currency['name'];
+            $currency_array[strtoupper($currency['iso'])] = $this->app['translator']->trans($currency_name);
+        }
+
         $status_array = array();
         $types = $this->dataBase->getStatusTypes();
         foreach ($types as $type) {
@@ -85,8 +93,18 @@ class Base extends Admin
             'choices' => $status_array,
             'empty_value' => false,
             'data' => isset($data['status']) ? $data['status'] : 'ACTIVE'
-        ))
-        ->add('description', 'textarea', array(
+        ));
+
+        if (isset($data['id']) && ($data['id'] > 0)) {
+            $form->add('base_configuration_delete_checkbox', 'checkbox', array(
+                'required' => false
+            ));
+        }
+        else {
+            $form->add('base_configuration_delete_checkbox', 'hidden');
+        }
+
+        $form->add('description', 'textarea', array(
             'data' => isset($data['description']) ? $data['description'] : '',
             'required' => false
         ))
@@ -100,6 +118,11 @@ class Base extends Admin
             'choices' => $locale_array,
             'empty_value' => '- please select -',
             'data' => isset($data['locale']) ? $data['locale'] : null
+        ))
+        ->add('currency_iso', 'choice', array(
+            'choices' => $currency_array,
+            'empty_value' => '- please select -',
+            'data' => isset($data['currency_iso']) ? $data['currency_iso'] : null
         ))
         ->add('article_value_added_tax', 'text', array(
             'data' => number_format($article_value_added_tax, 2, $decimal_separator, $thousand_separator)
@@ -143,14 +166,6 @@ class Base extends Admin
             'data' => number_format($shipping_value_added_tax, 2, $decimal_separator, $thousand_separator)
         ));
 
-        if (isset($data['id']) && ($data['id'] > 0)) {
-            $form->add('base_configuration_delete_checkbox', 'checkbox', array(
-                'required' => false
-            ));
-        }
-        else {
-            $form->add('base_configuration_delete_checkbox', 'hidden');
-        }
 
         return $form->getForm();
     }
@@ -235,6 +250,7 @@ class Base extends Admin
             '@phpManufaktur/miniShop/Template', 'admin/edit.base.twig'),
             array(
                 'usage' => self::$usage,
+                'usage_param' => self::$usage_param,
                 'toolbar' => $this->getToolbar('base'),
                 'alert' => $this->getAlert(),
                 'form' => $form->createView()
@@ -264,6 +280,7 @@ class Base extends Admin
             '@phpManufaktur/miniShop/Template', 'admin/edit.base.twig'),
             array(
                 'usage' => self::$usage,
+                'usage_param' => self::$usage_param,
                 'toolbar' => $this->getToolbar('base'),
                 'alert' => $this->getAlert(),
                 'form' => $form->createView()
@@ -285,8 +302,10 @@ class Base extends Admin
             '@phpManufaktur/miniShop/Template', 'admin/list.base.twig'),
             array(
                 'usage' => self::$usage,
+                'usage_param' => self::$usage_param,
                 'toolbar' => $this->getToolbar('base'),
                 'alert' => $this->getAlert(),
+                'config' => self::$config,
                 'bases' => $bases
             ));
     }

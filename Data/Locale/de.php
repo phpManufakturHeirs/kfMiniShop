@@ -19,14 +19,28 @@ if ('á' != "\xc3\xa1") {
 return array(
   'Advance payment'
     => 'Vorkasse',
+  'Article'
+    => 'Artikel',
+  'Article delete checkbox'
+    => 'diesen Artikel unwiderruflich löschen',
   'Article group'
     => 'Artikel Gruppe',
   'Article group delete checkbox'
-    => 'diese Artikelgruppe und alle verbundenen Artikel löschen',
+    => 'diese Artikelgruppe und alle verbundenen Artikel unwiderruflich löschen',
   'Article groups'
     => 'Artikelgruppen',
+  'Article image'
+    => 'Abbildung',
+  'Article image folder gallery'
+    => 'verwende Order der Abbildung für eine Galerie',
   'Article limit'
     => 'max. Bestellmenge',
+  'Article list'
+    => 'Artikel Übersicht',
+  'Article name'
+    => 'Artikelname',
+  'Article price'
+    => 'Preis',
   'Article price type'
     => 'Preisangabe',
   'Article value added tax'
@@ -35,10 +49,12 @@ return array(
     => 'Artikel',
   'At least you must specify one payment method!'
     => 'Sie müssen mindestens eine Zahlungsmethode festlegen!',
+  'Available date'
+    => 'Lieferbar ab',
   'Base configuration'
     => 'Basis Einstellungen',
   'Base configuration delete checkbox'
-    => 'diese Basis Einstellung und alle verbundenen Artikelgruppen löschen',
+    => 'diese Basis Einstellung und alle verbundenen Artikelgruppen unwiderruflich löschen',
   'Base configurations'
     => 'Basis Einstellungen',
   'Base id'
@@ -50,6 +66,8 @@ return array(
   'Create a new miniShop base'
     => 'Neue Basis Einstellung anlegen',
   'Currency'
+    => 'Währung',
+  'Currency iso'
     => 'Währung',
   'Define and edit base configurations for the miniShop'
     => 'Anlegen und Bearbeiten von Basis Einstellungen für den miniShop',
@@ -77,20 +95,38 @@ return array(
     => 'auf Rechnung',
   'Order minimum price'
     => 'Mindestbestellpreis',
+  'Order number'
+    => 'Bestellnummer',
   'Payment methods'
     => 'Zahlungsmethoden',
   'Paypal'
     => 'PayPal',
-  'Please create a new article group to start with your shop!'
-    => 'Bitte erstellen Sie eine neue Artikelgruppe um mit Ihrem Shop starten zu können!',
-  'Please create a new miniShop base to start with your shop!'
-    => 'Bitte erstellen Sie eine neue miniShop Basis Einstellung um mit Ihrem Shop starten zu können!',
+  'Permanent link'
+    => 'Permanenter Link',
+  'Please create a article group to start with your miniShop!'
+    => 'Bitte erstellen Sie eine Artikelgruppe um mit Ihrem miniShop zu starten!',
+  'Please create a article to start with your miniShop!'
+    => 'Bitte legen Sie einen Artikel an um mit Ihrem miniShop zu starten!',
+  'Please create a base configuration to start with your miniShop!'
+    => 'Bitte erstellen Sie eine Basis Einstellung um mit Ihrem miniShop zu starten!',
+  'Publish date'
+    => 'Im Shop ab',
+  'Select article image'
+    => 'Abbildung auswählen',
   'select the highest shipping cost'
     => 'die höchsten Versandkosten wählen',
   'select the lowest shipping cost'
     => 'die niedrigsten Versandkosten wählen',
+  'Seo description'
+    => 'SEO: Description',
+  'Seo keywords'
+    => 'SEO: Keywords',
+  'Seo title'
+    => 'SEO: Title',
   'Shipping article'
     => 'Versandkostentyp: Artikel',
+  'Shipping cost'
+    => 'Versandkosten',
   'Shipping flatrate'
     => 'Versandkostenpauschale',
   'Shipping type'
@@ -107,6 +143,8 @@ return array(
     => 'Die Artikelgruppe wurde erfolgreich aktualisiert.',
   'The article group with the ID %id% has successfull deleted'
     => 'Die Artikelgruppe mit der ID %id% wurde gelöscht.',
+  'The article with the ID %id% has successfull deleted'
+    => 'Der Artikel mit der ID %id% wurde erfolgreich gelöscht',
   'The base configuration with the ID %id% has successfull deleted'
     => 'Die Basis Einstellung mit der ID %id% wurde erfolgreich gelöscht.',
   'The miniShop Base has successful updated.'
