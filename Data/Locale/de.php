@@ -45,6 +45,14 @@ return array(
     => 'Preisangabe',
   'Article value added tax'
     => 'Umsatzsteuer (Artikel)',
+  'Article variant name'
+    => 'Variante, Bezeichner',
+  'Article variant name 2'
+    => 'Variante, Bezeichner',
+  'Article variant values'
+    => 'Variante, Werte',
+  'Article variant values 2'
+    => 'Variante, Werte',
   'Articles'
     => 'Artikel',
   'At least you must specify one payment method!'
@@ -77,6 +85,8 @@ return array(
     => 'Erstellen und Bearbeiten von Artikeln für den miniShop',
   'Determined by each article'
     => 'Festlegung durch jeden Artikel',
+  'Each value in a separate line, use <key>SHIFT</key>+<key>ENTER</key>'
+    => 'Jeder Wert in einer eigenen Zeile, verwenden Sie <key>UMSCHALT</key>+<key>EINGABE</key>',
   'Flatrate for shipping and handling'
     => 'Versandkostenpauschale',
   'Gross price'
@@ -145,6 +155,8 @@ return array(
     => 'Der Artikel wurde erfolgreich aktualisiert.',
   'sum-up the shipping costs'
     => 'alle Versandkosten addieren',
+  'Target page link'
+    => 'Zielseite im CMS',
   'The article group has successful updated.'
     => 'Die Artikelgruppe wurde erfolgreich aktualisiert.',
   'The article group with the ID %id% has successfull deleted'

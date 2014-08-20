@@ -57,6 +57,20 @@ $app->get('/minishop/cms/{cms_information}', function ($cms_information) use ($a
 });
 
 /**
+ * The PermanentLink for miniShop uses configurable routes.
+ * Setup will create the needed directories in the CMS root and place a
+ * .htaccess file which redirect to the routes.
+ */
+if (file_exists(MANUFAKTUR_PATH.'/miniShop/bootstrap.include.inc')) {
+    // the PermanentLink routes must exists and will be created by the setup routine!
+    include_once MANUFAKTUR_PATH.'/miniShop/bootstrap.include.inc';
+}
+else {
+    $app['monolog']->addError('Missing the permanent link routes in /miniShop/bootstrap.include.inc!',
+        array(__FILE__, __LINE__));
+}
+
+/**
  * ADMIN routes
  */
 
@@ -111,3 +125,15 @@ $app->get('/admin/minishop/article/image/check/id/{article_id}',
 $app->post('/admin/minishop/article/image/remove/id/{article_id}',
     'phpManufaktur\miniShop\Control\Admin\Article::ControllerImageRemove')
     ->assert('article_id', '\d+');
+
+/**
+ * kitCommand routes
+ */
+
+$app->post('/command/minishop',
+    // create the iFrame for the kitCommands and execute the route /content/action
+    'phpManufaktur\miniShop\Control\Command\ContentFrame::Controller')
+    ->setOption('info', MANUFAKTUR_PATH.'/miniShop/command.minishop.json');
+
+$app->get('/minishop/action',
+    'phpManufaktur\miniShop\Control\Command\Action::Controller');

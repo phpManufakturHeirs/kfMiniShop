@@ -85,7 +85,9 @@ class Configuration
                     'select' => '/media/public/shop'
                  )
             ),
-
+            'permanentlink' => array(
+                'directory' => '/shop'
+            )
         );
     }
 

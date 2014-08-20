@@ -13,6 +13,7 @@ namespace phpManufaktur\miniShop\Control\Admin;
 
 use Silex\Application;
 use phpManufaktur\miniShop\Data\Shop\Base as DataBase;
+use phpManufaktur\Basic\Data\CMS\Page;
 
 class Base extends Admin
 {
@@ -82,6 +83,13 @@ class Base extends Admin
         $shipping_flatrate = isset($data['shipping_flatrate']) ? $data['shipping_flatrate'] : 0;
         $shipping_value_added_tax = isset($data['shipping_value_added_tax']) ? $data['shipping_value_added_tax'] : 0;
 
+        $cmsPage = new Page($this->app);
+        $pagelist = $cmsPage->getPageLinkList();
+        $target_links = array();
+        foreach ($pagelist as $link) {
+            $target_links[$link['complete_link']] = $link['complete_link'];
+        }
+
         $form = $this->app['form.factory']->createBuilder('form')
         ->add('id', 'hidden', array(
             'data' => isset($data['id']) ? $data['id'] : -1
@@ -107,6 +115,11 @@ class Base extends Admin
         $form->add('description', 'textarea', array(
             'data' => isset($data['description']) ? $data['description'] : '',
             'required' => false
+        ))
+        ->add('target_page_link', 'choice', array(
+            'choices' => $target_links,
+            'data' => isset($data['target_page_link']) ? $data['target_page_link'] : null,
+            'empty_value' => '- please select -'
         ))
         ->add('payment_methods', 'choice', array(
             'choices' => $payment_array,

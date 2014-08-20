@@ -42,6 +42,7 @@ class Base
         `id` INT(11) NOT NULL AUTO_INCREMENT,
         `name` VARCHAR(64) NOT NULL DEFAULT 'DEFAULT',
         `description` TEXT NOT NULL,
+        `target_page_link` VARCHAR(256) NOT NULL DEFAULT '',
         `locale` VARCHAR(2) NOT NULL DEFAULT 'EN',
         `currency_iso` VARCHAR(3) NOT NULL DEFAULT 'EUR',
         `article_value_added_tax` FLOAT(11) NOT NULL DEFAULT 0,

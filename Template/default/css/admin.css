@@ -48,6 +48,11 @@ legend {
   color: #dcdcdc;
 }
 
+key {
+  font-family: Courier, monospace;
+  color: #000080;
+  background-color: transparent;
+}
 /*
   Wrapper for the about dialog
 */

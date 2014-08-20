@@ -101,6 +101,8 @@ class Article extends Admin
         $ck_config_long = $this->app['utils']->getTemplateFile('@phpManufaktur/miniShop/Template', 'admin/ckeditor.config.long.js', '', true);
         $ck_config_long = str_replace(MANUFAKTUR_PATH, MANUFAKTUR_URL, $ck_config_long);
 
+
+
         $form = $this->app['form.factory']->createBuilder('form')
         ->add('id', 'hidden', array(
             'data' => isset($data['id']) ? $data['id'] : -1
@@ -172,6 +174,29 @@ class Article extends Admin
                 'config' => $ck_config_short
             ),
             'label' => 'Teaser'
+        ))
+        ->add('article_variant_name', 'text', array(
+            'data' => isset($data['article_variant_name']) ? $data['article_variant_name'] : '',
+            'required' => false
+        ));
+        $help = $this->app['translator']->trans('Each value in a separate line, use <key>SHIFT</key>+<key>ENTER</key>');
+        $form->add('article_variant_values', 'textarea', array(
+            'data' => isset($data['article_variant_values']) ? $data['article_variant_values'] : null,
+            'required' => false,
+            'attr' => array(
+                'help' => $help
+            )
+        ))
+        ->add('article_variant_name_2', 'text', array(
+            'data' => isset($data['article_variant_name_2']) ? $data['article_variant_name_2'] : '',
+            'required' => false
+        ))
+        ->add('article_variant_values_2', 'textarea', array(
+            'data' => isset($data['article_variant_values_2']) ? $data['article_variant_values_2'] : null,
+            'required' => false,
+            'attr' => array(
+                'help' => $help
+            )
         ))
         ->add('description_long', 'textarea', array(
             'data' => isset($data['description_long']) ? $data['description_long'] : '',
@@ -319,10 +344,14 @@ class Article extends Admin
             $data['seo_title'] = trim($data['seo_title']);
             $data['seo_description'] = trim($data['seo_description']);
             $data['seo_keywords'] = trim($data['seo_keywords']);
-            if (is_null($data['order_number'])) {
-                $data['order_number'] = '';
+
+            $checks = array('order_number', 'article_variant_name', 'article_variant_values', 'article_variant_name_2', 'article_variant_values_2');
+            foreach ($checks as $check) {
+                if (is_null($data[$check])) {
+                    $data[$check] = '';
+                }
+                $data[$check] = trim($data[$check]);
             }
-            $data['order_number'] = trim($data['order_number']);
 
             if (empty($data['description_short'])) {
                 $this->setAlert('The short description can not be empty!', array(), self::ALERT_TYPE_WARNING);
