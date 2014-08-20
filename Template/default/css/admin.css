@@ -94,6 +94,10 @@ label[for=form_description_long] {
 
 .image-container {
   min-height: 200px;
+  margin-bottom: 10px;
+}
+.image-container-button {
+  margin-bottom: 10px;
 }
 .image-button {
   display: inline-block;

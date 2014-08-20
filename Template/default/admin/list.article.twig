@@ -56,7 +56,7 @@
           <tbody>
             {% for item in articles %}
               <tr>
-                <td><a href="{{ FRAMEWORK_URL ~ '/admin/minishop/article/edit/id/' ~ item.id ~ usage_param }}">{{ item.name }}</a></td>
+                <td><a href="{{ FRAMEWORK_URL ~ '/admin/minishop/article/edit/id/' ~ item.id ~ usage_param }}">{{ item.article_name }}</a></td>
                 <td>{{ item.status|humanize|trans }}</td>
               </tr>
             {% endfor %}

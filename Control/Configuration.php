@@ -78,7 +78,14 @@ class Configuration
                     'iso' => 'GBP',
                     'symbol' => '£'
                 )
-            )
+            ),
+            'images' => array(
+                'directory' => array(
+                    'start' => '/media/public',
+                    'select' => '/media/public/shop'
+                 )
+            ),
+
         );
     }
 

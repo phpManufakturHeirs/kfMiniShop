@@ -15,6 +15,10 @@ use Silex\Application;
 use phpManufaktur\miniShop\Data\Shop\Article as DataArticle;
 use phpManufaktur\miniShop\Data\Shop\Base as DataBase;
 use phpManufaktur\miniShop\Data\Shop\Group as DataGroup;
+use Carbon\Carbon;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class Article extends Admin
 {
@@ -206,6 +210,24 @@ class Article extends Admin
     }
 
     /**
+     * Get the rendered Article dialog
+     *
+     * @param FormFactory $form
+     */
+    protected function getArticleDialog($form)
+    {
+        return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+            '@phpManufaktur/miniShop/Template', 'admin/edit.article.twig'),
+            array(
+                'usage' => self::$usage,
+                'usage_param' => self::$usage_param,
+                'toolbar' => $this->getToolbar('article'),
+                'alert' => $this->getAlert(),
+                'form' => $form->createView()
+            ));
+    }
+
+    /**
      * Controller for the Article Dialog
      *
      * @param Application $app
@@ -223,28 +245,17 @@ class Article extends Admin
             }
         }
         $form = $this->getArticleForm($data);
-
-        return $this->app['twig']->render($this->app['utils']->getTemplateFile(
-            '@phpManufaktur/miniShop/Template', 'admin/edit.article.twig'),
-            array(
-                'usage' => self::$usage,
-                'usage_param' => self::$usage_param,
-                'toolbar' => $this->getToolbar('article'),
-                'alert' => $this->getAlert(),
-                'form' => $form->createView()
-            ));
+        return $this->getArticleDialog($form);
     }
 
     /**
-     * Controller to check the article dialog and insert or update a record
      *
-     * @param Application $app
+     * @param unknown $data
+     * @return string|boolean
      */
-    public function ControllerEditCheck(Application $app)
+    protected function checkArticleForm(&$data=array())
     {
-        $this->initialize($app);
-
-        $form = $this->getGroupForm();
+        $form = $this->getArticleForm();
         $form->bind($this->app['request']);
 
         if ($form->isValid()) {
@@ -256,60 +267,248 @@ class Article extends Admin
                 $this->dataArticle->delete($data['id']);
                 $this->setAlert('The article with the ID %id% has successfull deleted',
                     array('%id%' => $data['id']), self::ALERT_TYPE_SUCCESS);
-                return $this->Controller($app);
+                // show the article list and prompt the alert
+                return $this->Controller($this->app);
             }
             else {
                 // delete this item to avoid conflicts with the data table
                 unset($data['article_delete_checkbox']);
             }
 
+            // convert all dates and float values
+            if (empty($data['publish_date'])) {
+                $dt = Carbon::create();
+                $data['publish_date'] = $dt->toDateString();
+            }
+            else {
+                $dt = Carbon::createFromFormat($this->app['translator']->trans('DATE_FORMAT'), $data['publish_date']);
+                $data['publish_date'] = $dt->toDateString();
+            }
+            if (empty($data['available_date'])) {
+                $dt = Carbon::create();
+                $data['available_date'] = $dt->toDateString();
+            }
+            else {
+                $dt = Carbon::createFromFormat($this->app['translator']->trans('DATE_FORMAT'), $data['available_date']);
+                $data['available_date'] = $dt->toDateString();
+            }
+
+            $data['article_price'] = $this->app['utils']->str2float($data['article_price']);
+            $data['shipping_cost'] = $this->app['utils']->str2float($data['shipping_cost']);
+
+            $permanent_link = isset($data['permanent_link']) ? $data['permanent_link'] : null;
+            if (is_null($permanent_link)) {
+                $this->setAlert('Please define a permanent link for this article!', array(), self::ALERT_TYPE_WARNING);
+                return false;
+            }
+            $permanent_link = trim($permanent_link, '\\');
+            $permanent_link = trim($permanent_link, '/');
+            $permanent_link = trim($permanent_link);
+            $data['permanent_link'] = $this->app['utils']->sanitizeLink(strtolower($permanent_link));
+
+            $data['group_id'] = $data['article_group'];
+            unset($data['article_group']);
+            $group = $this->dataGroup->select($data['group_id']);
+            $data['group_name'] = $group['name'];
+            $data['base_id'] = $group['base_id'];
+            $data['base_name'] = $group['base_name'];
+
+            $data['description_short'] = trim($data['description_short']);
+            $data['description_long'] = trim($data['description_long']);
+            $data['article_name'] = trim($data['article_name']);
+            $data['seo_title'] = trim($data['seo_title']);
+            $data['seo_description'] = trim($data['seo_description']);
+            $data['seo_keywords'] = trim($data['seo_keywords']);
+            if (is_null($data['order_number'])) {
+                $data['order_number'] = '';
+            }
+            $data['order_number'] = trim($data['order_number']);
+
+            if (empty($data['description_short'])) {
+                $this->setAlert('The short description can not be empty!', array(), self::ALERT_TYPE_WARNING);
+                return false;
+            }
+
+            if (empty($data['description_long'])) {
+                $data['description_long'] = $data['description_short'];
+            }
+
+            if (empty($data['seo_title'])) {
+                $data['seo_title'] = $data['article_name'];
+            }
+            if (empty($data['seo_description'])) {
+                $data['seo_description'] = strip_tags($data['description_short']);
+            }
+
+            if (!empty($data['seo_keywords'])) {
+                $explode = explode(',', utf8_decode($data['seo_keywords']));
+                $keywords = array();
+                foreach ($explode as $item) {
+                    $keyword = strtolower(trim($item));
+                    if (!empty($keyword)) {
+                        $keywords[] = $keyword;
+                    }
+                }
+                $data['seo_keywords'] = utf8_encode(implode(', ', $keywords));
+            }
+
+            if (is_null($data['article_image'])) {
+                $data['article_image'] = '';
+            }
+            $data['article_image_folder_gallery'] = intval($data['article_image_folder_gallery']);
+
+            if (empty($data['permanent_link'])) {
+                $this->setAlert('Please define a permanent link for this article!', array(), self::ALERT_TYPE_WARNING);
+                return false;
+            }
+
             if ($data['id'] < 1) {
                 // this is a new record
+                if (false !== ($check = $this->dataArticle->existsPermanentLink($data['permanent_link']))) {
+                    // this permanent link is already in use
+                    $this->setAlert('The permanent link <strong>/%link%</strong> is already in use by another article, please select an alternate one.',
+                        array('%link%' => $data['permanent_link'])) ;
+                    return false;
+                }
+                unset($data['id']);
+                $data['id'] = $this->dataArticle->insert($data);
+                $this->setAlert('Successful inserted a new article.', array(), self::ALERT_TYPE_SUCCESS);
             }
             else {
                 // check existing record
+                $id = $this->dataArticle->selectContentIDbyPermaLink($data['permanent_link']);
+                if (($id !== false) && ($id != $data['id'])) {
+                    // this permanent link is already in use
+                    $this->setAlert('The permanent link <strong>/%link%</strong> is already in use by another article, please select an alternate one.',
+                        array('%link%' => $data['permanent_link'])) ;
+                    return false;
+                }
                 $old = $this->dataArticle->select($data['id']);
 
+                $do_update = false;
+                foreach ($data as $key => $value) {
+                    if ($value != $old[$key]) {
+                        $do_update = true;
+                        break;
+                    }
+                }
+                if ($do_update) {
+                    $this->dataArticle->update($data['id'], $data);
+                    $this->setAlert('Successful updated the article.', array(), self::ALERT_TYPE_SUCCESS);
+                }
+                else {
+                    $this->setAlert('The article has not changed.', array(), self::ALERT_TYPE_INFO);
+                }
             }
-            // get the form with the actual data
-            $form = $this->getGroupForm($data);
+            return true;
         }
         else {
             // general error (timeout, CSFR ...)
             $this->setAlert('The form is not valid, please check your input and try again!', array(),
                 self::ALERT_TYPE_DANGER, true, array('form_errors' => $form->getErrorsAsString(),
                     'method' => __METHOD__, 'line' => __LINE__));
+            return false;
         }
-
-        return $this->app['twig']->render($this->app['utils']->getTemplateFile(
-            '@phpManufaktur/miniShop/Template', 'admin/edit.article.twig'),
-            array(
-                'usage' => self::$usage,
-                'usage_param' => self::$usage_param,
-                'toolbar' => $this->getToolbar('group'),
-                'alert' => $this->getAlert(),
-                'form' => $form->createView()
-            ));
     }
 
+    /**
+     * Controller to check the article dialog and insert or update a record
+     *
+     * @param Application $app
+     */
+    public function ControllerEditCheck(Application $app)
+    {
+        $this->initialize($app);
+
+        $data = array();
+        $this->checkArticleForm($data);
+        $form = $this->getArticleForm($data);
+        return $this->getArticleDialog($form);
+    }
+
+    /**
+     * Controller to execute the Mediabrowser to select an article image
+     *
+     * @param Application $app
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function ControllerImageSelect(Application $app)
     {
         $this->initialize($app);
 
-        return __METHOD__;
+        $data = array();
+        if (!$this->checkArticleForm($data)) {
+            $form = $this->getArticleForm($data);
+            return $this->getArticleDialog($form);
+        }
+
+        // grant that the directory exists
+        $app['filesystem']->mkdir(FRAMEWORK_PATH.self::$config['images']['directory']['select']);
+
+        // exec the MediaBrowser
+        $subRequest = Request::create('/mediabrowser', 'GET', array(
+            'usage' => self::$usage,
+            'start' => self::$config['images']['directory']['start'],
+            'redirect' => '/admin/minishop/article/image/check/id/'.$data['id'],
+            'mode' => 'public',
+            'directory' => self::$config['images']['directory']['select']
+        ));
+        return $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
     }
 
+    /**
+     * Check the response of the MediaBrowser, update the article record and
+     * show the article dialog
+     *
+     * @param Application $app
+     * @param integer $article_id
+     */
     public function ControllerImageCheck(Application $app, $article_id)
     {
         $this->initialize($app);
 
-        return __METHOD__;
+        if (null == ($image = $app['request']->get('file'))) {
+            $this->setAlert('There was no image selected.', array(), self::ALERT_TYPE_INFO);
+        }
+        else {
+            // update the article record
+            $update = array(
+                'article_image' => $image
+            );
+            $this->dataArticle->update($article_id, $update);
+            $this->setAlert('The image %image% was successfull inserted.',
+                array('%image%' => basename($image)), self::ALERT_TYPE_SUCCESS);
+        }
+
+        if (false === ($data = $this->dataArticle->select($article_id))) {
+            $this->setAlert('The record with the ID %id% does not exists!',
+                array('%id%' => $article_id), self::ALERT_TYPE_DANGER);
+        }
+        $form = $this->getArticleForm($data);
+        return $this->getArticleDialog($form);
     }
 
-    public function ControllerImageRemove(Application $app)
+    /**
+     * Controller to remove the current image
+     *
+     * @param Application $app
+     * @param integer $article_id
+     */
+    public function ControllerImageRemove(Application $app, $article_id)
     {
         $this->initialize($app);
 
-        return __METHOD__;
+        $update = array(
+            'article_image' => ''
+        );
+        $this->dataArticle->update($article_id, $update);
+        $this->setAlert('The image was successfull removed.', array(), self::ALERT_TYPE_SUCCESS);
+
+        if (false === ($data = $this->dataArticle->select($article_id))) {
+            $this->setAlert('The record with the ID %id% does not exists!',
+                array('%id%' => $article_id), self::ALERT_TYPE_DANGER);
+        }
+        $form = $this->getArticleForm($data);
+        return $this->getArticleDialog($form);
     }
 }

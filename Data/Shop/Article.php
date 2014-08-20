@@ -192,9 +192,10 @@ EOD;
     public function existsPermanentLink($permalink)
     {
         try {
-            $SQL = "SELECT `permanent_link` FROM `".self::$table_name."` WHERE `permanent_link`='$permalink'";
+            $SQL = "SELECT `permanent_link` FROM `".self::$table_name."` WHERE `permanent_link`='$permalink' ".
+                "AND `status`!='DELETED'";
             $result = $this->app['db']->fetchColumn($SQL);
-            return ($result == $permalink);
+            return (strtolower($result) === strtolower($permalink));
         } catch (\Doctrine\DBAL\DBALException $e) {
             throw new \Exception($e);
         }
@@ -209,8 +210,81 @@ EOD;
     public function countPermanentLinksLikeThis($permalink)
     {
         try {
-            $SQL = "SELECT COUNT(`permanent_link`) FROM `".self::$table_name."` WHERE `permanent_link` LIKE '$permalink%'";
+            $SQL = "SELECT COUNT(`permanent_link`) FROM `".self::$table_name."` WHERE `permanent_link` ".
+                "LIKE '$permalink%' AND `status`!='DELETED'";
             return $this->app['db']->fetchColumn($SQL);
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            throw new \Exception($e);
+        }
+    }
+
+    /**
+     * Insert a new record
+     *
+     * @param array $data
+     * @throws \Exception
+     */
+    public function insert($data)
+    {
+        try {
+            $insert = array();
+            foreach ($data as $key => $value) {
+                $insert[$key] = (is_string($value)) ? $this->app['utils']->sanitizeText($value) : $value;
+            }
+            if (isset($insert['id'])) {
+                unset($insert['id']);
+            }
+            $this->app['db']->insert(self::$table_name, $insert);
+            return $this->app['db']->lastInsertId();
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            throw new \Exception($e);
+        }
+    }
+
+    /**
+     * Update the record with the given ID
+     *
+     * @param integer $id
+     * @param array $data
+     * @throws \Exception
+     */
+    public function update($id, $data)
+    {
+        try {
+            $check = array('id', 'timestamp');
+            foreach ($check as $key) {
+                if (isset($data[$key])) {
+                    unset($data[$key]);
+                }
+            }
+            $update = array();
+            foreach ($data as $key => $value) {
+                if (is_null($value)) {
+                    continue;
+                }
+                $update[$key] = is_string($value) ? $this->app['utils']->sanitizeText($value) : $value;
+            }
+            if (!empty($update)) {
+                $this->app['db']->update(self::$table_name, $update, array('id' => $id));
+            }
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            throw new \Exception($e);
+        }
+    }
+
+    /**
+     * Select the article ID by the given PermanentLink
+     *
+     * @param string $permalink
+     * @throws \Exception
+     * @return ambigous <boolean, integer>
+     */
+    public function selectContentIDbyPermaLink($permalink)
+    {
+        try {
+            $SQL = "SELECT `id` FROM `".self::$table_name."` WHERE `permanent_link`='$permalink' AND `status`!= 'DELETED'";
+            $result = $this->app['db']->fetchColumn($SQL);
+            return ($result > 0) ? $result : false;
         } catch (\Doctrine\DBAL\DBALException $e) {
             throw new \Exception($e);
         }

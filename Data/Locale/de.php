@@ -32,7 +32,7 @@ return array(
   'Article image'
     => 'Abbildung',
   'Article image folder gallery'
-    => 'verwende Order der Abbildung für eine Galerie',
+    => 'verwende Ordner der Abbildung für eine Galerie',
   'Article limit'
     => 'max. Bestellmenge',
   'Article list'
@@ -109,6 +109,8 @@ return array(
     => 'Bitte legen Sie einen Artikel an um mit Ihrem miniShop zu starten!',
   'Please create a base configuration to start with your miniShop!'
     => 'Bitte erstellen Sie eine Basis Einstellung um mit Ihrem miniShop zu starten!',
+  'Please define a permanent link for this article!'
+    => 'Bitte definieren Sie einen permanenten Link für diesen Artikel!',
   'Publish date'
     => 'Im Shop ab',
   'Select article image'
@@ -137,12 +139,18 @@ return array(
     => 'Es wurde eine neue Artikelgruppe angelegt.',
   'Succesful created a new miniShop Base'
     => 'Es wurde erfolgreich eine neue miniShop Basis Einstellung angelegt.',
+  'Successful inserted a new article.'
+    => 'Der neue Artikel wurde erfolgreich angelegt.',
+  'Successful updated the article.'
+    => 'Der Artikel wurde erfolgreich aktualisiert.',
   'sum-up the shipping costs'
     => 'alle Versandkosten addieren',
   'The article group has successful updated.'
     => 'Die Artikelgruppe wurde erfolgreich aktualisiert.',
   'The article group with the ID %id% has successfull deleted'
     => 'Die Artikelgruppe mit der ID %id% wurde gelöscht.',
+  'The article has not changed.'
+    => 'Der Artikel wurde nicht geändert.',
   'The article with the ID %id% has successfull deleted'
     => 'Der Artikel mit der ID %id% wurde erfolgreich gelöscht',
   'The base configuration with the ID %id% has successfull deleted'
@@ -151,6 +159,10 @@ return array(
     => 'Die miniShop Basis Einstellung wurde erfolgreich aktualisiert.',
   'The name <strong>%name%</strong> is already in use, please select another one.'
     => 'Der Bezeichner <strong>%name%</strong> wird bereits verwendet, bitte wählen Sie einen anderen Bezeichner.',
+  'The permanent link <strong>/%link%</strong> is already in use by another article, please select an alternate one.'
+    => 'Der permanente Link <strong>/%link%</strong> wird bereits von einem anderen Artikel verwendet, bitte legen Sie einen anderen Link fest.',
+  'The short description can not be empty!'
+    => 'Die Kurzbeschreibung darf nicht leer sein!',
   'VAT'
     => 'Umsatzsteuer',
   
