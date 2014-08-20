@@ -87,6 +87,17 @@ class Configuration
             ),
             'permanentlink' => array(
                 'directory' => '/shop'
+            ),
+            'libraries' => array(
+                'enabled' => true,
+                'jquery' => array(
+                    'jquery/jquery/latest/jquery.min.js',
+                    'bootstrap/latest/js/bootstrap.min.js'
+                ),
+                'css' => array(
+                    'bootstrap/latest/css/bootstrap.min.css',
+                    'font-awesome/latest/css/font-awesome.min.css'
+                )
             )
         );
     }

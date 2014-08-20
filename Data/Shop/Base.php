@@ -109,6 +109,33 @@ EOD;
     }
 
     /**
+     * Select all active bases entries
+     *
+     * @throws \Exception
+     * @return Ambigous <boolean, array>
+     */
+    public function selectAllActive()
+    {
+        try {
+            $SQL = "SELECT * FROM `".self::$table_name."` WHERE `status`='ACTIVE' ORDER BY `name` ASC";
+            $results = $this->app['db']->fetchAll($SQL);
+            $bases = array();
+            if (is_array($results)) {
+                foreach ($results as $result) {
+                    $item = array();
+                    foreach ($result as $key => $value) {
+                        $item[$key] = (is_string($value)) ? $this->app['utils']->unsanitizeText($value) : $value;
+                    }
+                    $bases[] = $item;
+                }
+            }
+            return (!empty($bases)) ? $bases : false;
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            throw new \Exception($e);
+        }
+    }
+
+    /**
      * Count all not deleted records
      *
      * @throws \Exception
@@ -117,6 +144,20 @@ EOD;
     {
         try {
             return $this->app['db']->fetchColumn("SELECT * FROM `".self::$table_name."` WHERE `status`!='DELETED'");
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            throw new \Exception($e);
+        }
+    }
+
+    /**
+     * Count all active base configuration records
+     *
+     * @throws \Exception
+     */
+    public function countActive()
+    {
+        try {
+            return $this->app['db']->fetchColumn("SELECT * FROM `".self::$table_name."` WHERE `status`='ACTIVE'");
         } catch (\Doctrine\DBAL\DBALException $e) {
             throw new \Exception($e);
         }

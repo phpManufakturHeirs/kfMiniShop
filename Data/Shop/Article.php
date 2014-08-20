@@ -293,4 +293,36 @@ EOD;
             throw new \Exception($e);
         }
     }
+
+    public function selectByGroup($groups, $limit=-1, $order_by='article_name', $order_direction='ASC',
+        $status=array('AVAILABLE', 'AVAILABLE_DATE', 'AVAILABLE_DATE_ORDER', 'AVAILABLE_SOON', 'AVAILABLE_SOON_ORDER', 'NOT_AVAILABLE'))
+    {
+        try {
+            if (!is_array($groups)) {
+                throw new \Exception('The parameter groups must be of type array!');
+            }
+            $in_groups = "('".implode("','", $groups)."')";
+            $in_status = "('".implode("','", $status)."')";
+
+            $SQL = "SELECT * FROM `".self::$table_name."` WHERE `group_name` IN $in_groups AND `status` IN $in_status ".
+                "ORDER BY `$order_by` $order_direction";
+            if ($limit > 0) {
+                $SQL .= " LIMIT $limit";
+            }
+            $results = $this->app['db']->fetchAll($SQL);
+            $articles = array();
+            if (is_array($results)) {
+                foreach ($results as $result) {
+                    $item = array();
+                    foreach ($result as $key => $value) {
+                        $item[$key] = (is_string($value)) ? $this->app['utils']->unsanitizeText($value) : $value;
+                    }
+                    $articles[] = $item;
+                }
+            }
+            return (!empty($articles)) ? $articles : false;
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            throw new \Exception($e);
+        }
+    }
 }

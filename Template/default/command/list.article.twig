@@ -1,0 +1,27 @@
+{#
+  miniShop
+
+  @author Team phpManufaktur <team@phpmanufaktur.de>
+  @link https://kit2.phpmanufaktur.de/miniShop
+  @copyright 2014 Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
+  @license MIT License (MIT) http://www.opensource.org/licenses/MIT
+#}
+{% spaceless %}
+<!-- {{ _self.getTemplateName() }} -->
+<div id="minishop">
+  <div class="container-fluid">    
+      
+    {{ basic.alert }}
+    
+    {% if articles|length > 0 %}
+      {% for article in articles %}
+        <h2>{{ article.article_name }}</h2>
+        <div>{{ article.description_short }}</div>
+        <div>{{ article.article_price }}</div>
+        <div><a href="{{ permalink_base_url ~ '/' ~ article.permanent_link }}">DETAIL</a></div>
+      {% endfor %}
+    {% endif %}
+    
+  </div>
+</div>
+{% endspaceless %}

@@ -134,6 +134,34 @@ EOD;
     }
 
     /**
+     * Select all active groups for the given base configuration name
+     *
+     * @param string $base_name
+     * @throws \Exception
+     * @return Ambigous <boolean, array>
+     */
+    public function selectAllActiveByBase($base_name)
+    {
+        try {
+            $SQL = "SELECT * FROM `".self::$table_name."` WHERE `status`='ACTIVE' AND `base_name`='$base_name' ORDER BY `name` ASC";
+            $results = $this->app['db']->fetchAll($SQL);
+            $groups = array();
+            if (is_array($results)) {
+                foreach ($results as $result) {
+                    $item = array();
+                    foreach ($result as $key => $value) {
+                        $item[$key] = (is_string($value)) ? $this->app['utils']->unsanitizeText($value) : $value;
+                    }
+                    $groups[] = $item;
+                }
+            }
+            return (!empty($groups)) ? $groups : false;
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            throw new \Exception($e);
+        }
+    }
+
+    /**
      * Select the article group with the given ID
      *
      * @param integer $id
@@ -250,5 +278,7 @@ EOD;
             throw new \Exception($e);
         }
     }
+
+
 
 }
