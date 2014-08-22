@@ -1,0 +1,82 @@
+/*
+  miniShop
+
+  @author Team phpManufaktur <team@phpmanufaktur.de>
+  @link https://kit2.phpmanufaktur.de/miniShop
+  @copyright 2014 Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
+  @license MIT License (MIT) http://www.opensource.org/licenses/MIT
+*/
+
+#minishop .container-fluid {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#minishop .content:before,
+#minishop .order-container:before,
+#minishop .article-container:before {
+  display: table;
+  content: " ";
+}
+#minishop .article-container {
+  display: block;
+}
+#minishop .content {
+  margin: 0;
+  padding: 0;
+  height: auto;
+  min-height: 0;
+  width: 100%;
+}
+#minishop .content:after,
+#minishop .order-container:after,
+#minishop .article-container:after {
+  clear: both;
+}
+#minishop .article-image-left {
+  margin-right: 10px;
+  float: left !important;
+}
+
+#minishop .order-container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+#minishop .order-container label {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+#minishop .order-container label:first-child {
+  margin-left: 0;
+}
+#minishop input#form_quantity {
+  width: 50px;
+  text-align: right;
+} 
+#minishop select#form_article_variant_values,
+#minishop select#form_article_variant_values_2,
+#minishop .order-container button {
+  margin-left: 5px;
+}
+
+#minishop .order-container .info {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+#minishop .order-container .info .status,
+#minishop .order-container .info .price {
+ 
+}
+#minishop .order-container .info .price strong {
+  font-size: 20px;
+  font-weight: bold;
+}
+#minishop .order-container .info .status.locked {
+  color: #da251d;
+  font-weight: bold;
+}
+
+#minishop .basket {
+  margin-bottom: 5px;
+  text-align: right;
+}

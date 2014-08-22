@@ -17,6 +17,7 @@ use phpManufaktur\miniShop\Data\Shop\Base;
 use phpManufaktur\miniShop\Data\Shop\Group;
 use phpManufaktur\miniShop\Data\Shop\Article;
 use phpManufaktur\miniShop\Control\Configuration;
+use phpManufaktur\miniShop\Data\Shop\Basket;
 
 class Setup
 {
@@ -112,6 +113,9 @@ class Setup
 
             $articleTable = new Article($app);
             $articleTable->createTable();
+
+            $basketTable = new Basket($app);
+            $basketTable->createTable();
 
             // create the permanent link routes
             $this->createPermalinkRoutes($app, self::$configuration);

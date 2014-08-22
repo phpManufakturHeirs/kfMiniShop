@@ -25,6 +25,7 @@ class ActionList extends Basic
     protected $dataArticle = null;
     protected $dataBase = null;
     protected $dataGroup = null;
+    protected $Basket = null;
 
     protected function initParameters(Application $app, $parameter_id=-1)
     {
@@ -36,6 +37,7 @@ class ActionList extends Basic
         $this->dataArticle = new DataArticle($app);
         $this->dataBase = new DataBase($app);
         $this->dataGroup = new DataGroup($app);
+        $this->Basket = new Basket($app);
     }
 
     protected function showList()
@@ -45,9 +47,9 @@ class ActionList extends Basic
         $base = null;
         $groups = null;
 
-        if (!is_null(self::$parameter['group'])) {
+        if (!is_null(self::$parameter['groups'])) {
             // show the list for a article group
-            $checks = strpos(self::$parameter['group'], ',') ? explode(',', self::$parameter['group']) : array(self::$parameter['group']);
+            $checks = strpos(self::$parameter['groups'], ',') ? explode(',', self::$parameter['groups']) : array(self::$parameter['groups']);
             $groups = array();
             foreach ($checks as $check) {
                 $check = trim($check);
@@ -102,7 +104,8 @@ class ActionList extends Basic
                 'config' => self::$config,
                 'parameter' => self::$parameter,
                 'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
-                'articles' => $articles
+                'articles' => $articles,
+                'basket' => $this->Basket->getBasket()
             ));
 
         // set the parameters for jQuery and CSS
@@ -169,7 +172,7 @@ class ActionList extends Basic
         // disable the jquery check?
         self::$parameter['check_jquery'] = (isset(self::$parameter['check_jquery']) && ((self::$parameter['check_jquery'] == 0) || (strtolower(self::$parameter['check_jquery']) == 'false'))) ? false : true;
 
-        self::$parameter['group'] = (isset(self::$parameter['group']) && !empty(self::$parameter['group'])) ? self::$parameter['group'] : null;
+        self::$parameter['groups'] = (isset(self::$parameter['groups']) && !empty(self::$parameter['groups'])) ? self::$parameter['groups'] : null;
         self::$parameter['base'] = (isset(self::$parameter['base']) && !empty(self::$parameter['base'])) ? self::$parameter['base'] : null;
 
         self::$parameter['limit'] = (isset(self::$parameter['limit']) && is_numeric(self::$parameter['limit'])) ? intval(self::$parameter['limit']) : -1;

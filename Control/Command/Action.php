@@ -55,6 +55,22 @@ class Action extends Basic
             return $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         }
 
+        // check the CMS GET parameters
+        $GET = $this->getCMSgetParameters();
+
+        if (isset($GET['command']) && (strtolower($GET['command']) == 'minishop') &&
+            isset($GET['action']) && (($GET['action'] == $parameter['action']) ||
+            (($GET['action'] == 'article') && ($parameter['action'] == 'list')))) {
+            // the command and parameters are set as GET from the CMS
+            foreach ($GET as $key => $value) {
+                if (strtolower($key) == 'command') continue;
+                $parameter[strtolower($key)] = $value;
+            }
+            $this->setCommandParameters($parameter);
+            // create also a new parameter ID!
+            $this->createParameterID($parameter);
+        }
+
         switch (strtolower($parameter['action'])) {
             case 'list':
                 $ActionList = new ActionList();

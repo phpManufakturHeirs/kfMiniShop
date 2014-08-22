@@ -15,6 +15,7 @@ use Silex\Application;
 use phpManufaktur\miniShop\Data\Shop\Base;
 use phpManufaktur\miniShop\Data\Shop\Group;
 use phpManufaktur\miniShop\Data\Shop\Article;
+use phpManufaktur\miniShop\Data\Shop\Basket;
 
 class Uninstall
 {
@@ -37,6 +38,9 @@ class Uninstall
 
         $articleTable = new Article($app);
         $articleTable->dropTable();
+
+        $basketTable = new Basket($app);
+        $basketTable->dropTable();
 
         return $app['translator']->trans('Successfull uninstalled the extension %extension%.',
             array('%extension%' => 'miniShop'));

@@ -135,5 +135,18 @@ $app->post('/command/minishop',
     'phpManufaktur\miniShop\Control\Command\ContentFrame::Controller')
     ->setOption('info', MANUFAKTUR_PATH.'/miniShop/command.minishop.json');
 
+$app->post('/command/minishop/getheader/id/{article_id}',
+    // return header information to set title, description and keywords
+    // will be accessed by \Basic\Control\kitCommand\Parser::setHeader
+    'phpManufaktur\miniShop\Control\Command\getHeader::Controller')
+    ->assert('article_id', '\d+');
+$app->post('/command/minishop/canonical/id/{article_id}',
+    // return the permanent link URL of the given article ID to create a canonical link
+    // will be accessed by \Basic\Control\kitCommand\Parser::setCanonicalLink
+    'phpManufaktur\miniShop\Control\Command\getCanonicalLink::Controller')
+    ->assert('article_id', '\d+');
+
 $app->get('/minishop/action',
     'phpManufaktur\miniShop\Control\Command\Action::Controller');
+
+

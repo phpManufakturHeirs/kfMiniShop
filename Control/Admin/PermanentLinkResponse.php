@@ -13,6 +13,7 @@ namespace phpManufaktur\miniShop\Control\Admin;
 
 use Silex\Application;
 use phpManufaktur\miniShop\Data\Shop\Article;
+
 class PermanentLinkResponse
 {
 

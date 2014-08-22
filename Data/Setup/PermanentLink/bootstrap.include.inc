@@ -10,5 +10,11 @@
  */
 
 // permanent link route to a article
-$app->get('%subdirectory%%permanentlink%/{name}',
+$app->get('%subdirectory%%permanentlink%/article/{name}',
     'phpManufaktur\miniShop\Control\PermanentLink::ControllerArticle');
+
+// routes for the basket
+$app->post('%subdirectory%%permanentlink%/basket/add',
+    'phpManufaktur\miniShop\Control\Command\ActionArticle::ControllerBasketAdd');
+$app->get('%subdirectory%%permanentlink%/basket/view',
+    'phpManufaktur\miniShop\Control\Command\Basket::ControllerBasketView');

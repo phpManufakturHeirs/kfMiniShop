@@ -83,7 +83,15 @@ class Configuration
                 'directory' => array(
                     'start' => '/media/public',
                     'select' => '/media/public/shop'
-                 )
+                 ),
+                'extension' => array(
+                    '*.jpg',
+                    '*.jpeg',
+                    '*.png',
+                    '*.JPG',
+                    '*.JPEG',
+                    '*.PNG'
+                )
             ),
             'permanentlink' => array(
                 'directory' => '/shop'
@@ -92,11 +100,13 @@ class Configuration
                 'enabled' => true,
                 'jquery' => array(
                     'jquery/jquery/latest/jquery.min.js',
-                    'bootstrap/latest/js/bootstrap.min.js'
+                    'bootstrap/latest/js/bootstrap.min.js',
+                    'jquery/lightbox/latest/js/lightbox.min.js'
                 ),
                 'css' => array(
                     'bootstrap/latest/css/bootstrap.min.css',
-                    'font-awesome/latest/css/font-awesome.min.css'
+                    'font-awesome/latest/css/font-awesome.min.css',
+                    'jquery/lightbox/latest/css/lightbox.css'
                 )
             )
         );

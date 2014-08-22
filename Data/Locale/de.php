@@ -17,6 +17,8 @@ if ('á' != "\xc3\xa1") {
 }
 
 return array(
+  'Add article to cart'
+    => 'Artikel dem Warenkorb hinzufügen',
   'Advance payment'
     => 'Vorkasse',
   'Article'
@@ -53,12 +55,24 @@ return array(
     => 'Variante, Werte',
   'Article variant values 2'
     => 'Variante, Werte',
+  'article_variant_name'
+    => 'Variante, Bezeichner',
+  'article_variant_name_2'
+    => 'Variante, Bezeichner',
   'Articles'
     => 'Artikel',
   'At least you must specify one payment method!'
     => 'Sie müssen mindestens eine Zahlungsmethode festlegen!',
+  'Available'
+    => 'sofort lieferbar',
   'Available date'
-    => 'Lieferbar ab',
+    => 'lieferbar ab',
+  'Available date order'
+    => 'kann bestellt werden, lieferbar ab',
+  'Available soon'
+    => 'in Kürze lieferbar',
+  'Available soon order'
+    => 'kann bestellt werden, in Kürze lieferbar',
   'Base configuration'
     => 'Basis Einstellungen',
   'Base configuration delete checkbox'
@@ -89,6 +103,8 @@ return array(
     => 'Jeder Wert in einer eigenen Zeile, verwenden Sie <key>UMSCHALT</key>+<key>EINGABE</key>',
   'Flatrate for shipping and handling'
     => 'Versandkostenpauschale',
+  'Free of shipping costs'
+    => 'Versandkostenfrei',
   'Gross price'
     => 'Bruttopreis',
   'Information about the miniShop extension'
@@ -99,8 +115,12 @@ return array(
     => 'miniShop für das kitFramework',
   'Net price'
     => 'Nettopreis',
+  'net price without tax'
+    => 'zzgl. Umsatzsteuer',
   'No shipping'
     => 'Kein Versand',
+  'Not available'
+    => 'nicht lieferbar',
   'On account'
     => 'auf Rechnung',
   'Order minimum price'
@@ -113,6 +133,8 @@ return array(
     => 'PayPal',
   'Permanent link'
     => 'Permanenter Link',
+  'Pickup by the customer'
+    => 'Selbstabholer',
   'Please create a article group to start with your miniShop!'
     => 'Bitte erstellen Sie eine Artikelgruppe um mit Ihrem miniShop zu starten!',
   'Please create a article to start with your miniShop!'
@@ -121,8 +143,14 @@ return array(
     => 'Bitte erstellen Sie eine Basis Einstellung um mit Ihrem miniShop zu starten!',
   'Please define a permanent link for this article!'
     => 'Bitte definieren Sie einen permanenten Link für diesen Artikel!',
+  'Please submit a article ID!'
+    => 'Bitte übermitteln Sie eine Artikel ID!',
   'Publish date'
     => 'Im Shop ab',
+  'Quantity'
+    => 'Menge',
+  'Quantity to order'
+    => 'Bestellmenge',
   'Select article image'
     => 'Abbildung auswählen',
   'select the highest shipping cost'
@@ -139,6 +167,8 @@ return array(
     => 'Versandkostentyp: Artikel',
   'Shipping cost'
     => 'Versandkosten',
+  'Shipping costs %costs% %currency%'
+    => 'Versandkosten %costs% %currency%',
   'Shipping flatrate'
     => 'Versandkostenpauschale',
   'Shipping type'
@@ -155,8 +185,12 @@ return array(
     => 'Der Artikel wurde erfolgreich aktualisiert.',
   'sum-up the shipping costs'
     => 'alle Versandkosten addieren',
+  'switch to the offers'
+    => 'zu den Angeboten',
   'Target page link'
     => 'Zielseite im CMS',
+  'The article group <strong>%group%</strong> does not exists, please check the kitCommand!'
+    => 'Die Artikelgruppe <strong>%group%</strong> existiert nicht, bitte prüfen Sie das kitCommand!',
   'The article group has successful updated.'
     => 'Die Artikelgruppe wurde erfolgreich aktualisiert.',
   'The article group with the ID %id% has successfull deleted'
@@ -165,6 +199,8 @@ return array(
     => 'Der Artikel wurde nicht geändert.',
   'The article with the ID %id% has successfull deleted'
     => 'Der Artikel mit der ID %id% wurde erfolgreich gelöscht',
+  'The base configuration <strong>%base%</strong> does not exists, please check the kitCommand!'
+    => 'Die Basis Einstellung <strong>%base%</strong> existiert nicht, bitte prüfen Sie das kitCommand!',
   'The base configuration with the ID %id% has successfull deleted'
     => 'Die Basis Einstellung mit der ID %id% wurde erfolgreich gelöscht.',
   'The miniShop Base has successful updated.'
@@ -175,6 +211,8 @@ return array(
     => 'Der permanente Link <strong>/%link%</strong> wird bereits von einem anderen Artikel verwendet, bitte legen Sie einen anderen Link fest.',
   'The short description can not be empty!'
     => 'Die Kurzbeschreibung darf nicht leer sein!',
+  'There exists more than one base configurations, so you must set a base or a group as parameter!'
+    => 'Es existiert mehr als eine Basis Einstellung, Sie müssen eine Basis oder eine Gruppe als Parameter festlegen!',
   'VAT'
     => 'Umsatzsteuer',
   

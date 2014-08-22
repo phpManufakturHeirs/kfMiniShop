@@ -13,12 +13,21 @@ namespace phpManufaktur\miniShop\Control;
 
 use Silex\Application;
 use phpManufaktur\miniShop\Control\Configuration;
+use phpManufaktur\miniShop\Data\Shop\Article as DataArticle;
+use phpManufaktur\miniShop\Data\Shop\Base as DataBase;
+use Carbon\Carbon;
+use phpManufaktur\Basic\Data\CMS\Page as DataPage;
 
 class PermanentLink
 {
     protected $app = null;
+    protected $dataArticle = null;
+    protected $dataBase = null;
+    protected $dataPage = null;
 
     protected static $config = null;
+
+    protected static $ignore_parameters = array('searchresult','sstring','pid');
 
     /**
      * Initialize the class
@@ -32,6 +41,9 @@ class PermanentLink
         $Config = new Configuration($app);
         self::$config = $Config->getConfiguration();
 
+        $this->dataArticle = new DataArticle($app);
+        $this->dataBase = new DataBase($app);
+        $this->dataPage = new DataPage($app);
     }
 
     /**
@@ -68,7 +80,7 @@ class PermanentLink
         }
 
         // get the visibility of the target page
-        $visibility = $this->PageData->getPageVisibilityByPageID($page_id);
+        $visibility = $this->dataPage->getPageVisibilityByPageID($page_id);
         if (in_array($visibility, array('none', 'registered', 'private'))) {
             // page can not be shown!
             $error = 'The visibility of the requested page is "none", can not show the content!';
@@ -117,90 +129,70 @@ class PermanentLink
     }
 
 
-    /**
-     * Redirect to the target URL to show the category content
-     *
-     * @return string
-     */
-    protected function redirectToCategoryID()
+
+    public function ControllerArticle(Application $app, $name)
     {
-        if (false === ($category = $this->CategoryTypeData->select(self::$category_id, self::$language))) {
-            // the category ID does not exists!
-            $this->app['monolog']->addError('The flexContent category ID '.self::$category_id." does not exists.",
-                array(__METHOD__, __LINE__));
-            return $this->app['twig']->render($this->app['utils']->getTemplateFile(
-                '@phpManufaktur/Basic/Template', 'kitcommand/bootstrap/noframe/alert.twig'),
-                array(
-                    'content' => $this->app['translator']->trans('There is no category assigned to this pemanent link!'),
-                    'type' => 'alert-danger'));
+        $this->initialize($app);
+
+        if (false === ($article = $this->dataArticle->selectByPermanentLink($name))) {
+            $message = str_ireplace(array('%directory%','%action%','%name%'),
+                array(self::$config['permanentlink']['directory'], 'article', $name),
+                'The permanent link <strong>%directory%/%action%/%name%</strong> does not exists!');
+            $this->app['monolog']->addDebug(strip_tags($message), array(__METHOD__, __LINE__));
+            $app->abort(404, $message);
+        }
+        elseif ($article['status'] === 'LOCKED') {
+            $message = str_ireplace(array('%directory%','%action%','%name%'),
+                array(self::$config['permanentlink']['directory'], 'article', $name),
+                'The permanent link <strong>%directory%/%action%/%name%</strong> is temporary not available!');
+            $this->app['monolog']->addDebug(strip_tags($message), array(__METHOD__, __LINE__));
+            $app->abort(423, $message);
+        }
+        elseif ($article['status'] === 'DELETED') {
+            $message = str_ireplace(array('%directory%','%action%','%name%'),
+                array(self::$config['permanentlink']['directory'], 'article', $name),
+                'The permanent link <strong>%directory%/%action%/%name%</strong> is no longer available!');
+            $this->app['monolog']->addDebug(strip_tags($message), array(__METHOD__, __LINE__));
+            $app->abort(410, $message);
         }
 
-        // get the CMS page link from the target link
-        $link = substr($category['target_url'], strlen($this->PageData->getPageDirectory()), (strlen($this->PageData->getPageExtension()) * -1));
-
-        if (false === ($page_id = $this->PageData->getPageIDbyPageLink($link))) {
-            // the page does not exists!
-            $this->app['monolog']->addError('The CMS page for the page link '.$link.' does not exists!', array(__METHOD__, __LINE__));
-            return $this->app['twig']->render($this->app['utils']->getTemplateFile(
-                '@phpManufaktur/Basic/Template', 'kitcommand/bootstrap/noframe/alert.twig'),
-                array(
-                    'content' => $this->app['translator']->trans('The target URL assigned to this permanent link does not exists!'),
-                    'type' => 'alert-danger'));
+        $publish_date = Carbon::createFromFormat('Y-m-d', $article['publish_date']);
+        $now = Carbon::create();
+        if ($now->lt($publish_date)) {
+            // the article is not published yet!
+            $message = str_ireplace(array('%directory%','%action%','%name%'),
+                array(self::$config['permanentlink']['directory'], 'article', $name),
+                'The permanent link <strong>%directory%/%action%/%name%</strong> is temporary not available!');
+            $this->app['monolog']->addDebug(strip_tags($message), array(__METHOD__, __LINE__));
+            $app->abort(423, $message);
         }
 
-        if ((false === ($lang_code = $this->PageData->getPageLanguage($page_id))) || (self::$language != strtolower($lang_code))) {
-            // the page does not support the needed language!
-            $error = 'The CMS target page does not support the needed language <strong>'.self::$language.'</strong> for this permanent link!';
-            $this->app['monolog']->addError(strip_tags($error), array(__METHOD__, __LINE__, self::$content_id));
-            return $this->app['twig']->render($this->app['utils']->getTemplateFile(
-                '@phpManufaktur/Basic/Template', 'kitcommand/bootstrap/noframe/alert.twig'),
-                array(
-                    'content' => $error,
-                    'type' => 'alert-danger'));
+        // get the base configuration
+        $base = $this->dataBase->select($article['base_id']);
+
+        $link = substr($base['target_page_link'], strlen($this->dataPage->getPageDirectory()), (strlen($this->dataPage->getPageExtension()) * -1));
+
+        if (false === ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
+            // the CMS page does not exists!
+            $message = str_ireplace('%link%', $base['target_page_link'], 'The CMS page <strong>%link%</strong> does not exists!');
+            $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
+            $app->abort(404, $message);
         }
 
-        if (!$this->PageData->existsCommandAtPageID('flexcontent', $page_id)) {
-            // the page exists but does not contain the needed kitCommand
-            $this->app['monolog']->addError('The CMS target URL does not contain the needed kitCommand!', array(__METHOD__, __LINE__));
-            return $this->app['twig']->render($this->app['utils']->getTemplateFile(
-                '@phpManufaktur/Basic/Template', 'kitcommand/bootstrap/noframe/alert.twig'),
-                array(
-                    'content' => $this->app['translator']->trans('The CMS target URL does not contain the needed kitCommand!'),
-                    'type' => 'alert-danger'));
+        if (!$this->dataPage->existsCommandAtPageID('minishop', $page_id)) {
+            // missing the kitCommand at the target URL
+            $message = str_ireplace('%link%', $base['target_page_link'], 'The CMS page <strong>%link%</strong> does not contain the needed kitCommand!');
+            $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
+            $app->abort(404, $message);
         }
 
-        // create the parameter array
         $parameter = array(
-            'command' => 'flexcontent',
-            'action' => 'category',
-            'category_id' => self::$category_id,
-            'content_id' => self::$content_id,
-            'language' => strtolower(self::$language),
-            'robots' => self::$config['kitcommand']['permalink']['category']['robots'],
-            'canonical' => $this->Tools->getPermalinkBaseURL(self::$language).'/category/'.$category['category_permalink']
+            'command' => 'minishop',
+            'action' => 'article',
+            'id' => $article['id'],
+            'robots' => 'index,follow',
+            'canonical' => CMS_URL.self::$config['permanentlink']['directory'].'/article/'.$name
         );
-
-        if (self::$config['search']['result']['highlight'] &&
-            (null !== ($searchresult = $this->app['request']->query->get('searchresult'))) &&
-            (null !== ($sstring = $this->app['request']->query->get('sstring')))) {
-            // create a highlight array
-            $highlight = array();
-            if ($searchresult == 1) {
-                if (false !== strpos($sstring, '+')) {
-                    $words = explode('+', $sstring);
-                    foreach ($words as $word) {
-                        $highlight[] = $word;
-                    }
-                }
-                else {
-                    $highlight[] = $sstring;
-                }
-            }
-            else {
-                $highlight[] = str_replace('_', ' ', $sstring);
-            }
-            $parameter['highlight'] = $highlight;
-        }
 
         $gets = $this->app['request']->query->all();
         foreach ($gets as $key => $value) {
@@ -211,112 +203,9 @@ class PermanentLink
         }
 
         // create the target URL and set the needed parameters
-        $target_url = CMS_URL.$category['target_url'].'?'.http_build_query($parameter, '', '&');
+        $target_url = CMS_URL.$base['target_page_link'].'?'.http_build_query($parameter, '', '&');
 
         return $this->cURLexec($target_url, $page_id);
-    }
-
-    /**
-     * Redirect to the target URL to show the FAQ content
-     *
-     * @return string
-     */
-    protected function redirectToFAQID()
-    {
-        if (false === ($category = $this->CategoryTypeData->select(self::$category_id, self::$language))) {
-            // the category ID does not exists!
-            $this->app['monolog']->addError('The flexContent category ID '.self::$category_id." does not exists.",
-                array(__METHOD__, __LINE__));
-            return $this->app['twig']->render($this->app['utils']->getTemplateFile(
-                '@phpManufaktur/Basic/Template', 'kitcommand/bootstrap/noframe/alert.twig'),
-                array(
-                    'content' => $this->app['translator']->trans('There is no category assigned to this pemanent link!'),
-                    'type' => 'alert-danger'));
-        }
-
-        // get the CMS page link from the target link
-        $link = substr($category['target_url'], strlen($this->PageData->getPageDirectory()), (strlen($this->PageData->getPageExtension()) * -1));
-
-        if (false === ($page_id = $this->PageData->getPageIDbyPageLink($link))) {
-            // the page does not exists!
-            $this->app['monolog']->addError('The CMS page for the page link '.$link.' does not exists!', array(__METHOD__, __LINE__));
-            return $this->app['twig']->render($this->app['utils']->getTemplateFile(
-                '@phpManufaktur/Basic/Template', 'kitcommand/bootstrap/noframe/alert.twig'),
-                array(
-                    'content' => $this->app['translator']->trans('The target URL assigned to this permanent link does not exists!'),
-                    'type' => 'alert-danger'));
-        }
-
-        if ((false === ($lang_code = $this->PageData->getPageLanguage($page_id))) || (self::$language != strtolower($lang_code))) {
-            // the page does not support the needed language!
-            $error = 'The CMS target page does not support the needed language <strong>'.self::$language.'</strong> for this permanent link!';
-            $this->app['monolog']->addError(strip_tags($error), array(__METHOD__, __LINE__, self::$content_id));
-            return $this->app['twig']->render($this->app['utils']->getTemplateFile(
-                '@phpManufaktur/Basic/Template', 'kitcommand/bootstrap/noframe/alert.twig'),
-                array(
-                    'content' => $error,
-                    'type' => 'alert-danger'));
-        }
-
-        if (!$this->PageData->existsCommandAtPageID('flexcontent', $page_id)) {
-            // the page exists but does not contain the needed kitCommand
-            $this->app['monolog']->addError('The CMS target URL does not contain the needed kitCommand!', array(__METHOD__, __LINE__));
-            return $this->app['twig']->render($this->app['utils']->getTemplateFile(
-                '@phpManufaktur/Basic/Template', 'kitcommand/bootstrap/noframe/alert.twig'),
-                array(
-                    'content' => $this->app['translator']->trans('The CMS target URL does not contain the needed kitCommand!'),
-                    'type' => 'alert-danger'));
-        }
-
-        // create the parameter array
-        $parameter = array(
-            'command' => 'flexcontent',
-            'action' => 'faq',
-            'category_id' => self::$category_id,
-            'language' => strtolower(self::$language),
-            'robots' => self::$config['kitcommand']['permalink']['faq']['robots'],
-            'canonical' => $this->Tools->getPermalinkBaseURL(self::$language).'/faq/'.$category['category_permalink']
-        );
-
-        if (self::$config['search']['result']['highlight'] &&
-            (null !== ($searchresult = $this->app['request']->query->get('searchresult'))) &&
-            (null !== ($sstring = $this->app['request']->query->get('sstring')))) {
-            // create a highlight array
-            $highlight = array();
-            if ($searchresult == 1) {
-                if (false !== strpos($sstring, '+')) {
-                    $words = explode('+', $sstring);
-                    foreach ($words as $word) {
-                        $highlight[] = $word;
-                    }
-                }
-                else {
-                    $highlight[] = $sstring;
-                }
-            }
-            else {
-                $highlight[] = str_replace('_', ' ', $sstring);
-            }
-            $parameter['highlight'] = $highlight;
-        }
-
-        $gets = $this->app['request']->query->all();
-        foreach ($gets as $key => $value) {
-            if (!key_exists($key, $parameter) && !in_array($key, self::$ignore_parameters)) {
-                // pass all other parameters to the target page
-                $parameter[$key] = $value;
-            }
-        }
-
-        // create the target URL and set the needed parameters
-        $target_url = CMS_URL.$category['target_url'].'?'.http_build_query($parameter, '', '&');
-
-        return $this->cURLexec($target_url, $page_id);
-    }
-
-
-    public function ControllerArticle(Application $app)
-    {
         return __METHOD__;
     }
 }

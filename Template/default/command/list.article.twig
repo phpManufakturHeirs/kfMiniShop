@@ -10,15 +10,16 @@
 <!-- {{ _self.getTemplateName() }} -->
 <div id="minishop">
   <div class="container-fluid">    
-      
+    {% include '@phpManufaktur/miniShop/Template/default/command/basket.twig' %}
+    
     {{ basic.alert }}
     
     {% if articles|length > 0 %}
       {% for article in articles %}
-        <h2>{{ article.article_name }}</h2>
+        <a href="{{ permalink_base_url ~ '/article/' ~ article.permanent_link }}"><h2>{{ article.article_name }}</h2></a>
         <div>{{ article.description_short }}</div>
         <div>{{ article.article_price }}</div>
-        <div><a href="{{ permalink_base_url ~ '/' ~ article.permanent_link }}">DETAIL</a></div>
+        <div><a href="{{ permalink_base_url ~ '/article/' ~ article.permanent_link }}">DETAIL</a></div>
       {% endfor %}
     {% endif %}
     

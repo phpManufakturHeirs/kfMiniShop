@@ -69,7 +69,6 @@ class Article
         `shipping_cost` FLOAT(11) NOT NULL DEFAULT 0,
         `timestamp` TIMESTAMP,
         PRIMARY KEY (`id`),
-        UNIQUE (`order_number`),
         INDEX (`group_id`, `group_name`, `base_id`, `base_name`),
         CONSTRAINT
             FOREIGN KEY (`base_id`)
@@ -187,6 +186,30 @@ EOD;
     }
 
     /**
+     * Select the article record by the given permanent link name
+     *
+     * @param string $permanent_link
+     * @throws \Exception
+     * @return Ambigous <boolean, array>
+     */
+    public function selectByPermanentLink($permanent_link)
+    {
+        try {
+            $SQL = "SELECT * FROM `".self::$table_name."` WHERE `permanent_link`='$permanent_link'";
+            $result = $this->app['db']->fetchAssoc($SQL);
+            $article = array();
+            if (is_array($result)) {
+                foreach ($result as $key => $value) {
+                    $article[$key] = is_string($value) ? $this->app['utils']->unsanitizeText($value) : $value;
+                }
+            }
+            return (!empty($article)) ? $article : false;
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            throw new \Exception($e);
+        }
+    }
+
+    /**
      * Check if a permanent link already exists
      *
      * @param link $permalink
@@ -283,7 +306,7 @@ EOD;
      * @throws \Exception
      * @return ambigous <boolean, integer>
      */
-    public function selectContentIDbyPermaLink($permalink)
+    public function selectArticleIDbyPermaLink($permalink)
     {
         try {
             $SQL = "SELECT `id` FROM `".self::$table_name."` WHERE `permanent_link`='$permalink' AND `status`!= 'DELETED'";

@@ -405,7 +405,7 @@ class Article extends Admin
             }
             else {
                 // check existing record
-                $id = $this->dataArticle->selectContentIDbyPermaLink($data['permanent_link']);
+                $id = $this->dataArticle->selectArticleIDbyPermaLink($data['permanent_link']);
                 if (($id !== false) && ($id != $data['id'])) {
                     // this permanent link is already in use
                     $this->setAlert('The permanent link <strong>/%link%</strong> is already in use by another article, please select an alternate one.',
