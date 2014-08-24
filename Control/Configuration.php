@@ -112,7 +112,7 @@ class Configuration
             'contact' => array(
                     'field' => array(
                         'predefined' => array(
-                            'contact_type',
+                            'contact_type'
                         ),
                         'visible' => array(
                             'person_gender',
@@ -152,6 +152,11 @@ class Configuration
                             'category_name'
                         ),
                         'tags' => array(
+                        ),
+                        'default_value' => array(
+                            'contact_type' => 'PERSON',
+                            'person_gender' => 'MALE',
+                            'address_country_code' => 'DE'
                         )
                     )
                 )

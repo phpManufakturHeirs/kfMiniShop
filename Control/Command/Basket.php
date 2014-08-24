@@ -13,21 +13,13 @@ namespace phpManufaktur\miniShop\Control\Command;
 
 use Silex\Application;
 use phpManufaktur\miniShop\Data\Shop\Basket as DataBasket;
-use phpManufaktur\miniShop\Control\Configuration;
-use phpManufaktur\Basic\Control\kitCommand\Basic;
-use phpManufaktur\miniShop\Data\Shop\Article as DataArticle;
-use phpManufaktur\miniShop\Data\Shop\Base as DataBase;
 
-class Basket extends Basic
+class Basket extends CommandBasic
 {
-    protected static $parameter = null;
     protected static $basket = array();
     protected static $identifier = null;
-    protected static $config = null;
 
     protected $dataBasket = null;
-    protected $dataArticle = null;
-    protected $dataBase = null;
 
     /**
      * (non-PHPdoc)
@@ -43,12 +35,6 @@ class Basket extends Basic
         $this->dataBasket->cleanup();
         // get the current basket
         self::$basket = $this->getBasket();
-
-        $Configuration = new Configuration($app);
-        self::$config = $Configuration->getConfiguration();
-
-        $this->dataArticle = new DataArticle($app);
-        $this->dataBase = new DataBase($app);
     }
 
     /**

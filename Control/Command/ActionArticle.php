@@ -11,38 +11,24 @@
 
 namespace phpManufaktur\miniShop\Control\Command;
 
-use phpManufaktur\Basic\Control\kitCommand\Basic;
 use Silex\Application;
-use phpManufaktur\miniShop\Control\Configuration;
-use phpManufaktur\miniShop\Data\Shop\Article as DataArticle;
-use phpManufaktur\miniShop\Data\Shop\Base as DataBase;
-use phpManufaktur\miniShop\Data\Shop\Group as DataGroup;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\Response;
 
-class ActionArticle extends Basic
+
+class ActionArticle extends CommandBasic
 {
-    protected static $config = null;
-    protected static $parameter = null;
-
-    protected $dataArticle = null;
-    protected $dataGroup = null;
-    protected $dataBase = null;
     protected $Basket = null;
 
+    /**
+     * (non-PHPdoc)
+     * @see \phpManufaktur\Basic\Control\kitCommand\Basic::initParameters()
+     */
     protected function initParameters(Application $app, $parameter_id=-1)
     {
         parent::initParameters($app, $parameter_id);
 
-        $Configuration = new Configuration($app);
-        self::$config = $Configuration->getConfiguration();
-
-        $this->dataArticle = new DataArticle($app);
-        $this->dataBase = new DataBase($app);
-        $this->dataGroup = new DataGroup($app);
         $this->Basket = new Basket($app);
 
         // get the kitCommand parameters
@@ -81,6 +67,11 @@ class ActionArticle extends Basic
 
     }
 
+    /**
+     * Get the small form to add this article to the basket
+     *
+     * @param array $data
+     */
     protected function getOrderForm($data=array())
     {
 
@@ -167,6 +158,11 @@ class ActionArticle extends Basic
         return $form->getForm();
     }
 
+    /**
+     * Show the detailed article description
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
     protected function showArticle()
     {
 
@@ -233,55 +229,30 @@ class ActionArticle extends Basic
                 'basket' => $this->Basket->getBasket()
             ));
 
-        // set the parameters for jQuery and CSS
-        $params = array();
+        // get the params to autoload jQuery and CSS
+        $params = $this->getResponseParameter();
+
         if (isset($article['id'])) {
             // set the page header and the canonical link
             $params['set_header'] = $article['id'];
             $params['canonical'] = $article['id'];
         }
-        $params['library'] = null;
-        if (self::$parameter['check_jquery']) {
-            if (self::$config['libraries']['enabled'] &&
-                !empty(self::$config['libraries']['jquery'])) {
-                // load all predefined jQuery files for the miniShop
-                foreach (self::$config['libraries']['jquery'] as $library) {
-                    if (!empty($params['library'])) {
-                        $params['library'] .= ',';
-                    }
-                    $params['library'] .= $library;
-                }
-            }
-        }
-        if (self::$parameter['load_css']) {
-            if (self::$config['libraries']['enabled'] &&
-            !empty(self::$config['libraries']['css'])) {
-                // load all predefined CSS files for the miniShop
-                foreach (self::$config['libraries']['css'] as $library) {
-                    if (!empty($params['library'])) {
-                        $params['library'] .= ',';
-                    }
-                    // attach to 'library' not to 'css' !!!
-                    $params['library'] .= $library;
-                }
-            }
 
-            // set the CSS parameter
-            $params['css'] = 'miniShop,css/minishop.min.css,'.$this->getPreferredTemplateStyle();
-        }
-
-        $response = new Response();
-        $response->headers->setCookie(new Cookie('minishop', 'test'));
         return $this->app->json(array(
             'parameter' => $params,
             'response' => $result
         ));
     }
 
+    /**
+     * General controller for the article handling
+     *
+     * @param Application $app
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
     public function Controller(Application $app)
     {
         $this->initParameters($app);
-
         return $this->showArticle();
     }
 
