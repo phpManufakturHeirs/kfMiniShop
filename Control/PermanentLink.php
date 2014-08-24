@@ -17,6 +17,7 @@ use phpManufaktur\miniShop\Data\Shop\Article as DataArticle;
 use phpManufaktur\miniShop\Data\Shop\Base as DataBase;
 use Carbon\Carbon;
 use phpManufaktur\Basic\Data\CMS\Page as DataPage;
+use phpManufaktur\miniShop\Control\Command\Basket;
 
 class PermanentLink
 {
@@ -24,6 +25,7 @@ class PermanentLink
     protected $dataArticle = null;
     protected $dataBase = null;
     protected $dataPage = null;
+    protected $Basket = null;
 
     protected static $config = null;
 
@@ -44,6 +46,7 @@ class PermanentLink
         $this->dataArticle = new DataArticle($app);
         $this->dataBase = new DataBase($app);
         $this->dataPage = new DataPage($app);
+        $this->Basket = new Basket($app);
     }
 
     /**
@@ -206,7 +209,126 @@ class PermanentLink
         $target_url = CMS_URL.$base['target_page_link'].'?'.http_build_query($parameter, '', '&');
 
         return $this->cURLexec($target_url, $page_id);
-        return __METHOD__;
+    }
+
+    /**
+     * Controller for the shopping basket
+     *
+     */
+    public function ControllerBasket(Application $app)
+    {
+        $this->initialize($app);
+
+        $basket = $this->Basket->getBasket();
+
+        if (empty($basket)) {
+            // the basket is empty - select a base configuration
+            if (false === ($bases = $this->dataBase->selectAllActive())) {
+                $app->abort(423, 'No active shop available!');
+            }
+            $base = $bases[0];
+        }
+        elseif (is_array($basket)) {
+            if (null === ($basket_article = array_shift($basket))) {
+                throw new \Exception('Invalid basket, can not read the content!');
+            }
+            if (false === ($article = $this->dataArticle->select($basket_article['id']))) {
+                throw new \Exception('Invalid article in basket!');
+            }
+            if (false === ($base = $this->dataBase->select($article['base_id']))) {
+                throw new \Exception('Can not get the base configuration from a basket article!');
+            }
+        }
+        else {
+            throw new \Exception('Invalid basket, can not read the content!');
+        }
+
+        $link = substr($base['target_page_link'], strlen($this->dataPage->getPageDirectory()), (strlen($this->dataPage->getPageExtension()) * -1));
+
+        if (false === ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
+            // the CMS page does not exists!
+            $message = str_ireplace('%link%', $base['target_page_link'], 'The CMS page <strong>%link%</strong> does not exists!');
+            $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
+            $app->abort(404, $message);
+        }
+
+        $parameter = array(
+            'command' => 'minishop',
+            'action' => 'basket',
+            'robots' => 'noindex,follow',
+            'basket' => $app['request']->request->get('form', null)
+        );
+
+        $queries = $this->app['request']->query->all();
+        foreach ($queries as $key => $value) {
+            if (!key_exists($key, $parameter) && !in_array($key, self::$ignore_parameters)) {
+                // pass all other parameters to the target page
+                $parameter[$key] = $value;
+            }
+        }
+
+        // create the target URL and set the needed parameters
+        $target_url = CMS_URL.$base['target_page_link'].'?'.http_build_query($parameter, '', '&');
+        return $this->cURLexec($target_url, $page_id);
+    }
+
+    /**
+     * Controller to order the articles from the basket
+     *
+     * @param Application $app
+     * @throws \Exception
+     */
+    public function ControllerOrder(Application $app)
+    {
+        $this->initialize($app);
+
+        $basket = $this->Basket->getBasket();
+
+        if (empty($basket)) {
+            $app->abort('423', 'No shopping basket available!');
+        }
+        elseif (is_array($basket)) {
+            if (null === ($basket_article = array_shift($basket))) {
+                throw new \Exception('Invalid basket, can not read the content!');
+            }
+            if (false === ($article = $this->dataArticle->select($basket_article['id']))) {
+                throw new \Exception('Invalid article in basket!');
+            }
+            if (false === ($base = $this->dataBase->select($article['base_id']))) {
+                throw new \Exception('Can not get the base configuration from a basket article!');
+            }
+        }
+        else {
+            throw new \Exception('Invalid basket, can not read the content!');
+        }
+
+        $link = substr($base['target_page_link'], strlen($this->dataPage->getPageDirectory()), (strlen($this->dataPage->getPageExtension()) * -1));
+
+        if (false === ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
+            // the CMS page does not exists!
+            $message = str_ireplace('%link%', $base['target_page_link'], 'The CMS page <strong>%link%</strong> does not exists!');
+            $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
+            $app->abort(404, $message);
+        }
+
+        $parameter = array(
+            'command' => 'minishop',
+            'action' => 'order',
+            'robots' => 'noindex,follow',
+            'order' => $app['request']->request->get('form', null)
+        );
+
+        $queries = $this->app['request']->query->all();
+        foreach ($queries as $key => $value) {
+            if (!key_exists($key, $parameter) && !in_array($key, self::$ignore_parameters)) {
+                // pass all other parameters to the target page
+                $parameter[$key] = $value;
+            }
+        }
+
+        // create the target URL and set the needed parameters
+        $target_url = CMS_URL.$base['target_page_link'].'?'.http_build_query($parameter, '', '&');
+        return $this->cURLexec($target_url, $page_id);
     }
 }
 

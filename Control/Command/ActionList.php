@@ -167,7 +167,7 @@ class ActionList extends Basic
             $this->setCommandParameters(self::$parameter);
         }
 
-        // check wether to use the flexcontent.css or not
+        // check wether to use the minishop.css or not
         self::$parameter['load_css'] = (isset(self::$parameter['load_css']) && ((self::$parameter['load_css'] == 0) || (strtolower(self::$parameter['load_css']) == 'false'))) ? false : true;
         // disable the jquery check?
         self::$parameter['check_jquery'] = (isset(self::$parameter['check_jquery']) && ((self::$parameter['check_jquery'] == 0) || (strtolower(self::$parameter['check_jquery']) == 'false'))) ? false : true;

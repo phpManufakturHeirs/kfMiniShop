@@ -10,7 +10,8 @@
 <!-- {{ _self.getTemplateName() }} -->
 <div id="minishop">
   <div class="container-fluid">    
-    {% include '@phpManufaktur/miniShop/Template/default/command/basket.twig' %}
+    {# show the shopping basket at the top #}
+    {% include '@phpManufaktur/miniShop/Template/default/command/include/basket.twig' %}
     
     {{ basic.alert }}
     

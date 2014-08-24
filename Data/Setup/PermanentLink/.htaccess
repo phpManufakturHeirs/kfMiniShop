@@ -1,3 +1,4 @@
+Options -Indexes
 # if your server is running Apache >= 2.2.16 you can use:
 #
 # FallbackResource %subdirectory%/kit2/bootstrap.php

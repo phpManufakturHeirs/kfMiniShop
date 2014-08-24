@@ -10,7 +10,8 @@
 <!-- {{ _self.getTemplateName() }} -->
 <div id="minishop">
   <div class="container-fluid">    
-    {% include '@phpManufaktur/miniShop/Template/default/command/basket.twig' %}
+    {# show the shopping basket at the top #}
+    {% include '@phpManufaktur/miniShop/Template/default/command/include/basket.twig' %}
     
     <h1>{{ article.article_name|default('Error'|trans) }}</h1>  
     
@@ -89,9 +90,9 @@
       
     {% endif %}
   </div>
-
-  <div class="switch-to-offers">
-    <a href="{{ shop_url }}"><i class="fa fa-arrow-circle-left"></i> {{ 'switch to the offers'|trans }}</a>
-  </div>
+  
+  {# show a link to the article list of the shop #}
+  {% include '@phpManufaktur/miniShop/Template/default/command/include/switch.list.twig' %}
+  
 </div>
 {% endspaceless %}

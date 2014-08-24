@@ -175,9 +175,12 @@ class Base extends Admin
             'empty_value' => '- please select -',
             'data' => isset($data['shipping_article']) ? $data['shipping_article'] : 'HIGHEST'
         ))
+        /*
         ->add('shipping_value_added_tax', 'text', array(
             'data' => number_format($shipping_value_added_tax, 2, $decimal_separator, $thousand_separator)
-        ));
+        ))
+        */
+        ;
 
 
         return $form->getForm();
@@ -218,7 +221,7 @@ class Base extends Admin
             $data['article_value_added_tax'] = $this->app['utils']->str2float($data['article_value_added_tax']);
             $data['order_minimum_price'] = $this->app['utils']->str2float($data['order_minimum_price']);
             $data['shipping_flatrate'] = $this->app['utils']->str2float($data['shipping_flatrate']);
-            $data['shipping_value_added_tax'] = $this->app['utils']->str2float($data['shipping_value_added_tax']);
+            //$data['shipping_value_added_tax'] = $this->app['utils']->str2float($data['shipping_value_added_tax']);
 
             $data['payment_methods'] = implode(',', $data['payment_methods']);
 

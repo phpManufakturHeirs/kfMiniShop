@@ -14,7 +14,13 @@ $app->get('%subdirectory%%permanentlink%/article/{name}',
     'phpManufaktur\miniShop\Control\PermanentLink::ControllerArticle');
 
 // routes for the basket
+$app->match('%subdirectory%%permanentlink%/basket',
+    'phpManufaktur\miniShop\Control\PermanentLink::ControllerBasket')
+    ->method('GET|POST');
 $app->post('%subdirectory%%permanentlink%/basket/add',
     'phpManufaktur\miniShop\Control\Command\ActionArticle::ControllerBasketAdd');
-$app->get('%subdirectory%%permanentlink%/basket/view',
-    'phpManufaktur\miniShop\Control\Command\Basket::ControllerBasketView');
+
+// routes for the order
+$app->match('%subdirectory%%permanentlink%/order',
+    'phpManufaktur\miniShop\Control\PermanentLink::ControllerOrder')
+    ->method('GET|POST');

@@ -6,6 +6,6 @@
   @copyright 2014 Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
   @license MIT License (MIT) http://www.opensource.org/licenses/MIT
 #}
-<div class="basket">
-  <a href="{{ permalink_base_url ~ '/basket/view' }}"><i class="fa fa-shopping-cart"></i> {{ 'Basket'|trans }}{% if basket|length > 0 %} <span class="badge">{{ basket|length }}</span>{% endif %}</a>
+<div class="switch-to-list">
+  <a href="{{ shop_url }}" class="btn btn-default" role="button"><i class="fa fa-arrow-circle-left"></i> {{ 'Switch to the article list'|trans }}</a>
 </div>

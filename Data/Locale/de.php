@@ -19,6 +19,10 @@ if ('á' != "\xc3\xa1") {
 return array(
   'Add article to cart'
     => 'Artikel dem Warenkorb hinzufügen',
+  'Add article to the shopping basket'
+    => 'Artikel zum Warenkorb hinzufügen',
+  'Added article <strong>%article%</strong> to the basket.'
+    => 'Der Artikel <strong>%article%</strong> wurde dem Warenkorb hinzugefügt.',
   'Advance payment'
     => 'Vorkasse',
   'Article'
@@ -83,6 +87,12 @@ return array(
     => 'ID',
   'Base name'
     => 'Basis Bezeichnung',
+  'Basket'
+    => 'Warenkorb',
+  'Changed quantity for the article <strong>%article%</strong> to <strong>%quantity%</strong>.'
+    => 'Die Bestellmenge für den Artikel <strong>%article%</strong> wurde auf <strong>%quantity%</strong> geändert.',
+  'Changed the quantity for article <strong>%article%</strong> from <strong>%old_quantity%</strong> to <strong>%new_quantity%</strong>.'
+    => 'Für den Artikel <strong>%article%</strong> wurde die Anzahl von <strong>%old_quantity%</strong> zu <strong>%new_quantity%</strong> geändert.',
   'Create a new article group'
     => 'Eine neue Artikelgruppe erstellen',
   'Create a new miniShop base'
@@ -109,6 +119,8 @@ return array(
     => 'Bruttopreis',
   'Information about the miniShop extension'
     => 'Informationen über die miniShop Erweiterung',
+  'Invalid quantity, ignored article.'
+    => 'Ungültige Mengenangabe, Artikel ignoriert.',
   'miniShop - About'
     => 'miniShop - Information',
   'miniShop for the kitFramework'
@@ -121,10 +133,16 @@ return array(
     => 'Kein Versand',
   'Not available'
     => 'nicht lieferbar',
+  'Number'
+    => 'Nummer',
   'On account'
     => 'auf Rechnung',
+  'Order'
+    => 'Bestellung',
   'Order minimum price'
     => 'Mindestbestellpreis',
+  'Order now'
+    => 'Jetzt bestellen',
   'Order number'
     => 'Bestellnummer',
   'Payment methods'
@@ -145,12 +163,20 @@ return array(
     => 'Bitte definieren Sie einen permanenten Link für diesen Artikel!',
   'Please submit a article ID!'
     => 'Bitte übermitteln Sie eine Artikel ID!',
+  'Price'
+    => 'Preis',
   'Publish date'
     => 'Im Shop ab',
   'Quantity'
     => 'Menge',
   'Quantity to order'
     => 'Bestellmenge',
+  'Refresh the shopping basket'
+    => 'Den Warenkorb aktualisieren',
+  'Removed article <strong>%article%</strong> from your shopping basket'
+    => 'Der Artikel <strong>%article%</strong> wurde aus dem Warenkorb entfernt.',
+  'Removed the article <strong>%article%</strong> from the basket.'
+    => 'Der Artikel <strong>%article%</strong>wurde aus dem Warenkorb entfernt.',
   'Select article image'
     => 'Abbildung auswählen',
   'select the highest shipping cost'
@@ -163,6 +189,8 @@ return array(
     => 'SEO: Keywords',
   'Seo title'
     => 'SEO: Title',
+  'Shipping & handling'
+    => 'Verpackung und Versand',
   'Shipping article'
     => 'Versandkostentyp: Artikel',
   'Shipping cost'
@@ -175,6 +203,8 @@ return array(
     => 'Versandkostentyp',
   'Shipping value added tax'
     => 'Umsatzsteuer (Versandkosten)',
+  'Subtotal'
+    => 'Zwischensumme',
   'Succesful created a new article group'
     => 'Es wurde eine neue Artikelgruppe angelegt.',
   'Succesful created a new miniShop Base'
@@ -183,10 +213,14 @@ return array(
     => 'Der neue Artikel wurde erfolgreich angelegt.',
   'Successful updated the article.'
     => 'Der Artikel wurde erfolgreich aktualisiert.',
+  'Sum include %vat%% value add tax = %vat-total% %currency%.'
+    => 'Betrag enthält %vat%% Umsatzssteuer = %vat-total% %currency%.',
+  'Sum total'
+    => 'Gesamtbetrag',
   'sum-up the shipping costs'
     => 'alle Versandkosten addieren',
-  'switch to the offers'
-    => 'zu den Angeboten',
+  'Switch to the article list'
+    => 'Zur Artikelliste wechseln',
   'Target page link'
     => 'Zielseite im CMS',
   'The article group <strong>%group%</strong> does not exists, please check the kitCommand!'
@@ -209,11 +243,29 @@ return array(
     => 'Der Bezeichner <strong>%name%</strong> wird bereits verwendet, bitte wählen Sie einen anderen Bezeichner.',
   'The permanent link <strong>/%link%</strong> is already in use by another article, please select an alternate one.'
     => 'Der permanente Link <strong>/%link%</strong> wird bereits von einem anderen Artikel verwendet, bitte legen Sie einen anderen Link fest.',
+  'The selected article is already in your basket.'
+    => 'Dieser Artikel befindet sich bereits in Ihrem Warenkorb.',
   'The short description can not be empty!'
     => 'Die Kurzbeschreibung darf nicht leer sein!',
   'There exists more than one base configurations, so you must set a base or a group as parameter!'
     => 'Es existiert mehr als eine Basis Einstellung, Sie müssen eine Basis oder eine Gruppe als Parameter festlegen!',
+  'Updated your shopping basket'
+    => 'Ihr Warenkorb wurde aktualisiert.',
+  'value add tax %vat%%'
+    => 'zzgl. %vat%% Umsatzsteuer',
   'VAT'
     => 'Umsatzsteuer',
+  'Your basket contain %count% articles'
+    => 'Ihr Warenkorb enthält %count% Artikel',
+  'Your basket contain one article'
+    => 'Ihr Warenkorb enthält einen Artikel',
+  'Your basket does not contain any article'
+    => 'Ihr Warenkorb ist leer',
+  'Your shopping basket'
+    => 'Ihr Warenkorb',
+  'Your shopping basket has not changed.'
+    => 'Ihr Warenkorb wurde nicht verändert.',
+  'Your shopping basket is empty.'
+    => 'Ihr Warenkorb ist leer.',
   
 );

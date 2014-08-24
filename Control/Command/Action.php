@@ -60,7 +60,9 @@ class Action extends Basic
 
         if (isset($GET['command']) && (strtolower($GET['command']) == 'minishop') &&
             isset($GET['action']) && (($GET['action'] == $parameter['action']) ||
-            (($GET['action'] == 'article') && ($parameter['action'] == 'list')))) {
+            (($GET['action'] == 'article') && ($parameter['action'] == 'list')) ||
+            (($GET['action'] == 'basket') && ($parameter['action'] == 'list')) ||
+            (($GET['action'] == 'order') && ($parameter['action'] == 'list')))) {
             // the command and parameters are set as GET from the CMS
             foreach ($GET as $key => $value) {
                 if (strtolower($key) == 'command') continue;
@@ -78,6 +80,12 @@ class Action extends Basic
             case 'article':
                 $ActionArticle = new ActionArticle();
                 return $ActionArticle->Controller($app);
+            case 'basket':
+                $Basket = new Basket();
+                return $Basket->ControllerBasketView($app);
+            case 'order':
+                $Order = new Order();
+                return $Order->ControllerOrder($app);
             default:
                 $this->setAlert('The parameter <code>%parameter%[%value%]</code> for the kitCommand <code>~~ %command% ~~</code> is unknown, please check the parameter and the given value!',
                     array('%parameter%' => 'action', '%value%' => $parameter['action'], '%command%' => 'flexContent'), self::ALERT_TYPE_DANGER);

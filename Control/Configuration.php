@@ -108,7 +108,53 @@ class Configuration
                     'font-awesome/latest/css/font-awesome.min.css',
                     'jquery/lightbox/latest/css/lightbox.css'
                 )
-            )
+            ),
+            'contact' => array(
+                    'field' => array(
+                        'predefined' => array(
+                            'contact_type',
+                        ),
+                        'visible' => array(
+                            'person_gender',
+                            'person_first_name',
+                            'person_last_name',
+                            'company_name',
+                            'company_department',
+                            'communication_email',
+                            'communication_phone',
+                            'address_street',
+                            'address_zip',
+                            'address_city',
+                            'address_country_code',
+                            'extra_fields',
+                            'special_fields'
+                        ),
+                        'required' => array(
+                            'person_gender',
+                            'person_last_name',
+                            'company_name',
+                            'address_street',
+                            'address_zip',
+                            'address_city',
+                            'address_country_code',
+                        ),
+                        'hidden' => array(
+                            'contact_id',
+                            'contact_type',
+                            'category_id',
+                            'category_type_id',
+                            'person_id',
+                            'company_id',
+                            'address_id'
+                        ),
+                        'readonly' => array(
+                            'contact_status',
+                            'category_name'
+                        ),
+                        'tags' => array(
+                        )
+                    )
+                )
         );
     }
 
