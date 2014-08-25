@@ -17,6 +17,14 @@ if ('á' != "\xc3\xa1") {
 }
 
 return array(
+    'Indicate that the contact has used the miniShop'
+    => 'Der Kontakt hat den miniShop verwendet',
+    'Minishop'
+    => 'miniShop',
+  'a company or a organization'
+    => 'eine Firma, Organisation, Behörde oder Verein',
+  'a private person'
+    => 'eine Privatperson, Familie',
   'Add article to cart'
     => 'Artikel dem Warenkorb hinzufügen',
   'Add article to the shopping basket'
@@ -77,6 +85,8 @@ return array(
     => 'in Kürze lieferbar',
   'Available soon order'
     => 'kann bestellt werden, in Kürze lieferbar',
+  'Back to the shopping basket'
+    => 'Zurück zum Warenkorb',
   'Base configuration'
     => 'Basis Einstellungen',
   'Base configuration delete checkbox'
@@ -113,6 +123,8 @@ return array(
     => 'Jeder Wert in einer eigenen Zeile, verwenden Sie <key>UMSCHALT</key>+<key>EINGABE</key>',
   'Flatrate for shipping and handling'
     => 'Versandkostenpauschale',
+  'Form action'
+    => 'Aktion',
   'Free of shipping costs'
     => 'Versandkostenfrei',
   'Gross price'
@@ -129,6 +141,8 @@ return array(
     => 'Nettopreis',
   'net price without tax'
     => 'zzgl. Umsatzsteuer',
+  'Next step'
+    => 'Nächster Schritt',
   'No shipping'
     => 'Kein Versand',
   'Not available'
@@ -137,8 +151,12 @@ return array(
     => 'Nummer',
   'On account'
     => 'auf Rechnung',
+  'Ooops, unknown form action: %action%'
+    => 'Uuuuups, unbekannte Aktion für das Formular: %action%',
   'Order'
     => 'Bestellung',
+  'Order for'
+    => 'Bestellung für',
   'Order minimum price'
     => 'Mindestbestellpreis',
   'Order now'
@@ -267,5 +285,5 @@ return array(
     => 'Ihr Warenkorb wurde nicht verändert.',
   'Your shopping basket is empty.'
     => 'Ihr Warenkorb ist leer.',
-  
+
 );

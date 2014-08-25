@@ -63,9 +63,9 @@ class PermanentLink
         // set the general cURL options
         $options = array(
             CURLOPT_HEADER => false,
-            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_FOLLOWLOCATION => true, // follow redirects!
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_USERAGENT => 'kitFramework::flexContent',
+            CURLOPT_USERAGENT => 'kitFramework::miniShop',
             CURLOPT_TIMEOUT => 30,
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_SSL_VERIFYPEER => false
@@ -114,19 +114,6 @@ class PermanentLink
                     'type' => 'alert-danger'));
         }
 
-        if (!curl_errno($ch)) {
-            $info = curl_getinfo($ch);
-            if ($info['http_code'] > 299) {
-                // bad request
-                $error = 'Error - HTTP Status Code: '.$info['http_code'].' - '.$url;
-                $this->app['monolog']->addError($error, array(__METHOD__, __LINE__));
-                return $this->app['twig']->render($this->app['utils']->getTemplateFile(
-                    '@phpManufaktur/Basic/Template', 'kitcommand/bootstrap/noframe/alert.twig'),
-                    array(
-                        'content' => $error,
-                        'type' => 'alert-danger'));
-            }
-        }
         curl_close($ch);
         return $result;
     }
