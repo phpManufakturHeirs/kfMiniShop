@@ -54,6 +54,7 @@ class Base
         `shipping_article` ENUM ('HIGHEST', 'LOWEST', 'SUM_UP') DEFAULT 'HIGHEST',
         `shipping_value_added_tax` FLOAT(11) NOT NULL DEFAULT 0,
         `payment_methods` SET ('ADVANCE_PAYMENT', 'ON_ACCOUNT', 'PAYPAL') NOT NULL DEFAULT 'ADVANCE_PAYMENT,PAYPAL',
+        `terms_conditions_link` VARCHAR(256) NOT NULL DEFAULT '',
         `status` ENUM ('ACTIVE', 'LOCKED', 'DELETED') DEFAULT 'ACTIVE',
         `timestamp` TIMESTAMP,
         PRIMARY KEY (`id`),

@@ -17,10 +17,10 @@ if ('á' != "\xc3\xa1") {
 }
 
 return array(
-    'Indicate that the contact has used the miniShop'
-    => 'Der Kontakt hat den miniShop verwendet',
-    'Minishop'
-    => 'miniShop',
+    'Payment method'
+        => 'Zahlungsweise',
+    'Confirm order now'
+    => 'Ich bestelle hiermit diese(n) Artikel',
   'a company or a organization'
     => 'eine Firma, Organisation, Behörde oder Verein',
   'a private person'
@@ -129,10 +129,16 @@ return array(
     => 'Versandkostenfrei',
   'Gross price'
     => 'Bruttopreis',
+  'I have read and accept the <a href="%url%" target="_blank">terms and conditions</a>'
+    => 'Ich habe die <a href="%url%" target="_blank">Allgemeinen Geschäftsbedingungen</a> gelesen und akzeptiert',
+  'Indicate that the contact has used the miniShop'
+    => 'Der Kontakt hat den miniShop verwendet',
   'Information about the miniShop extension'
     => 'Informationen über die miniShop Erweiterung',
   'Invalid quantity, ignored article.'
     => 'Ungültige Mengenangabe, Artikel ignoriert.',
+  'Minishop'
+    => 'miniShop',
   'miniShop - About'
     => 'miniShop - Information',
   'miniShop for the kitFramework'
@@ -241,6 +247,8 @@ return array(
     => 'Zur Artikelliste wechseln',
   'Target page link'
     => 'Zielseite im CMS',
+  'Terms conditions link'
+    => 'AGB, Seite im CMS',
   'The article group <strong>%group%</strong> does not exists, please check the kitCommand!'
     => 'Die Artikelgruppe <strong>%group%</strong> existiert nicht, bitte prüfen Sie das kitCommand!',
   'The article group has successful updated.'

@@ -96,6 +96,7 @@ class Order extends CommandBasic
             'type' => 'hidden',
             'data' => 'check_contact'
         );
+
         $payments = array();
         foreach (explode(',', $order['base']['payment_methods']) as $payment) {
             if (!empty($payment)) {
@@ -114,6 +115,25 @@ class Order extends CommandBasic
             'multiple' => false,
             'preferred_choices' => array()
         );
+
+        if (!empty($order['base']['terms_conditions_link'])) {
+            $special[] = array(
+                'enabled' => true,
+                'name' => 'terms_and_conditions',
+                'type' => 'checkbox',
+                'required' => true,
+                'label' => $this->app['translator']->trans('I have read and accept the <a href="%url%" target="_blank">terms and conditions</a>',
+                    array('%url%' => CMS_URL.$order['base']['terms_conditions_link']))
+            );
+        }
+
+        $special[] = array(
+            'enabled' => true,
+            'name' => 'confirm_order_now',
+            'type' => 'checkbox',
+            'required' => true
+        );
+
         $field['special'] = $special;
 
         if (false === ($form = $ContactForm->getFormContact($data, $field))) {
@@ -121,7 +141,7 @@ class Order extends CommandBasic
         }
 
         $result = $this->app['twig']->render($this->app['utils']->getTemplateFile(
-            '@phpManufaktur/miniShop/Template', 'command/start.order.twig',
+            '@phpManufaktur/miniShop/Template', 'command/order.twig',
             $this->getPreferredTemplateStyle()),
             array(
                 'alert' => $this->getAlert(),
@@ -233,28 +253,6 @@ class Order extends CommandBasic
                 throw new \Exception('Unknown payment method '.$query['order']['payment']);
         }
 
-        echo $query['order']['payment_method'];
-        //print_r($query);
-
-        $result = $this->app['twig']->render($this->app['utils']->getTemplateFile(
-            '@phpManufaktur/miniShop/Template', 'command/start.order.twig',
-            $this->getPreferredTemplateStyle()),
-            array(
-                'alert' => $this->getAlert(),
-                'config' => self::$config,
-                'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
-                //'form' => $form->createView(),
-                'order' => $order,
-                'shop_url' => CMS_URL.$order['base']['target_page_link']
-            ));
-
-        // get the params to autoload jQuery and CSS
-        $params = $this->getResponseParameter();
-
-        return $this->app->json(array(
-            'parameter' => $params,
-            'response' => $result
-        ));
     }
 
     protected function selectAddressType()
@@ -265,7 +263,7 @@ class Order extends CommandBasic
         $form = $this->getAddressTypeForm();
 
         $result = $this->app['twig']->render($this->app['utils']->getTemplateFile(
-            '@phpManufaktur/miniShop/Template', 'command/start.order.twig',
+            '@phpManufaktur/miniShop/Template', 'command/order.twig',
             $this->getPreferredTemplateStyle()),
             array(
                 'alert' => $this->getAlert(),

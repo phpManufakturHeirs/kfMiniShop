@@ -180,6 +180,12 @@ class Base extends Admin
             'data' => number_format($shipping_value_added_tax, 2, $decimal_separator, $thousand_separator)
         ))
         */
+        ->add('terms_conditions_link', 'choice', array(
+            'choices' => $target_links,
+            'data' => isset($data['terms_conditions_link']) ? $data['terms_conditions_link'] : null,
+            'empty_value' => '- please select -',
+            'required' => false
+        ))
         ;
 
 

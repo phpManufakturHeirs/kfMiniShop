@@ -24,8 +24,13 @@
     {% form_theme form '@phpManufaktur/Contact/Template/default/pattern/form.fields.horizontal.twig' %}
     
     <form action="{{ permalink_base_url ~ '/order' }}" class="form-horizontal" method="post" role="form">
-      {{ form_rest(form) }}      
-      <button class="btn btn-default pull-right" type="submit">{{ 'Next step'|trans }} <i class="fa fa-arrow-circle-right"></i></button>
+      {{ form_rest(form) }}   
+      <div class="row">
+        <div class="col-sm-9 col-sm-offset-3">
+      <a href="{{ permalink_base_url ~ '/basket' }}" class="btn btn-default" role="button">{{ 'Abort'|trans }}</a>&nbsp;
+      <button class="btn btn-default pull-right" type="submit">{% if form.form_action.vars.value == 'check_contact' %}{{ 'Order now'|trans }}{% else %}{{ 'Next step'|trans }} <i class="fa fa-arrow-circle-right"></i>{% endif %}</button>
+        </div>
+      </div>
     </form>
     
   </div>

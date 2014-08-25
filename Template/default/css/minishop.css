@@ -49,10 +49,13 @@
 #minishop .order-container label:first-child {
   margin-left: 0;
 }
+#minishop span.required {
+  color: #da251d;
+  font-weight: bold;
+}
 #minishop label.required:after {
   content: '*';
   color: #da251d;
-  background-color: transparent;
   font-weight: bold;
 }
 
