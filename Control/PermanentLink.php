@@ -18,14 +18,16 @@ use phpManufaktur\miniShop\Data\Shop\Base as DataBase;
 use Carbon\Carbon;
 use phpManufaktur\Basic\Data\CMS\Page as DataPage;
 use phpManufaktur\miniShop\Control\Command\Basket;
+use phpManufaktur\Basic\Control\Pattern\Alert;
+use phpManufaktur\miniShop\Data\Shop\Order as DataOrder;
 
-class PermanentLink
+class PermanentLink extends Alert
 {
-    protected $app = null;
     protected $dataArticle = null;
     protected $dataBase = null;
     protected $dataPage = null;
     protected $Basket = null;
+    protected $dataOrder = null;
 
     protected static $config = null;
 
@@ -38,7 +40,7 @@ class PermanentLink
      */
     protected function initialize(Application $app)
     {
-        $this->app = $app;
+        parent::initialize($app);
 
         $Config = new Configuration($app);
         self::$config = $Config->getConfiguration();
@@ -47,6 +49,7 @@ class PermanentLink
         $this->dataBase = new DataBase($app);
         $this->dataPage = new DataPage($app);
         $this->Basket = new Basket($app);
+        $this->dataOrder = new DataOrder($app);
     }
 
     /**
@@ -272,6 +275,30 @@ class PermanentLink
         $basket = $this->Basket->getBasket();
 
         if (empty($basket)) {
+            // there exists no basket!
+            if (false !== ($bases = $this->dataBase->selectAllActive())) {
+                // try to redirect to shop article list
+                $link = substr($bases[0]['target_page_link'], strlen($this->dataPage->getPageDirectory()), (strlen($this->dataPage->getPageExtension()) * -1));
+                if (false !== ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
+                    $this->setAlert('Your shopping basket is empty.', array(), self::ALERT_TYPE_WARNING);
+                    $parameter = array(
+                        'command' => 'minishop',
+                        'action' => 'list',
+                        'alert' => base64_encode($this->getAlert())
+                    );
+                    $queries = $this->app['request']->query->all();
+                    foreach ($queries as $key => $value) {
+                        if (!key_exists($key, $parameter) && !in_array($key, self::$ignore_parameters)) {
+                            // pass all other parameters to the target page
+                            $parameter[$key] = $value;
+                        }
+                    }
+                    // create the target URL and set the needed parameters
+                    $target_url = CMS_URL.$bases[0]['target_page_link'].'?'.http_build_query($parameter, '', '&');
+                    return $this->cURLexec($target_url, $page_id);
+                }
+            }
+            // not possible to redirect to a shop link:
             $app->abort('423', 'No shopping basket available!');
         }
         elseif (is_array($basket)) {
@@ -315,6 +342,67 @@ class PermanentLink
 
         // create the target URL and set the needed parameters
         $target_url = CMS_URL.$base['target_page_link'].'?'.http_build_query($parameter, '', '&');
+        return $this->cURLexec($target_url, $page_id);
+    }
+
+    /**
+     * Controller to send again the activation mail for a order
+     *
+     * @param Application $app
+     * @param integer $id
+     * @return string
+     */
+    public function ControllerSendActivation(Application $app, $id)
+    {
+        return __METHOD__;
+    }
+
+    /**
+     * Double Opt-in - check the GUID
+     *
+     * @param Application $app
+     * @param string $guid
+     */
+    public function ControllerDoubleOptIn(Application $app, $guid)
+    {
+        $this->initialize($app);
+
+        if (false === ($order = $this->dataOrder->selectByGUID($guid))) {
+            $app->abort(404, 'The submitted GUID does not exists.');
+        }
+
+        if ($order['status'] !== 'PENDING') {
+            $app->abort(410, 'The submitted GUID is no longer valid.');
+        }
+
+        $data = unserialize($order['data']);
+
+        $link = substr($data['base']['target_page_link'], strlen($this->dataPage->getPageDirectory()), (strlen($this->dataPage->getPageExtension()) * -1));
+
+        if (false === ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
+            // the CMS page does not exists!
+            $message = str_ireplace('%link%', $data['base']['target_page_link'], 'The CMS page <strong>%link%</strong> does not exists!');
+            $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
+            $app->abort(404, $message);
+        }
+
+        $parameter = array(
+            'command' => 'minishop',
+            'action' => 'guid',
+            'robots' => 'noindex,follow',
+            'guid' => $guid
+        );
+
+        $queries = $this->app['request']->query->all();
+        foreach ($queries as $key => $value) {
+            if (!key_exists($key, $parameter) && !in_array($key, self::$ignore_parameters)) {
+                // pass all other parameters to the target page
+                $parameter[$key] = $value;
+            }
+        }
+
+        // create the target URL and set the needed parameters
+        $target_url = CMS_URL.$data['base']['target_page_link'].'?'.http_build_query($parameter, '', '&');
         return $this->cURLexec($target_url, $page_id);
     }
 }

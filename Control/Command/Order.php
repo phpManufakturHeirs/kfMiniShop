@@ -19,16 +19,19 @@ use phpManufaktur\Contact\Data\Contact\CategoryType;
 use phpManufaktur\miniShop\Control\Payment\AdvancePayment;
 use phpManufaktur\miniShop\Control\Payment\OnAccount;
 use phpManufaktur\miniShop\Control\Payment\PayPal;
+use phpManufaktur\miniShop\Data\Shop\Order as DataOrder;
 
 class Order extends CommandBasic
 {
     protected $Basket = null;
+    protected $dataOrder = null;
 
     protected function initParameters(Application $app, $parameter_id=-1)
     {
         parent::initParameters($app, $parameter_id);
 
         $this->Basket = new Basket($app);
+        $this->dataOrder = new DataOrder($app);
     }
 
     /**
@@ -127,13 +130,6 @@ class Order extends CommandBasic
             );
         }
 
-        $special[] = array(
-            'enabled' => true,
-            'name' => 'confirm_order_now',
-            'type' => 'checkbox',
-            'required' => true
-        );
-
         $field['special'] = $special;
 
         if (false === ($form = $ContactForm->getFormContact($data, $field))) {
@@ -223,7 +219,8 @@ class Order extends CommandBasic
 
         }
         else {
-            // insert a new contact record
+            // insert a new contact record - important, set the status to PENDING
+            $contact['contact']['contact_status'] = 'PENDING';
             if (!$this->app['contact']->insert($contact, $contact_id)) {
                 // problem insert the record - go back to the first dialog
                 return $this->checkAddressType($query['order']);
@@ -312,5 +309,89 @@ class Order extends CommandBasic
 
         // start the order by selecting the address type
         return $this->selectAddressType();
+    }
+
+    public function ControllerGUID(Application $app)
+    {
+        $this->initParameters($app);
+
+        $query = $this->getCMSgetParameters();
+
+        if (!isset($query['guid'])) {
+            $app->abort(404, 'The submitted GUID does not exists.');
+        }
+
+        if (false === ($order = $this->dataOrder->selectByGUID($query['guid']))) {
+            $app->abort(404, 'The submitted GUID does not exists.');
+        }
+
+        if ($order['status'] !== 'PENDING') {
+            $app->abort(410, 'The submitted GUID is no longer valid.');
+        }
+
+        $data = array(
+            'status' => 'CONFIRMED',
+            'confirmation_timestamp' => date('Y-m-d H:i:s')
+        );
+        $this->dataOrder->update($order['id'], $data);
+
+        switch ($order['payment_method']) {
+            case 'ADVANCE_PAYMENT':
+                $AdvancePayment = new AdvancePayment($app);
+                if ($AdvancePayment->sendOrderConfirmation($order['id'])) {
+                    $this->setAlert('Thank you for the order, we have send you a confirmation mail.',
+                        array(), self::ALERT_TYPE_SUCCESS);
+                }
+                break;
+            default:
+                throw new \Exception('Unknown payment method: '.$order['payment_method']);
+        }
+
+        // get the params to autoload jQuery and CSS
+        $params = $this->getResponseParameter();
+
+        return $this->app->json(array(
+            'parameter' => $params,
+            'response' => $this->getAlert()
+        ));
+    }
+
+    public function sendAccountConfirmation($order_id)
+    {
+        // get the order
+        if (false === ($order = $this->dataOrder->select($order_id))) {
+            throw new \Exception("The order with the ID $order_id does not exists!");
+        }
+        // and the desired contact
+        $contact = $this->app['contact']->selectOverview($order['contact_id']);
+
+        // send a confirmation
+        $body = $this->app['twig']->render($this->app['utils']->getTemplateFile(
+            '@phpManufaktur/miniShop/Template', 'command/mail/customer/double-opt-in.twig',
+            $this->getPreferredTemplateStyle()),
+            array(
+                'order' => $order,
+                'config' => self::$config,
+                'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
+                'contact' => $contact
+            ));
+
+        // send a email to the customer
+        $message = \Swift_Message::newInstance()
+            ->setSubject($this->app['translator']->trans('Your miniShop order'))
+            ->setFrom(array(SERVER_EMAIL_ADDRESS => SERVER_EMAIL_NAME))
+            ->setTo($contact['communication_email'])
+            ->setBody($body)
+            ->setContentType('text/html');
+
+        // send the message
+        $failedRecipients = null;
+        if (!$this->app['mailer']->send($message, $failedRecipients))  {
+            $this->setAlert("Can't send mail to %recipients%.", array(
+                '%recipients%' => implode(',', $failedRecipients)), self::ALERT_TYPE_WARNING);
+            return false;
+        }
+
+        return true;
     }
 }

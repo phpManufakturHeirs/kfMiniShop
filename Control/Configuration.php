@@ -109,6 +109,13 @@ class Configuration
                     'jquery/lightbox/latest/css/lightbox.css'
                 )
             ),
+            'banking_account' => array(
+                'owner' => '',
+                'bank_name' => '',
+                'iban' => '',
+                'bic' => '',
+                'reason' => 'miniShop Order #%order_id%/%date%'
+            ),
             'contact' => array(
                     'field' => array(
                         'predefined' => array(

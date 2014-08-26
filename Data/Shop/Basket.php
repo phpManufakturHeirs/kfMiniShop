@@ -41,7 +41,7 @@ class Basket
         $SQL = <<<EOD
     CREATE TABLE IF NOT EXISTS `$table` (
         `id` INT(11) NOT NULL AUTO_INCREMENT,
-        `identifier` VARCHAR(64) NOT NULL DEFAULT 'DEFAULT',
+        `identifier` VARCHAR(64) NOT NULL DEFAULT '',
         `data` TEXT NOT NULL,
         `timestamp` TIMESTAMP,
         PRIMARY KEY (`id`),

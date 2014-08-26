@@ -16,6 +16,7 @@ use phpManufaktur\miniShop\Data\Shop\Base;
 use phpManufaktur\miniShop\Data\Shop\Group;
 use phpManufaktur\miniShop\Data\Shop\Article;
 use phpManufaktur\miniShop\Data\Shop\Basket;
+use phpManufaktur\miniShop\Data\Shop\Order;
 
 class Uninstall
 {
@@ -41,6 +42,9 @@ class Uninstall
 
         $basketTable = new Basket($app);
         $basketTable->dropTable();
+
+        $orderTable = new Order($app);
+        $orderTable->dropTable();
 
         return $app['translator']->trans('Successfull uninstalled the extension %extension%.',
             array('%extension%' => 'miniShop'));

@@ -188,8 +188,8 @@ class Basket extends CommandBasic
             }
             $article['basket_id'] = $key;
             $article['quantity'] = $item['quantity'];
-            $article['variant_value'] = $item['variant_value'];
-            $article['variant_value_2'] = $item['variant_value_2'];
+            $article['variant_value'] = isset($item['variant_value']) ? $item['variant_value'] : null;
+            $article['variant_value_2'] = isset($item['variant_value_2']) ? $item['variant_value_2'] : null;
             $article['subtotal'] = $article['quantity'] * $article['article_price'];
 
             // add subtotal

@@ -131,6 +131,10 @@ class ActionList extends CommandBasic
             $this->setCommandParameters(self::$parameter);
         }
 
+        if (isset(self::$parameter['alert'])) {
+            $this->setAlertUnformatted(base64_decode(self::$parameter['alert']));
+        }
+
         // check wether to use the minishop.css or not
         self::$parameter['load_css'] = (isset(self::$parameter['load_css']) && ((self::$parameter['load_css'] == 0) || (strtolower(self::$parameter['load_css']) == 'false'))) ? false : true;
         // disable the jquery check?

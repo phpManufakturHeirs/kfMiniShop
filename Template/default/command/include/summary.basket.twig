@@ -12,7 +12,7 @@
   {% endif %}
   {% set currency_symbol = attribute(config.currency, order.base.currency_iso).symbol %}
   {% set decimal_separator = 'DECIMAL_SEPARATOR'|trans({},'messages', order.base.locale|lower) %}
-  {% set thousand_separator = 'THOUSAND_SEPARAROR'|trans({},'messages', order.base.locale|lower) %}
+  {% set thousand_separator = 'THOUSAND_SEPARATOR'|trans({},'messages', order.base.locale|lower) %}
   <div class="basket-summary">
     <div class="table-responsive">
       <table class="table table-condensed table-hover">
