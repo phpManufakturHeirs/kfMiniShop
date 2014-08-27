@@ -49,6 +49,24 @@ class CommandBasic extends Basic
         // disable the jquery check?
         self::$parameter['check_jquery'] = (isset(self::$parameter['check_jquery']) && ((self::$parameter['check_jquery'] == 0) || (strtolower(self::$parameter['check_jquery']) == 'false'))) ? false : true;
 
+        self::$parameter['id'] = (isset(self::$parameter['id']) && is_numeric(self::$parameter['id'])) ? intval(self::$parameter['id']) : null;
+
+        self::$parameter['groups'] = (isset(self::$parameter['groups']) && !empty(self::$parameter['groups'])) ? self::$parameter['groups'] : null;
+        self::$parameter['base'] = (isset(self::$parameter['base']) && !empty(self::$parameter['base'])) ? self::$parameter['base'] : null;
+
+        self::$parameter['image_max_width'] = (isset(self::$parameter['image_max_width']) && is_numeric(self::$parameter['image_max_width'])) ? intval(self::$parameter['image_max_width']) : 200;
+        self::$parameter['image_max_height'] = (isset(self::$parameter['image_max_height']) && is_numeric(self::$parameter['image_max_height'])) ? intval(self::$parameter['image_max_height']) : 200;
+
+        self::$parameter['rating'] = (isset(self::$parameter['rating']) && ((self::$parameter['rating'] == 0) || (strtolower(self::$parameter['rating']) == 'false'))) ? false : true;
+        self::$parameter['comments'] = (isset(self::$parameter['comments']) && ((self::$parameter['comments'] == 1) || (strtolower(self::$parameter['comments']) == 'true'))) ? true : false;
+
+        self::$parameter['limit'] = (isset(self::$parameter['limit']) && is_numeric(self::$parameter['limit'])) ? intval(self::$parameter['limit']) : -1;
+        self::$parameter['order_by'] = (isset(self::$parameter['order_by'])) ? strtolower(self::$parameter['order_by']) : 'article_name';
+        self::$parameter['order_direction'] = isset(self::$parameter['order_direction']) ? strtoupper(self::$parameter['order_direction']) : 'ASC';
+
+        self::$parameter['thumbnail_max_width'] = (isset(self::$parameter['thumbnail_max_width']) && is_numeric(self::$parameter['thumbnail_max_width'])) ? intval(self::$parameter['thumbnail_max_width']) : 150;
+        self::$parameter['thumbnail_max_height'] = (isset(self::$parameter['thumbnail_max_height']) && is_numeric(self::$parameter['thumbnail_max_height'])) ? intval(self::$parameter['thumbnail_max_height']) : 150;
+
     }
 
     /**

@@ -125,7 +125,7 @@ class AdvancePayment extends Payment
             $this->Basket->removeBasket();
             $date = date($this->app['translator']->trans('DATETIME_FORMAT'), strtotime($pending['order_timestamp']));
             $link = CMS_URL.self::$config['permanentlink']['directory'].'/order/send/'.$pending['id'];
-            $this->setAlert('<p>We\'re sorry, but there exists already a pending order of date <strong>%date%</strong>. Please confirm or discard this order before creating a new one.</p><p>We can <a href="%link%">send you again the confirmation mail</a>.</p>',
+            $this->setAlert('<p>We are sorry, but there exists already a pending order of date <strong>%date%</strong>. Please confirm or discard this order before creating a new one.</p><p>We can <a href="%link%">send you again the confirmation mail</a>.</p>',
                 array('%date%' => $date, '%link%' => $link), self::ALERT_TYPE_WARNING);
             return $this->promptAlert();
         }

@@ -89,6 +89,10 @@ class ActionList extends CommandBasic
             $articles = $this->dataArticle->selectByGroup($groups);
         }
 
+        if (isset($articles[0]['base_id'])) {
+            $base = $this->dataBase->select($articles[0]['base_id']);
+        }
+
         $result = $this->app['twig']->render($this->app['utils']->getTemplateFile(
             '@phpManufaktur/miniShop/Template', 'command/list.article.twig',
             $this->getPreferredTemplateStyle()),
@@ -98,7 +102,8 @@ class ActionList extends CommandBasic
                 'parameter' => self::$parameter,
                 'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
                 'articles' => $articles,
-                'basket' => $this->Basket->getBasket()
+                'basket' => $this->Basket->getBasket(),
+                'base' => $base
             ));
 
         // get the params to autoload jQuery and CSS
@@ -113,9 +118,6 @@ class ActionList extends CommandBasic
     public function Controller(Application $app)
     {
         $this->initParameters($app);
-
-        // get the kitCommand parameters
-        self::$parameter = $this->getCommandParameters();
 
         // check the CMS GET parameters
         $GET = $this->getCMSgetParameters();
@@ -134,18 +136,6 @@ class ActionList extends CommandBasic
         if (isset(self::$parameter['alert'])) {
             $this->setAlertUnformatted(base64_decode(self::$parameter['alert']));
         }
-
-        // check wether to use the minishop.css or not
-        self::$parameter['load_css'] = (isset(self::$parameter['load_css']) && ((self::$parameter['load_css'] == 0) || (strtolower(self::$parameter['load_css']) == 'false'))) ? false : true;
-        // disable the jquery check?
-        self::$parameter['check_jquery'] = (isset(self::$parameter['check_jquery']) && ((self::$parameter['check_jquery'] == 0) || (strtolower(self::$parameter['check_jquery']) == 'false'))) ? false : true;
-
-        self::$parameter['groups'] = (isset(self::$parameter['groups']) && !empty(self::$parameter['groups'])) ? self::$parameter['groups'] : null;
-        self::$parameter['base'] = (isset(self::$parameter['base']) && !empty(self::$parameter['base'])) ? self::$parameter['base'] : null;
-
-        self::$parameter['limit'] = (isset(self::$parameter['limit']) && is_numeric(self::$parameter['limit'])) ? intval(self::$parameter['limit']) : -1;
-        self::$parameter['order_by'] = (isset(self::$parameter['order_by'])) ? strtolower(self::$parameter['order_by']) : 'article_name';
-        self::$parameter['order_direction'] = isset(self::$parameter['order_direction']) ? strtoupper(self::$parameter['order_direction']) : 'ASC';
 
         if (isset(self::$parameter['status']) && !empty(self::$parameter['status'])) {
             if (strpos(self::$parameter['status'], ',')) {

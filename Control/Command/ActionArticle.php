@@ -31,9 +31,6 @@ class ActionArticle extends CommandBasic
 
         $this->Basket = new Basket($app);
 
-        // get the kitCommand parameters
-        self::$parameter = $this->getCommandParameters();
-
         // check the CMS GET parameters
         $GET = $this->getCMSgetParameters();
         if (isset($GET['command']) && ($GET['command'] == 'minishop')
@@ -51,20 +48,6 @@ class ActionArticle extends CommandBasic
         if (isset(self::$parameter['alert'])) {
             $this->setAlertUnformatted(base64_decode(self::$parameter['alert']));
         }
-
-        // check wether to use the flexcontent.css or not
-        self::$parameter['load_css'] = (isset(self::$parameter['load_css']) && ((self::$parameter['load_css'] == 0) || (strtolower(self::$parameter['load_css']) == 'false'))) ? false : true;
-        // disable the jquery check?
-        self::$parameter['check_jquery'] = (isset(self::$parameter['check_jquery']) && ((self::$parameter['check_jquery'] == 0) || (strtolower(self::$parameter['check_jquery']) == 'false'))) ? false : true;
-
-        self::$parameter['id'] = (isset(self::$parameter['id']) && is_numeric(self::$parameter['id'])) ? intval(self::$parameter['id']) : null;
-
-        self::$parameter['groups'] = (isset(self::$parameter['groups']) && !empty(self::$parameter['groups'])) ? self::$parameter['groups'] : null;
-        self::$parameter['base'] = (isset(self::$parameter['base']) && !empty(self::$parameter['base'])) ? self::$parameter['base'] : null;
-
-        self::$parameter['image_max_width'] = (isset(self::$parameter['image_max_width']) && is_numeric(self::$parameter['image_max_width'])) ? intval(self::$parameter['image_max_width']) : 200;
-        self::$parameter['image_max_height'] = (isset(self::$parameter['image_max_height']) && is_numeric(self::$parameter['image_max_height'])) ? intval(self::$parameter['image_max_height']) : 200;
-
     }
 
     /**

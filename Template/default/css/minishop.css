@@ -142,3 +142,16 @@
   text-align: right;
   margin-bottom: 10px;
 }
+
+#minishop .rating-container {
+  max-height: 20px;
+  margin: 15px 0;
+}
+#minishop .rating-container.small {
+  max-height: 12px;
+  margin: 0;
+}
+#minishop .article-list .article-price {
+  text-align: right;
+  font-weight: bold;
+}

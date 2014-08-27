@@ -9,7 +9,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>{{ 'Order by advance payment'|trans }}</title>
+    <title>{{ 'Order by on account payment'|trans }}</title>
   </head>
   <body>
     {% spaceless %}
@@ -18,7 +18,7 @@
       {% set decimal_separator = 'DECIMAL_SEPARATOR'|trans({},'messages', order_data.base.locale|lower) %}
       {% set thousand_separator = 'THOUSAND_SEPARATOR'|trans({},'messages', order_data.base.locale|lower) %}
 
-      <p><strong>{{ 'Order by advance payment'|trans }}</strong></p>
+      <p><strong>{{ 'Order by on account payment'|trans }}</strong></p>
       
       {% if contact.contact_type == 'COMPANY' %}
         <p>{{ contact.company_name }}

@@ -352,9 +352,47 @@ class PermanentLink extends Alert
      * @param integer $id
      * @return string
      */
-    public function ControllerSendActivation(Application $app, $id)
+    public function ControllerSendActivation(Application $app, $order_id)
     {
-        return __METHOD__;
+        $this->initialize($app);
+
+        if (false === ($order = $this->dataOrder->select($order_id))) {
+            $app->abort(404, 'The submitted order ID does not exists.');
+        }
+
+        if ($order['status'] !== 'PENDING') {
+            $app->abort(410, 'This order was already handled and can not activated again.');
+        }
+
+        $data = unserialize($order['data']);
+
+        $link = substr($data['base']['target_page_link'], strlen($this->dataPage->getPageDirectory()), (strlen($this->dataPage->getPageExtension()) * -1));
+
+        if (false === ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
+            // the CMS page does not exists!
+            $message = str_ireplace('%link%', $data['base']['target_page_link'], 'The CMS page <strong>%link%</strong> does not exists!');
+            $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
+            $app->abort(404, $message);
+        }
+
+        $parameter = array(
+            'command' => 'minishop',
+            'action' => 'send-guid',
+            'robots' => 'noindex,follow',
+            'order_id' => $order_id
+        );
+
+        $queries = $this->app['request']->query->all();
+        foreach ($queries as $key => $value) {
+            if (!key_exists($key, $parameter) && !in_array($key, self::$ignore_parameters)) {
+                // pass all other parameters to the target page
+                $parameter[$key] = $value;
+            }
+        }
+
+        // create the target URL and set the needed parameters
+        $target_url = CMS_URL.$data['base']['target_page_link'].'?'.http_build_query($parameter, '', '&');
+        return $this->cURLexec($target_url, $page_id);
     }
 
     /**

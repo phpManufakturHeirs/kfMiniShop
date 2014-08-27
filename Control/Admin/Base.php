@@ -229,6 +229,12 @@ class Base extends Admin
             $data['shipping_flatrate'] = $this->app['utils']->str2float($data['shipping_flatrate']);
             //$data['shipping_value_added_tax'] = $this->app['utils']->str2float($data['shipping_value_added_tax']);
 
+            // @todo enable PayPal!
+            if (in_array('PAYPAL', $data['payment_methods'])) {
+                unset($data['payment_methods'][array_search('PAYPAL', $data['payment_methods'])]);
+                $this->setAlert('PayPal will be enabled in a coming miniShop release, please test using other payment methods!');
+            }
+
             $data['payment_methods'] = implode(',', $data['payment_methods']);
 
             if (empty($data['payment_methods'])) {

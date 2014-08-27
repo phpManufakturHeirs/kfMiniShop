@@ -311,17 +311,20 @@ class Order extends CommandBasic
         return $this->selectAddressType();
     }
 
+    /**
+     * Controller check the submitted GUID, redirect to the desired
+     * payment method and handle the order
+     *
+     * @param Application $app
+     * @throws \Exception
+     */
     public function ControllerGUID(Application $app)
     {
         $this->initParameters($app);
 
         $query = $this->getCMSgetParameters();
 
-        if (!isset($query['guid'])) {
-            $app->abort(404, 'The submitted GUID does not exists.');
-        }
-
-        if (false === ($order = $this->dataOrder->selectByGUID($query['guid']))) {
+        if (!isset($query['guid']) || (false === ($order = $this->dataOrder->selectByGUID($query['guid'])))) {
             $app->abort(404, 'The submitted GUID does not exists.');
         }
 
@@ -343,6 +346,13 @@ class Order extends CommandBasic
                         array(), self::ALERT_TYPE_SUCCESS);
                 }
                 break;
+            case 'ON_ACCOUNT':
+                $OnAccount = new OnAccount($app);
+                if ($OnAccount->sendOrderConfirmation($order['id'])) {
+                    $this->setAlert('Thank you for the order, we have send you a confirmation mail.',
+                        array(), self::ALERT_TYPE_SUCCESS);
+                }
+                break;
             default:
                 throw new \Exception('Unknown payment method: '.$order['payment_method']);
         }
@@ -356,6 +366,41 @@ class Order extends CommandBasic
         ));
     }
 
+    public function ControllerSendGUID(Application $app)
+    {
+        $this->initParameters($app);
+
+        $query = $this->getCMSgetParameters();
+
+        if (!isset($query['order_id']) || (false === ($order = $this->dataOrder->select($query['order_id'])))) {
+            $app->abort(404, 'The submitted order ID does not exists.');
+        }
+
+        if ($order['status'] !== 'PENDING') {
+            $app->abort(410, 'This order was already handled and can not activated again.');
+        }
+
+        if ($this->sendAccountConfirmation($query['order_id'])) {
+            $this->setAlert('Thank you for the order. We have send you a email with a confirmation link, please use this link to finish your order.',
+                array(), self::ALERT_TYPE_SUCCESS);
+        }
+
+        // get the params to autoload jQuery and CSS
+        $params = $this->getResponseParameter();
+
+        return $this->app->json(array(
+            'parameter' => $params,
+            'response' => $this->getAlert()
+        ));
+    }
+
+    /**
+     * Send a mail to confirm the account
+     *
+     * @param integer $order_id
+     * @throws \Exception
+     * @return boolean
+     */
     public function sendAccountConfirmation($order_id)
     {
         // get the order

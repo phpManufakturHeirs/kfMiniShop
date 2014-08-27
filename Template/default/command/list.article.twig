@@ -16,11 +16,32 @@
     {{ basic.alert }}
     
     {% if articles|length > 0 %}
+      
+      {% set currency_symbol = attribute(config.currency, base.currency_iso).symbol %}
+      {% set decimal_separator = 'DECIMAL_SEPARATOR'|trans({},'messages', base.locale|lower) %}
+      {% set thousand_separator = 'THOUSAND_SEPARATOR'|trans({},'messages', base.locale|lower) %}
+
       {% for article in articles %}
-        <a href="{{ permalink_base_url ~ '/article/' ~ article.permanent_link }}"><h2>{{ article.article_name }}</h2></a>
-        <div>{{ article.description_short }}</div>
-        <div>{{ article.article_price }}</div>
-        <div><a href="{{ permalink_base_url ~ '/article/' ~ article.permanent_link }}">DETAIL</a></div>
+        <div class="media article-list">
+          <a class="pull-left" href="{{ permalink_base_url ~ '/article/' ~ article.permanent_link }}">
+            {% set img = image(article.article_image, parameter.thumbnail_max_width, parameter.thumbnail_max_height) %}
+            <img class="media-object" src="{{ img.src }}" alt="{{ article.article_name }}">
+          </a>
+          <div class="media-body">
+            <a href="{{ permalink_base_url ~ '/article/' ~ article.permanent_link }}"><h2 class="media-heading">{{ article.article_name }}</h2></a>
+            {% if parameter.rating %}
+              <div class="rating-container small">
+                {{ kitCommand('rating', {'type':'MINISHOP','id':article.id,'size':'small'}) }}
+              </div>
+            {% endif %}
+            {{ article.description_short }}
+            <div class="article-price">
+              <a href="{{ permalink_base_url ~ '/article/' ~ article.permanent_link }}">
+                {{ article.article_price|number_format(2, decimal_separator, thousand_separator) }} {{ currency_symbol }}
+              </a>
+            </div>
+          </div>
+        </div>
       {% endfor %}
     {% endif %}
     

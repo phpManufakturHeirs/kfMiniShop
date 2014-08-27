@@ -17,14 +17,12 @@ if ('á' != "\xc3\xa1") {
 }
 
 return array(
-    'Payment method'
-        => 'Zahlungsweise',
-    'Confirm order now'
-    => 'Ich bestelle hiermit diese(n) Artikel',
   'a company or a organization'
     => 'eine Firma, Organisation, Behörde oder Verein',
   'a private person'
     => 'eine Privatperson, Familie',
+  'Account owner'
+    => 'Kontoinhaber',
   'Add article to cart'
     => 'Artikel dem Warenkorb hinzufügen',
   'Add article to the shopping basket'
@@ -87,6 +85,8 @@ return array(
     => 'kann bestellt werden, in Kürze lieferbar',
   'Back to the shopping basket'
     => 'Zurück zum Warenkorb',
+  'Bank name'
+    => 'Bankname',
   'Base configuration'
     => 'Basis Einstellungen',
   'Base configuration delete checkbox'
@@ -99,10 +99,14 @@ return array(
     => 'Basis Bezeichnung',
   'Basket'
     => 'Warenkorb',
+  'BIC'
+    => 'BIC',
   'Changed quantity for the article <strong>%article%</strong> to <strong>%quantity%</strong>.'
     => 'Die Bestellmenge für den Artikel <strong>%article%</strong> wurde auf <strong>%quantity%</strong> geändert.',
   'Changed the quantity for article <strong>%article%</strong> from <strong>%old_quantity%</strong> to <strong>%new_quantity%</strong>.'
     => 'Für den Artikel <strong>%article%</strong> wurde die Anzahl von <strong>%old_quantity%</strong> zu <strong>%new_quantity%</strong> geändert.',
+  'Confirm order now'
+    => 'Ich bestelle hiermit diese(n) Artikel',
   'Create a new article group'
     => 'Eine neue Artikelgruppe erstellen',
   'Create a new miniShop base'
@@ -131,6 +135,8 @@ return array(
     => 'Bruttopreis',
   'I have read and accept the <a href="%url%" target="_blank">terms and conditions</a>'
     => 'Ich habe die <a href="%url%" target="_blank">Allgemeinen Geschäftsbedingungen</a> gelesen und akzeptiert',
+  'IBAN'
+    => 'IBAN',
   'Indicate that the contact has used the miniShop'
     => 'Der Kontakt hat den miniShop verwendet',
   'Information about the miniShop extension'
@@ -143,6 +149,10 @@ return array(
     => 'miniShop - Information',
   'miniShop for the kitFramework'
     => 'miniShop für das kitFramework',
+  'miniShop order by advance payment'
+    => 'miniShop Bestellung - Vorauszahlung',
+  'miniShop order by on account payment'
+    => 'miniShop Bestellung - auf Rechung',
   'Net price'
     => 'Nettopreis',
   'net price without tax'
@@ -161,6 +171,10 @@ return array(
     => 'Uuuuups, unbekannte Aktion für das Formular: %action%',
   'Order'
     => 'Bestellung',
+  'Order by advance payment'
+    => 'Bestellung durch Vorauszahlung',
+  'Order by on account payment'
+    => 'Bestellung auf Rechnung',
   'Order for'
     => 'Bestellung für',
   'Order minimum price'
@@ -169,6 +183,8 @@ return array(
     => 'Jetzt bestellen',
   'Order number'
     => 'Bestellnummer',
+  'Payment method'
+    => 'Zahlungsweise',
   'Payment methods'
     => 'Zahlungsmethoden',
   'Paypal'
@@ -195,6 +211,8 @@ return array(
     => 'Menge',
   'Quantity to order'
     => 'Bestellmenge',
+  'Reason'
+    => 'Verwendungszweck',
   'Refresh the shopping basket'
     => 'Den Warenkorb aktualisieren',
   'Removed article <strong>%article%</strong> from your shopping basket'
@@ -249,6 +267,10 @@ return array(
     => 'Zielseite im CMS',
   'Terms conditions link'
     => 'AGB, Seite im CMS',
+  'Thank you for the order, we have send you a confirmation mail.'
+    => 'Vielen Dank für Ihre Bestellung, wir haben Ihnen eine Bestätigung zugesendet.',
+  'Thank you for the order. We have send you a email with a confirmation link, please use this link to finish your order.'
+    => 'Vielen Dank für Ihre Bestellung. Wir haben Ihnen eine E-Mail mit einem Bestätigungslink zugesendet, bitte verwenden Sie diesen Link um Ihre Bestellung abzuschließen.',
   'The article group <strong>%group%</strong> does not exists, please check the kitCommand!'
     => 'Die Artikelgruppe <strong>%group%</strong> existiert nicht, bitte prüfen Sie das kitCommand!',
   'The article group has successful updated.'
@@ -275,23 +297,29 @@ return array(
     => 'Die Kurzbeschreibung darf nicht leer sein!',
   'There exists more than one base configurations, so you must set a base or a group as parameter!'
     => 'Es existiert mehr als eine Basis Einstellung, Sie müssen eine Basis oder eine Gruppe als Parameter festlegen!',
+  'Total amount'
+    => 'Gesamtbetrag',
   'Updated your shopping basket'
     => 'Ihr Warenkorb wurde aktualisiert.',
   'value add tax %vat%%'
     => 'zzgl. %vat%% Umsatzsteuer',
   'VAT'
     => 'Umsatzsteuer',
+  '<p>We are sorry, but there exists already a pending order of date <strong>%date%</strong>. Please confirm or discard this order before creating a new one.</p><p>We can <a href="%link%">send you again the confirmation mail</a>.</p>'
+    => '<p>Entschuldigung, aber es existiert noch eine unbestätigte Bestellung vom <strong>%date%</strong>. Bitte bestätigen oder verwerfen Sie diese Bestellung bevor Sie eine neue aufgeben.</p><p>Wir können Ihnen die <a href="%link%">Bestätigungsmail erneut zusenden</a>.</p>',
   'Your basket contain %count% articles'
     => 'Ihr Warenkorb enthält %count% Artikel',
   'Your basket contain one article'
     => 'Ihr Warenkorb enthält einen Artikel',
   'Your basket does not contain any article'
     => 'Ihr Warenkorb ist leer',
+  'Your miniShop order'
+    => 'Ihre miniShop Bestellung',
   'Your shopping basket'
     => 'Ihr Warenkorb',
   'Your shopping basket has not changed.'
     => 'Ihr Warenkorb wurde nicht verändert.',
   'Your shopping basket is empty.'
     => 'Ihr Warenkorb ist leer.',
-
+  
 );

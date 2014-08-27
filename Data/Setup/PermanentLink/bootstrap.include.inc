@@ -24,8 +24,8 @@ $app->post('%subdirectory%%permanentlink%/basket/add',
 $app->match('%subdirectory%%permanentlink%/order',
     'phpManufaktur\miniShop\Control\PermanentLink::ControllerOrder')
     ->method('GET|POST');
-$app->get('%subdirectory%%permanentlink%/order/send/{id}',
+$app->get('%subdirectory%%permanentlink%/order/send/{order_id}',
     'phpManufaktur\miniShop\Control\PermanentLink::ControllerSendActivation')
-    ->assert('id', '\d+');
+    ->assert('order_id', '\d+');
 $app->get('%subdirectory%%permanentlink%/order/confirm/{guid}',
     'phpManufaktur\miniShop\Control\PermanentLink::ControllerDoubleOptIn');
