@@ -126,6 +126,64 @@ $app->post('/admin/minishop/article/image/remove/id/{article_id}',
     'phpManufaktur\miniShop\Control\Admin\Article::ControllerImageRemove')
     ->assert('article_id', '\d+');
 
+$app->get('/admin/minishop/order/list',
+    'phpManufaktur\miniShop\Control\Admin\Order::Controller');
+$app->get('/admin/minishop/order/view/id/{order_id}',
+    'phpManufaktur\miniShop\Control\Admin\Order::ControllerView')
+    ->assert('order_id', '\d+');
+
+// handling the contacts in miniShop ...
+$app->match('/admin/minishop/contact/list',
+    'phpManufaktur\miniShop\Control\Admin\ContactList::Controller');
+$app->match('/admin/minishop/contact/list/page/{page}',
+    'phpManufaktur\miniShop\Control\Admin\ContactList::Controller')
+    ->assert('page', '\d+');
+$app->match('/admin/minishop/contact/search',
+    'phpManufaktur\miniShop\Control\Admin\ContactSearch::Controller');
+$app->match('/admin/minishop/contact/select',
+    'phpManufaktur\miniShop\Control\Admin\ContactSelect::Controller');
+$app->match('/admin/minishop/contact/edit/id/{contact_id}',
+    'phpManufaktur\miniShop\Control\Admin\ContactSelect::Controller')
+    ->assert('contact_id', '\d+');
+$app->match('/admin/minishop/contact/person/edit',
+    'phpManufaktur\miniShop\Control\Admin\ContactPerson::Controller');
+$app->match('/admin/minishop/contact/person/edit/id/{contact_id}',
+    'phpManufaktur\miniShop\Control\Admin\ContactPerson::Controller')
+    ->assert('contact_id', '\d+');
+$app->match('/admin/minishop/contact/company/edit',
+    'phpManufaktur\miniShop\Control\Admin\ContactCompany::Controller');
+$app->match('/admin/minishop/contact/company/edit/id/{contact_id}',
+    'phpManufaktur\miniShop\Control\Admin\ContactCompany::Controller')
+    ->assert('contact_id', '\d+');
+$app->match('/admin/minishop/contact/category/list',
+    'phpManufaktur\miniShop\Control\Admin\Contact\CategoryList::Controller');
+$app->match('/admin/minishop/contact/category/edit',
+    'phpManufaktur\miniShop\Control\Admin\Contact\CategoryEdit::Controller');
+$app->match('/admin/minishop/contact/category/edit/id/{category_id}',
+    'phpManufaktur\miniShop\Control\Admin\Contact\CategoryEdit::Controller')
+    ->assert('category_id', '\d+');
+$app->match('/admin/minishop/contact/extra/list',
+    'phpManufaktur\miniShop\Control\Admin\Contact\ExtraList::Controller');
+$app->match('/admin/minishop/contact/extra/edit',
+    'phpManufaktur\miniShop\Control\Admin\Contact\ExtraEdit::Controller');
+$app->match('/admin/minishop/contact/extra/edit/id/{type_id}',
+    'phpManufaktur\miniShop\Control\Admin\Contact\ExtraEdit::Controller')
+    ->assert('type_id', '\d+');
+$app->match('/admin/minishop/contact/title/list',
+    'phpManufaktur\miniShop\Control\Admin\Contact\TitleList::Controller');
+$app->match('/admin/minishop/contact/title/edit',
+    'phpManufaktur\miniShop\Control\Admin\Contact\TitleEdit::Controller');
+$app->match('/admin/minishop/contact/title/edit/id/{title_id}',
+    'phpManufaktur\miniShop\Control\Admin\Contact\TitleEdit::Controller')
+    ->assert('title_id', '\d+');
+$app->match('/admin/minishop/contact/tag/list',
+    'phpManufaktur\miniShop\Control\Admin\Contact\TagList::Controller');
+$app->match('/admin/minishop/contact/tag/edit',
+    'phpManufaktur\miniShop\Control\Admin\Contact\TagEdit::Controller');
+$app->match('/admin/minishop/contact/tag/edit/id/{tag_id}',
+    'phpManufaktur\miniShop\Control\Admin\Contact\TagEdit::Controller')
+    ->assert('tag_id', '\d+');
+
 /**
  * kitCommand routes
  */

@@ -35,7 +35,7 @@
                 {% endif %}
               </td>
               <td class="article">
-                <div class="name"><a href="{{ permalink_base_url ~ '/article/' ~ article.permanent_link }}">{{ article.article_name }}</a></div>
+                <div class="name"><a href="{{ permalink_base_url ~ '/article/' ~ article.permanent_link }}" target="_blank">{{ article.article_name }}</a></div>
                 <div class="description">{{ article.description_short }}</div>
                 {% if article.variant_value|length > 0 or article.variant_value_2|length > 0 %}
                   <div class="variant">

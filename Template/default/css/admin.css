@@ -22,6 +22,9 @@ label {
   width: 100%;
   text-align: right;
 }
+.checkbox label {
+  text-align: left;
+}
 @media (max-width: 767px) {
   label {
     text-align: left;
@@ -123,4 +126,50 @@ image-button.remove {
   font-size: smaller;
   color: #c0c0c0;
   margin-bottom: 0;
+}
+
+td.sum-total,
+td.shipping,
+td.vat-total,
+th.price,
+td.price,
+td.sub-total,
+th.sub-total {
+  text-align: right;
+}
+td.sum-total {
+  font-weight: bold;
+}
+
+td.no-border {
+  border: none !important;
+}
+
+td.article .variant .name {
+  font-weight: bold;
+}
+td.article .variant .value {
+  margin-right: 5px;
+  font-style: italic;
+}
+
+.hint.vat-total {
+  margin-top: 20px;
+  text-align: right;
+  color: #777;
+  font-size: smaller;
+}
+
+.address {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  margin-left: 200px;
+}
+.address .info {
+  margin-top: 20px;
+  color: #777;
+}
+
+input[type=search] {
+  width: auto !important;
 }

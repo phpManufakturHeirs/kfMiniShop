@@ -90,6 +90,33 @@ class Admin extends Alert
                         'active' => ($active == 'article')
                     );
                     break;
+                case 'orders':
+                    $toolbar[$tab] = array(
+                        'name' => 'orders',
+                        'text' => $this->app['translator']->trans('Orders'),
+                        'hint' => $this->app['translator']->trans('View all orders you have received'),
+                        'link' => FRAMEWORK_URL.'/admin/minishop/order/list'.self::$usage_param,
+                        'active' => ($active == 'orders')
+                    );
+                    break;
+                case 'contact_list':
+                    $toolbar[$tab] = array(
+                        'name' => 'contact_list',
+                        'text' => $this->app['translator']->trans('Customer list'),
+                        'hint' => $this->app['translator']->trans('List of all available contacts'),
+                        'link' => FRAMEWORK_URL.'/admin/minishop/contact/list'.self::$usage_param,
+                        'active' => ($active == 'contact_list')
+                    );
+                    break;
+                case 'contact_edit':
+                    $toolbar[$tab] = array(
+                        'name' => 'contact_edit',
+                        'text' => $this->app['translator']->trans('Customer'),
+                        'hint' => $this->app['translator']->trans('Create a new contact'),
+                        'link' => FRAMEWORK_URL.'/admin/minishop/contact/select'.self::$usage_param,
+                        'active' => ($active == 'contact_edit')
+                    );
+                    break;
             }
         }
         return $toolbar;
@@ -118,6 +145,15 @@ class Admin extends Alert
                 break;
             case 'article':
                 $route = '/admin/minishop/article/list';
+                break;
+            case 'orders':
+                $route = '/admin/minishop/order/list';
+                break;
+            case 'contact_list':
+                $route = '/admin/minishop/contact/list';
+                break;
+            case 'contact_edit':
+                $route = '/admin/minishop/contact/select';
                 break;
             default:
                 throw new \Exception('Invalid default nav_tab in configuration: '.self::$config['nav_tabs']['default']);

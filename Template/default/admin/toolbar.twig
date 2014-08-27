@@ -11,6 +11,12 @@
             <i class="fa fa-sitemap"></i>
           {% elseif item.name == 'article' %}
             <i class="fa fa-shopping-cart"></i>
+          {% elseif item.name == 'orders' %}
+            <i class="fa fa-truck"></i>
+          {% elseif item.name == 'contact_list' %}
+            <i class="fa fa-users"></i>
+          {% elseif item.name == 'contact_edit' %}
+            <i class="fa fa-user"></i>
           {% endif %}
           {% if item.name != 'about' %}  
             <span class="visible-lg pull-right">&nbsp;{{ item.text|trans }}</span>  

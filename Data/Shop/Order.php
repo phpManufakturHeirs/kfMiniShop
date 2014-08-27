@@ -166,4 +166,37 @@ EOD;
             throw new \Exception($e);
         }
     }
+
+    /**
+     * Select all orders, except deleted, sort by order timestamp, descending
+     *
+     * @throws \Exception
+     * @return Ambigous <boolean, array>
+     */
+    public function selectAll($max_days=0)
+    {
+        try {
+            if ($max_days > 0) {
+                $dt = new Carbon();
+                $dt->subDays($max_days);
+                $ts = $dt->format('Y-m-d H:i:s');
+                $SQL = "SELECT * FROM `".self::$table_name."` WHERE `status` != 'DELETED' AND ".
+                    "`order_timestamp` > '$ts' ORDER BY `order_timestamp` DESC";
+            }
+            else {
+                $SQL = "SELECT * FROM `".self::$table_name."` WHERE `status` != 'DELETED' ORDER BY `order_timestamp` DESC";
+            }
+            $results = $this->app['db']->fetchAll($SQL);
+            $orders = array();
+            if (is_array($results)) {
+                foreach ($results as $result) {
+                    $result['data'] = unserialize($result['data']);
+                    $orders[] = $result;
+                }
+            }
+            return (!empty($orders)) ? $orders : false;
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            throw new \Exception($e);
+        }
+    }
 }

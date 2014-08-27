@@ -46,12 +46,15 @@ class Configuration
         return array(
             'nav_tabs' => array(
                 'order' => array(
+                    'orders',
+                    'contact_list',
+                    'contact_edit',
                     'article',
                     'group',
                     'base',
                     'about'
                 ),
-                'default' => 'article'
+                'default' => 'about'
             ),
             'locale' => array(
                 'EN',
@@ -116,57 +119,173 @@ class Configuration
                 'bic' => '',
                 'reason' => 'miniShop Order #%order_id%/%date%'
             ),
+            'basket' => array(
+                'lifetime_hours' => 6
+            ),
+            'order' => array(
+                'admin' => array(
+                    'list' => array(
+                        'max_days' => 30
+                    )
+                )
+            ),
             'contact' => array(
-                    'field' => array(
-                        'predefined' => array(
-                            'contact_type'
-                        ),
-                        'visible' => array(
-                            'person_gender',
-                            'person_first_name',
-                            'person_last_name',
-                            'company_name',
-                            'company_department',
-                            'communication_email',
-                            'communication_phone',
-                            'address_street',
-                            'address_zip',
-                            'address_city',
-                            'address_country_code',
-                            'extra_fields',
-                            'special_fields'
-                        ),
-                        'required' => array(
-                            'person_gender',
-                            'person_last_name',
-                            'company_name',
-                            'address_street',
-                            'address_zip',
-                            'address_city',
-                            'address_country_code',
-                        ),
-                        'hidden' => array(
-                            'contact_id',
-                            'contact_type',
-                            'category_id',
-                            'category_type_id',
-                            'person_id',
-                            'company_id',
-                            'address_id'
-                        ),
-                        'readonly' => array(
-                            'contact_status',
-                            'category_name'
-                        ),
-                        'tags' => array(
-                        ),
-                        'default_value' => array(
-                            'contact_type' => 'PERSON',
-                            'person_gender' => 'MALE',
-                            'address_country_code' => 'DE'
+                'field' => array(
+                    'predefined' => array(
+                        'contact_type'
+                    ),
+                    'visible' => array(
+                        'person_gender',
+                        'person_first_name',
+                        'person_last_name',
+                        'company_name',
+                        'company_department',
+                        'communication_email',
+                        'communication_phone',
+                        'address_street',
+                        'address_zip',
+                        'address_city',
+                        'address_country_code',
+                        'extra_fields',
+                        'special_fields'
+                    ),
+                    'required' => array(
+                        'person_gender',
+                        'person_last_name',
+                        'company_name',
+                        'address_street',
+                        'address_zip',
+                        'address_city',
+                        'address_country_code',
+                    ),
+                    'hidden' => array(
+                        'contact_id',
+                        'contact_type',
+                        'category_id',
+                        'category_type_id',
+                        'person_id',
+                        'company_id',
+                        'address_id'
+                    ),
+                    'readonly' => array(
+                        'contact_status',
+                        'category_name'
+                    ),
+                    'tags' => array(
+                    ),
+                    'default_value' => array(
+                        'contact_type' => 'PERSON',
+                        'person_gender' => 'MALE',
+                        'address_country_code' => 'DE'
+                    )
+                ),
+                'admin' => array(
+                    'person' => array(
+                        'field' => array(
+                            'predefined' => array(),
+                            'visible' => array(
+                                'contact_status',
+                                'category_name',
+                                'category_access',
+                                'tags',
+                                'person_gender',
+                                'person_title',
+                                'person_first_name',
+                                'person_last_name',
+                                'person_birthday',
+                                'communication_email',
+                                'communication_phone',
+                                'communication_cell',
+                                'communication_url',
+                                'address_street',
+                                'address_zip',
+                                'address_city',
+                                'address_country_code',
+                                'note',
+                                'extra_fields',
+                                'special_fields'
+                            ),
+                            'required' => array(
+                                'communication_email'
+                            ),
+                            'hidden' => array(
+                                'contact_id',
+                                'contact_type',
+                                'category_id',
+                                'category_type_id',
+                                'person_id',
+                                'company_id',
+                                'address_id'
+                            ),
+                            'readonly' => array(
+                                'category_access'
+                            ),
+                            'tags' => array(),
+                            'route' => array(
+                                'person' => '/admin/minishop/contact/person/edit',
+                                'tag' => '/admin/minishop/contact/tag/list',
+                                'category' => '/admin/minishop/contact/category/list',
+                                'title' => '/admin/minishop/contact/title/list',
+                                'list' => '/admin/minishop/contact/list'
+                            )
+                        )
+                    ),
+                    'company' => array(
+                        'field' => array(
+                            'predefined' => array(),
+                            'visible' => array(
+                                'contact_status',
+                                'category_name',
+                                'category_access',
+                                'tags',
+                                'company_name',
+                                'company_department',
+                                'communication_email',
+                                'communication_phone',
+                                'communication_fax',
+                                'communication_url',
+                                'address_street',
+                                'address_zip',
+                                'address_city',
+                                'address_country_code',
+                                'address_delivery_street',
+                                'address_delivery_zip',
+                                'address_delivery_city',
+                                'address_delivery_country_code',
+                                'address_billing_street',
+                                'address_billing_zip',
+                                'address_billing_city',
+                                'address_billing_country_code',
+                                'note',
+                                'extra_fields',
+                                'special_fields'
+                            ),
+                            'required' => array(
+                                'communication_email'
+                            ),
+                            'hidden' => array(
+                                'contact_id',
+                                'contact_type',
+                                'category_id',
+                                'category_type_id',
+                                'company_id',
+                                'person_id',
+                                'address_id'
+                            ),
+                            'readonly' => array(
+                                'category_access'
+                            ),
+                            'tags' => array(),
+                            'route' => array(
+                                'company' => '/admin/minishop/contact/company/edit',
+                                'tag' => '/admin/minishop/contact/tag/list',
+                                'category' => '/admin/minishop/contact/category/list',
+                                'list' => '/admin/minishop/contact/list'
+                            )
                         )
                     )
                 )
+            )
         );
     }
 

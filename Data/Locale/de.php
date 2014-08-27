@@ -107,6 +107,12 @@ return array(
     => 'Für den Artikel <strong>%article%</strong> wurde die Anzahl von <strong>%old_quantity%</strong> zu <strong>%new_quantity%</strong> geändert.',
   'Confirm order now'
     => 'Ich bestelle hiermit diese(n) Artikel',
+  'Confirmation timestamp'
+    => 'Bestätigung',
+  'Contact ID <strong>%contact_id%</strong> assigned to order ID <strong>%order_id%</strong> does no longer exists!'
+    => 'Die Kontakt ID <strong>%contact_id%</strong>, die der Bestellung mit der ID <strong>%order_id%</strong> zugeordnet ist, existiert nicht mehr!',
+  'Contact ID <strong>%contact_id%</strong> assigned to order ID <strong>%order_id%</strong> is marked as <strong>DELETED</strong>.'
+    => 'Die Kontakt ID <strong>%contact_id%</strong>, die der Bestellung mit der ID <strong>%order_id%</strong> zugeordnet ist, ist als <strong>GELÖSCHT</strong> markiert,',
   'Create a new article group'
     => 'Eine neue Artikelgruppe erstellen',
   'Create a new miniShop base'
@@ -115,6 +121,8 @@ return array(
     => 'Währung',
   'Currency iso'
     => 'Währung',
+  'Customer list'
+    => 'Kundenliste',
   'Define and edit base configurations for the miniShop'
     => 'Anlegen und Bearbeiten von Basis Einstellungen für den miniShop',
   'Define and edit the article groups for the miniShop'
@@ -177,12 +185,20 @@ return array(
     => 'Bestellung auf Rechnung',
   'Order for'
     => 'Bestellung für',
+  'Order list'
+    => 'Bestellungen',
   'Order minimum price'
     => 'Mindestbestellpreis',
   'Order now'
     => 'Jetzt bestellen',
   'Order number'
     => 'Bestellnummer',
+  'Order timestamp'
+    => 'Bestellung, Zeitstempel',
+  'Order total'
+    => 'Gesamtbetrag',
+  'Orders'
+    => 'Bestellungen',
   'Payment method'
     => 'Zahlungsweise',
   'Payment methods'
@@ -285,10 +301,14 @@ return array(
     => 'Die Basis Einstellung <strong>%base%</strong> existiert nicht, bitte prüfen Sie das kitCommand!',
   'The base configuration with the ID %id% has successfull deleted'
     => 'Die Basis Einstellung mit der ID %id% wurde erfolgreich gelöscht.',
+  'The contact with the ID %contact_id% does no longer exists!'
+    => 'Der Kontakt mit der ID %contact_id% existiert nicht mehr!',
   'The miniShop Base has successful updated.'
     => 'Die miniShop Basis Einstellung wurde erfolgreich aktualisiert.',
   'The name <strong>%name%</strong> is already in use, please select another one.'
     => 'Der Bezeichner <strong>%name%</strong> wird bereits verwendet, bitte wählen Sie einen anderen Bezeichner.',
+  'The order list is empty!'
+    => 'Es liegen keine Bestellungen vor.',
   'The permanent link <strong>/%link%</strong> is already in use by another article, please select an alternate one.'
     => 'Der permanente Link <strong>/%link%</strong> wird bereits von einem anderen Artikel verwendet, bitte legen Sie einen anderen Link fest.',
   'The selected article is already in your basket.'
@@ -297,6 +317,10 @@ return array(
     => 'Die Kurzbeschreibung darf nicht leer sein!',
   'There exists more than one base configurations, so you must set a base or a group as parameter!'
     => 'Es existiert mehr als eine Basis Einstellung, Sie müssen eine Basis oder eine Gruppe als Parameter festlegen!',
+  'There exists no order with the ID %order_id%!'
+    => 'Es existiert keine Bestellung mit der ID %order_id%!',
+  'Timestamp'
+    => 'Zeitstempel',
   'Total amount'
     => 'Gesamtbetrag',
   'Updated your shopping basket'
@@ -305,6 +329,10 @@ return array(
     => 'zzgl. %vat%% Umsatzsteuer',
   'VAT'
     => 'Umsatzsteuer',
+  'View all orders you have received'
+    => 'Übersicht der Bestellungen die Sie erhalten haben',
+  'View Order'
+    => 'Bestellung',
   '<p>We are sorry, but there exists already a pending order of date <strong>%date%</strong>. Please confirm or discard this order before creating a new one.</p><p>We can <a href="%link%">send you again the confirmation mail</a>.</p>'
     => '<p>Entschuldigung, aber es existiert noch eine unbestätigte Bestellung vom <strong>%date%</strong>. Bitte bestätigen oder verwerfen Sie diese Bestellung bevor Sie eine neue aufgeben.</p><p>Wir können Ihnen die <a href="%link%">Bestätigungsmail erneut zusenden</a>.</p>',
   'Your basket contain %count% articles'
