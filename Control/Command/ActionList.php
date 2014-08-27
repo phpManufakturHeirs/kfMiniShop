@@ -86,7 +86,8 @@ class ActionList extends CommandBasic
         $articles = null;
 
         if (!is_null($groups)) {
-            $articles = $this->dataArticle->selectByGroup($groups);
+            $articles = $this->dataArticle->selectByGroup($groups, self::$parameter['limit'],
+                self::$parameter['order_by'], self::$parameter['order_direction']);
         }
 
         if (isset($articles[0]['base_id'])) {
@@ -115,6 +116,11 @@ class ActionList extends CommandBasic
         ));
     }
 
+    /**
+     * Controller to show an article list
+     *
+     * @param Application $app
+     */
     public function Controller(Application $app)
     {
         $this->initParameters($app);

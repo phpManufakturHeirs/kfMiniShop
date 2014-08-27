@@ -61,8 +61,8 @@ class CommandBasic extends Basic
         self::$parameter['comments'] = (isset(self::$parameter['comments']) && ((self::$parameter['comments'] == 1) || (strtolower(self::$parameter['comments']) == 'true'))) ? true : false;
 
         self::$parameter['limit'] = (isset(self::$parameter['limit']) && is_numeric(self::$parameter['limit'])) ? intval(self::$parameter['limit']) : -1;
-        self::$parameter['order_by'] = (isset(self::$parameter['order_by'])) ? strtolower(self::$parameter['order_by']) : 'article_name';
-        self::$parameter['order_direction'] = isset(self::$parameter['order_direction']) ? strtoupper(self::$parameter['order_direction']) : 'ASC';
+        self::$parameter['order_by'] = (isset(self::$parameter['order_by'])) ? strtolower(self::$parameter['order_by']) : 'publish_date';
+        self::$parameter['order_direction'] = isset(self::$parameter['order_direction']) ? strtoupper(self::$parameter['order_direction']) : 'DESC';
 
         self::$parameter['thumbnail_max_width'] = (isset(self::$parameter['thumbnail_max_width']) && is_numeric(self::$parameter['thumbnail_max_width'])) ? intval(self::$parameter['thumbnail_max_width']) : 150;
         self::$parameter['thumbnail_max_height'] = (isset(self::$parameter['thumbnail_max_height']) && is_numeric(self::$parameter['thumbnail_max_height'])) ? intval(self::$parameter['thumbnail_max_height']) : 150;

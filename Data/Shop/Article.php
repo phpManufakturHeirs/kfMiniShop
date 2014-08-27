@@ -317,7 +317,7 @@ EOD;
         }
     }
 
-    public function selectByGroup($groups, $limit=-1, $order_by='article_name', $order_direction='ASC',
+    public function selectByGroup($groups, $limit=-1, $order_by='publish_date', $order_direction='ASC',
         $status=array('AVAILABLE', 'AVAILABLE_DATE', 'AVAILABLE_DATE_ORDER', 'AVAILABLE_SOON', 'AVAILABLE_SOON_ORDER', 'NOT_AVAILABLE'))
     {
         try {
