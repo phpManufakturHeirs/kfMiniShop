@@ -37,7 +37,8 @@
           {% endif %}  
         {% endif %}
         <div class="content">
-          {{ article.description_long }}
+          {# by default parsing kitCommands in the article text is enabled #}
+          {{ kitCommandParser(article.description_long|default('')) }}
         </div>
       </div>
         
