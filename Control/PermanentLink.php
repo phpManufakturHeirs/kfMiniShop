@@ -63,6 +63,12 @@ class PermanentLink extends Alert
         // init cURL
         $ch = curl_init();
 
+        if (is_null($this->app['session']->get('MINISHOP_COOKIE_FILE')) ||
+            !$this->app['filesystem']->exists($this->app['session']->get('MINISHOP_COOKIE_FILE'))) {
+            // this is the first call of this cURL session, create a cookie file
+            $this->app['session']->set('MINISHOP_COOKIE_FILE', FRAMEWORK_TEMP_PATH.'/session/'.uniqid('minishop_'));
+        }
+
         // set the general cURL options
         $options = array(
             CURLOPT_HEADER => false,
@@ -71,19 +77,11 @@ class PermanentLink extends Alert
             CURLOPT_USERAGENT => 'kitFramework::miniShop',
             CURLOPT_TIMEOUT => 30,
             CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_SSL_VERIFYPEER => false
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_COOKIESESSION => true,
+            CURLOPT_COOKIEJAR => $this->app['session']->get('MINISHOP_COOKIE_FILE'),
+            CURLOPT_COOKIEFILE => $this->app['session']->get('MINISHOP_COOKIE_FILE')
         );
-
-        if (is_null($this->app['session']->get('MINISHOP_COOKIE_FILE')) ||
-            !$this->app['filesystem']->exists($this->app['session']->get('MINISHOP_COOKIE_FILE'))) {
-            // this is the first call of this cURL session, create a cookie file
-            $this->app['session']->set('MINISHOP_COOKIE_FILE', FRAMEWORK_TEMP_PATH.'/session/'.uniqid('minishop_'));
-            $options[CURLOPT_COOKIEJAR] = $this->app['session']->get('MINISHOP_COOKIE_FILE');
-        }
-        else {
-            // load the existing cookie file
-            $options[CURLOPT_COOKIEFILE] = $this->app['session']->get('MINISHOP_COOKIE_FILE');
-        }
 
         // get the visibility of the target page
         $visibility = $this->dataPage->getPageVisibilityByPageID($page_id);
@@ -187,6 +185,10 @@ class PermanentLink extends Alert
             'canonical' => CMS_URL.self::$config['permanentlink']['directory'].'/article/'.$name
         );
 
+        if (!is_null($this->app['session']->get('BASKET'))) {
+            $parameter['session_basket'] = $this->app['session']->get('BASKET');
+        }
+
         $gets = $this->app['request']->query->all();
         foreach ($gets as $key => $value) {
             if (!key_exists($key, $parameter) && !in_array($key, self::$ignore_parameters)) {
@@ -248,6 +250,10 @@ class PermanentLink extends Alert
             'robots' => 'noindex,follow',
             'basket' => $app['request']->request->get('form', null)
         );
+
+        if (!is_null($this->app['session']->get('BASKET'))) {
+            $parameter['session_basket'] = $this->app['session']->get('BASKET');
+        }
 
         $queries = $this->app['request']->query->all();
         foreach ($queries as $key => $value) {
@@ -332,6 +338,10 @@ class PermanentLink extends Alert
             'order' => $app['request']->request->get('form', null)
         );
 
+        if (!is_null($this->app['session']->get('BASKET'))) {
+            $parameter['session_basket'] = $this->app['session']->get('BASKET');
+        }
+
         $queries = $this->app['request']->query->all();
         foreach ($queries as $key => $value) {
             if (!key_exists($key, $parameter) && !in_array($key, self::$ignore_parameters)) {
@@ -382,6 +392,10 @@ class PermanentLink extends Alert
             'order_id' => $order_id
         );
 
+        if (!is_null($this->app['session']->get('BASKET'))) {
+            $parameter['session_basket'] = $this->app['session']->get('BASKET');
+        }
+
         $queries = $this->app['request']->query->all();
         foreach ($queries as $key => $value) {
             if (!key_exists($key, $parameter) && !in_array($key, self::$ignore_parameters)) {
@@ -430,6 +444,10 @@ class PermanentLink extends Alert
             'robots' => 'noindex,follow',
             'guid' => $guid
         );
+
+        if (!is_null($this->app['session']->get('BASKET'))) {
+            $parameter['session_basket'] = $this->app['session']->get('BASKET');
+        }
 
         $queries = $this->app['request']->query->all();
         foreach ($queries as $key => $value) {
