@@ -6,6 +6,10 @@ MIT License (MIT) - <http://www.opensource.org/licenses/MIT>
 
 kitFramework - <https://kit2.phpmanufaktur.de>
 
+**0.11** - 2014-08-28
+
+* first public beta release
+
 **0.10** - 2014-08-13 
 
 * initial release
