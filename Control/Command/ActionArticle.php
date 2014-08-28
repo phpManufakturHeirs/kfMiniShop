@@ -85,8 +85,9 @@ class ActionArticle extends CommandBasic
             $variant_values = array();
             $items = explode("\r\n", $data['article_variant_values']);
             foreach ($items as $item) {
-                if (!empty(trim($item))) {
-                    $variant_values[] = trim($item);
+                $item = trim($item);
+                if (!empty($item)) {
+                    $variant_values[] = $item;
                 }
             }
             if (!empty($variant_values)) {
@@ -114,8 +115,9 @@ class ActionArticle extends CommandBasic
             $variant_values = array();
             $items = explode("\r\n", $data['article_variant_values_2']);
             foreach ($items as $item) {
-                if (!empty(trim($item))) {
-                    $variant_values[] = trim($item);
+                $item = trim($item);
+                if (!empty($item)) {
+                    $variant_values[] = $item;
                 }
             }
             if (!empty($variant_values)) {
@@ -195,7 +197,7 @@ class ActionArticle extends CommandBasic
         }
 
         $form = $this->getOrderForm($article);
-
+//echo "yy".print_r($this->app['session']->get('BASKET', array()));
         $result = $this->app['twig']->render($this->app['utils']->getTemplateFile(
             '@phpManufaktur/miniShop/Template', 'command/view.article.twig',
             $this->getPreferredTemplateStyle()),
