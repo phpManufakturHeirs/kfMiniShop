@@ -92,6 +92,23 @@ class Setup
     }
 
     /**
+     * Check if the entries for the miniShop exists in the config.jsoneditor.json
+     *
+     * @param Application $app
+     */
+    public function jsonEditorConfiguration(Application $app)
+    {
+        $jsonEditorConfiguration = new \phpManufaktur\Basic\Control\jsonEditor\Configuration($app);
+        $json_config = $jsonEditorConfiguration->getConfiguration();
+
+        if (!isset($json_config['help']['config.minishop.json'])) {
+            $json_config['help']['config.minishop.json'] = 'help_minishop_json';
+            $jsonEditorConfiguration->setConfiguration($json_config);
+            $jsonEditorConfiguration->saveConfiguration();
+        }
+    }
+
+    /**
      * Execute all steps needed to setup the miniShop
      *
      * @param Application $app
@@ -128,6 +145,9 @@ class Setup
             // setup the miniShop as Add-on in the CMS
             $admin_tool = new InstallAdminTool($app);
             $admin_tool->exec(MANUFAKTUR_PATH.'/miniShop/extension.json', '/minishop/cms');
+
+            // add the ConfigurationEditor help text
+            $this->jsonEditorConfiguration($app);
 
             return $app['translator']->trans('Successfull installed the extension %extension%.',
                 array('%extension%' => 'miniShop'));
