@@ -58,7 +58,7 @@ class PermanentLink extends Alert
      * @param string $url
      * @return mixed
      */
-    protected function cURLexec($url, $page_id)
+    protected function cURLexec($url, $page_id=-1)
     {
         // init cURL
         $ch = curl_init();
@@ -83,17 +83,19 @@ class PermanentLink extends Alert
             CURLOPT_COOKIEFILE => $this->app['session']->get('MINISHOP_COOKIE_FILE')
         );
 
-        // get the visibility of the target page
-        $visibility = $this->dataPage->getPageVisibilityByPageID($page_id);
-        if (in_array($visibility, array('none', 'registered', 'private'))) {
-            // page can not be shown!
-            $error = 'The visibility of the requested page is "none", can not show the content!';
-            $this->app['monolog']->addError($error, array(__METHOD__, __LINE__));
-            return $this->app['twig']->render($this->app['utils']->getTemplateFile(
-                '@phpManufaktur/Basic/Template', 'kitcommand/bootstrap/noframe/alert.twig'),
-                array(
-                    'content' => $this->app['translator']->trans($error),
-                    'type' => 'alert-danger'));
+        if ($page_id > 0) {
+            // get the visibility of the target page
+            $visibility = $this->dataPage->getPageVisibilityByPageID($page_id);
+            if (in_array($visibility, array('none', 'registered', 'private'))) {
+                // page can not be shown!
+                $error = 'The visibility of the requested page is "none", can not show the content!';
+                $this->app['monolog']->addError($error, array(__METHOD__, __LINE__));
+                return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+                    '@phpManufaktur/Basic/Template', 'kitcommand/bootstrap/noframe/alert.twig'),
+                    array(
+                        'content' => $this->app['translator']->trans($error),
+                        'type' => 'alert-danger'));
+            }
         }
 
         // add the URL to the options
@@ -118,8 +120,6 @@ class PermanentLink extends Alert
         curl_close($ch);
         return $result;
     }
-
-
 
     public function ControllerArticle(Application $app, $name)
     {
@@ -185,10 +185,6 @@ class PermanentLink extends Alert
             'canonical' => CMS_URL.self::$config['permanentlink']['directory'].'/article/'.$name
         );
 
-        if (!is_null($this->app['session']->get('BASKET'))) {
-            $parameter['session_basket'] = $this->app['session']->get('BASKET');
-        }
-
         $gets = $this->app['request']->query->all();
         foreach ($gets as $key => $value) {
             if (!key_exists($key, $parameter) && !in_array($key, self::$ignore_parameters)) {
@@ -250,10 +246,6 @@ class PermanentLink extends Alert
             'robots' => 'noindex,follow',
             'basket' => $app['request']->request->get('form', null)
         );
-
-        if (!is_null($this->app['session']->get('BASKET'))) {
-            $parameter['session_basket'] = $this->app['session']->get('BASKET');
-        }
 
         $queries = $this->app['request']->query->all();
         foreach ($queries as $key => $value) {
@@ -338,10 +330,6 @@ class PermanentLink extends Alert
             'order' => $app['request']->request->get('form', null)
         );
 
-        if (!is_null($this->app['session']->get('BASKET'))) {
-            $parameter['session_basket'] = $this->app['session']->get('BASKET');
-        }
-
         $queries = $this->app['request']->query->all();
         foreach ($queries as $key => $value) {
             if (!key_exists($key, $parameter) && !in_array($key, self::$ignore_parameters)) {
@@ -392,10 +380,6 @@ class PermanentLink extends Alert
             'order_id' => $order_id
         );
 
-        if (!is_null($this->app['session']->get('BASKET'))) {
-            $parameter['session_basket'] = $this->app['session']->get('BASKET');
-        }
-
         $queries = $this->app['request']->query->all();
         foreach ($queries as $key => $value) {
             if (!key_exists($key, $parameter) && !in_array($key, self::$ignore_parameters)) {
@@ -444,10 +428,6 @@ class PermanentLink extends Alert
             'robots' => 'noindex,follow',
             'guid' => $guid
         );
-
-        if (!is_null($this->app['session']->get('BASKET'))) {
-            $parameter['session_basket'] = $this->app['session']->get('BASKET');
-        }
 
         $queries = $this->app['request']->query->all();
         foreach ($queries as $key => $value) {

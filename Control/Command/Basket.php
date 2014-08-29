@@ -31,6 +31,7 @@ class Basket extends CommandBasic
         parent::initParameters($app, $parameter_id);
 
         self::$identifier = md5($_SERVER['REMOTE_ADDR']);
+
         $this->dataBasket = new DataBasket($app);
         $this->dataBasket->cleanup();
         // get the current basket
@@ -110,8 +111,9 @@ class Basket extends CommandBasic
                         $variant_values = array();
                         $items = explode("\r\n", $article['article_variant_values']);
                         foreach ($items as $item) {
-                            if (!empty(trim($item))) {
-                                $variant_values[] = trim($item);
+                            $item = trim($item);
+                            if (!empty($item)) {
+                                $variant_values[] = $item;
                             }
                         }
                         if (!empty($variant_values)) {
@@ -124,8 +126,9 @@ class Basket extends CommandBasic
                         $variant_values = array();
                         $items = explode("\r\n", $article['article_variant_values_2']);
                         foreach ($items as $item) {
-                            if (!empty(trim($item))) {
-                                $variant_values[] = trim($item);
+                            $item = trim($item);
+                            if (!empty($item)) {
+                                $variant_values[] = $item;
                             }
                         }
                         if (!empty($variant_values)) {
