@@ -11,7 +11,11 @@
 <div id="minishop">
   <div class="container-fluid">    
     {# show the shopping basket at the top #}
-    {% include '@phpManufaktur/miniShop/Template/default/command/include/basket.twig' %}
+    {#% include '@phpManufaktur/miniShop/Template/default/command/include/basket.twig' %#}
+    
+    <div class="basket-container basket">
+      {{ kitCommand('miniShop_basket', {'action':'basket'}) }}
+    </div>
     
     {{ basic.alert }}
     

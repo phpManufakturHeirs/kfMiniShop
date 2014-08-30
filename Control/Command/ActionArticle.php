@@ -197,7 +197,7 @@ class ActionArticle extends CommandBasic
         }
 
         $form = $this->getOrderForm($article);
-//echo "yy".print_r($this->app['session']->get('BASKET', array()));
+
         $result = $this->app['twig']->render($this->app['utils']->getTemplateFile(
             '@phpManufaktur/miniShop/Template', 'command/view.article.twig',
             $this->getPreferredTemplateStyle()),

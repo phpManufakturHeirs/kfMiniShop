@@ -28,6 +28,10 @@ class ContentFrame extends Basic
     {
         $this->initParameters($app);
 
+        $query = $this->getCMSgetParameters();
+        if (isset($query['action']) && ($query['action'] == 'basket')) {
+            return $this->createIFrame('/minishop/action');
+        }
         // get the preferred template
         $template = $this->getPreferredTemplateStyle();
 
@@ -39,5 +43,11 @@ class ContentFrame extends Basic
             'pid' => self::getParameterID()));
 
         return $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+    }
+
+    public function ControllerBasket(Application $app)
+    {
+        $this->initParameters($app);
+        return $this->createIFrame('/minishop/basket');
     }
 }

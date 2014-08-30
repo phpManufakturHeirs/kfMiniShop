@@ -11,8 +11,10 @@
 <div id="minishop">
   <div class="container-fluid">    
     {# show the shopping basket at the top #}
-    {% include '@phpManufaktur/miniShop/Template/default/command/include/basket.twig' %}
-    
+    {#% include '@phpManufaktur/miniShop/Template/default/command/include/basket.twig' %#}
+    <div class="basket-container basket">
+      {{ kitCommand('miniShop_basket', {'action':'basket'}) }}
+    </div>
     <h1>{{ article.article_name|default('Error'|trans) }}</h1>  
     
     {{ basic.alert }}
@@ -72,28 +74,9 @@
             {% endif %}  
           </div>
         </div>
-        {% if article.status != 'AVAILABLE_SOON' and article.status != 'NOT_AVAILABLE' %}  
-        <form action="{{ permalink_base_url ~ '/basket/add' }}" class="form-inline" method="post" role="form">
-          <div class="form-group">
-            <div class="input-group">
-              <div class="input-group-addon"><i class="fa fa-shopping-cart"></i></div>
-                {{ form_widget(form.quantity) }}
-            </div>
-          </div>
-          {% if form.article_variant_name.vars.value|length > 0 %}
-            <div class="form-group">
-              {{ form_widget(form.article_variant_values) }}
-            </div>
-          {% endif %}  
-          {% if form.article_variant_name_2.vars.value|length > 0 %}
-            <div class="form-group">
-              {{ form_widget(form.article_variant_values_2) }}
-            </div>
-          {% endif %}          
-          {{ form_rest(form) }}
-          <button type="submit" class="btn btn-default input-sm" title="{{ 'Add article to the shopping basket'|trans }}"><i class="fa fa-plus"></i></button>
-        </form>  
-        {% endif %}
+        <div class="basket-container control">     
+          {{ kitCommand('minishop_basket', {'action':'control','article_id':article.id}) }}
+        </div>
       </div>
       
       
@@ -101,7 +84,9 @@
   </div>
   
   {# show a link to the article list of the shop #}
-  {% include '@phpManufaktur/miniShop/Template/default/command/include/switch.list.twig' %}
+  <div class="switch-to-list">
+    <a href="{{ shop_url }}" class="btn btn-default" role="button"><i class="fa fa-arrow-circle-left"></i> {{ 'Switch to the article list'|trans }}</a>
+  </div>
   
   {% if parameter.comments %}
     {{ kitCommand('comments', {'type':'MINISHOP', 'id':article.id}) }}

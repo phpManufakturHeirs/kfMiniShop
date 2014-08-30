@@ -27,7 +27,6 @@ class Basket extends CommandBasic
      */
     protected function initParameters(Application $app, $parameter_id=-1)
     {
-        //parent::initialize($app);
         parent::initParameters($app, $parameter_id);
 
         self::$identifier = md5($_SERVER['REMOTE_ADDR']);
@@ -296,10 +295,11 @@ class Basket extends CommandBasic
             $base = $order['base'];
         }
 
-        $result = $this->app['twig']->render($this->app['utils']->getTemplateFile(
-            '@phpManufaktur/miniShop/Template', 'command/view.basket.twig',
+        return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+            '@phpManufaktur/miniShop/Template', 'command/basket/view.twig',
             $this->getPreferredTemplateStyle()),
             array(
+                'basic' => $this->getBasicSettings(),
                 'alert' => $this->getAlert(),
                 'config' => self::$config,
                 'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
@@ -307,42 +307,5 @@ class Basket extends CommandBasic
                 'order' => $order,
                 'shop_url' => CMS_URL.$base['target_page_link']
             ));
-
-        // set the parameters for jQuery and CSS
-        $params = array();
-        $params['library'] = null;
-        if (self::$parameter['check_jquery']) {
-            if (self::$config['libraries']['enabled'] &&
-                !empty(self::$config['libraries']['jquery'])) {
-                // load all predefined jQuery files for the miniShop
-                foreach (self::$config['libraries']['jquery'] as $library) {
-                    if (!empty($params['library'])) {
-                        $params['library'] .= ',';
-                    }
-                    $params['library'] .= $library;
-                }
-            }
-        }
-        if (self::$parameter['load_css']) {
-            if (self::$config['libraries']['enabled'] &&
-            !empty(self::$config['libraries']['css'])) {
-                // load all predefined CSS files for the miniShop
-                foreach (self::$config['libraries']['css'] as $library) {
-                    if (!empty($params['library'])) {
-                        $params['library'] .= ',';
-                    }
-                    // attach to 'library' not to 'css' !!!
-                    $params['library'] .= $library;
-                }
-            }
-
-            // set the CSS parameter
-            $params['css'] = 'miniShop,css/minishop.min.css,'.$this->getPreferredTemplateStyle();
-        }
-
-        return $this->app->json(array(
-            'parameter' => $params,
-            'response' => $result
-        ));
     }
 }

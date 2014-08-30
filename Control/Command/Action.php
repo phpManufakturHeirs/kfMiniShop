@@ -100,4 +100,29 @@ class Action extends Basic
                 return $this->promptAlert();
         }
     }
+
+    public function ControllerBasket(Application $app)
+    {
+        $this->initParameters($app);
+
+        $parameter = $this->getCommandParameters();
+
+        if (!isset($parameter['action'])) {
+            $this->setAlert('Missing the parameter <em>action</em>!', array(), self::ALERT_TYPE_DANGER);
+            return $this->promptAlert();
+        }
+
+        switch ($parameter['action']) {
+            case 'basket':
+                $ActionBasket = new ActionBasket();
+                return $ActionBasket->ControllerBasket($app);
+            case 'control':
+                $ActionBasket = new ActionBasket();
+                return $ActionBasket->ControllerBasketControl($app);
+            default:
+                $this->setAlert('The parameter <code>%parameter%[%value%]</code> for the kitCommand <code>~~ %command% ~~</code> is unknown, please check the parameter and the given value!',
+                    array('%parameter%' => 'action', '%value%' => $parameter['action'], '%command%' => 'miniShop_basket'), self::ALERT_TYPE_DANGER);
+                return $this->promptAlert();
+        }
+    }
 }

@@ -207,4 +207,16 @@ $app->post('/command/minishop/canonical/id/{article_id}',
 $app->get('/minishop/action',
     'phpManufaktur\miniShop\Control\Command\Action::Controller');
 
+$app->post('/command/minishop_basket',
+    'phpManufaktur\miniShop\Control\Command\ContentFrame::ControllerBasket');
 
+$app->get('/minishop/basket',
+    'phpManufaktur\miniShop\Control\Command\Action::ControllerBasket');
+$app->post('/minishop/basket/add',
+    'phpManufaktur\miniShop\Control\Command\ActionBasket::ControllerBasketControlAdd');
+$app->get('/minishop/order',
+    'phpManufaktur\miniShop\Control\Command\Order::ControllerContactType');
+$app->post('/minishop/order/check/type',
+    'phpManufaktur\miniShop\Control\Command\Order::ControllerContactTypeCheck');
+$app->post('/minishop/order/check/contact',
+    'phpManufaktur\miniShop\Control\Command\Order::ControllerContactCheck');

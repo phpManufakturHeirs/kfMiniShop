@@ -35,15 +35,15 @@ class Order extends CommandBasic
     }
 
     /**
-     * Get the form to select the address type for the order
+     * Get the form to select the contact type for the order
      *
      * @return FormFactory
      */
-    protected function getAddressTypeForm()
+    protected function getContactTypeForm()
     {
-        return $this->app['form.factory']->createBuilder('form', null, array('csrf_protection' => false))
+        return $this->app['form.factory']->createBuilder('form')
             ->add('form_action', 'hidden', array(
-                'data' => 'address_type'
+                'data' => 'type'
             ))
             ->add('order_for', 'choice', array(
                 'choices' => array(
@@ -56,22 +56,8 @@ class Order extends CommandBasic
             ->getForm();
     }
 
-    /**
-     * Controller to check the Address type and show the contact form for the
-     * next step in order
-     *
-     * @throws \Exception
-     * @return JsonResponse
-     */
-    protected function CheckAddressType($data=array())
+    protected function getContactForm($data=array(), $order)
     {
-
-        // get submitted form data
-        $query = $this->getCMSgetParameters();
-
-        // get the current order from the basket
-        $order = $this->Basket->CreateOrderDataFromBasket();
-
         // create a contact form
         $ContactForm = new ContactForm($this->app);
 
@@ -81,14 +67,8 @@ class Order extends CommandBasic
                 $data[$key] = $value;
             }
         }
-        if (isset($query['order_for'])) {
-            $data['contact_type'] = $query['order_for'];
-        }
 
         $field = self::$config['contact']['field'];
-
-        // important: switch off the CSRF protection!
-        $field['csrf_protection'] = false;
 
         // get predefined special fields
         $special = isset($field['special']) ? $field['special'] : array();
@@ -97,7 +77,7 @@ class Order extends CommandBasic
             'enabled' => true,
             'name' => 'form_action',
             'type' => 'hidden',
-            'data' => 'check_contact'
+            'data' => 'contact'
         );
 
         $payments = array();
@@ -135,11 +115,63 @@ class Order extends CommandBasic
         if (false === ($form = $ContactForm->getFormContact($data, $field))) {
             throw new \Exception($this->getMessage());
         }
+        return $form;
+    }
 
-        $result = $this->app['twig']->render($this->app['utils']->getTemplateFile(
-            '@phpManufaktur/miniShop/Template', 'command/order.twig',
+    /**
+     * Controller to check the Address type and show the contact form for the
+     * next step in order
+     *
+     * @throws \Exception
+     * @return JsonResponse
+     */
+    public function ControllerContactTypeCheck(Application $app)
+    {
+        $this->initParameters($app);
+
+        $form = $this->getContactTypeForm();
+        $form->bind($this->app['request']);
+
+        if ($form->isValid()) {
+            // the form is valid
+            $data = $form->getData();
+
+            // get the current order from the basket
+            $order = $this->Basket->CreateOrderDataFromBasket();
+
+            $contact_form = $this->getContactForm(array(
+                'contact_type' => $data['order_for']), $order);
+
+            return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+                '@phpManufaktur/miniShop/Template', 'command/basket/order.twig',
+                $this->getPreferredTemplateStyle()),
+                array(
+                    'basic' => $this->getBasicSettings(),
+                    'alert' => $this->getAlert(),
+                    'config' => self::$config,
+                    'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
+                    'form' => $contact_form->createView(),
+                    'order' => $order,
+                    'shop_url' => CMS_URL.$order['base']['target_page_link']
+                ));
+        }
+        else {
+            // general error (timeout, CSFR ...)
+            $this->setAlert('The form is not valid, please check your input and try again!', array(),
+                self::ALERT_TYPE_DANGER, true, array('form_errors' => $form->getErrorsAsString(),
+                    'method' => __METHOD__, 'line' => __LINE__));
+            return $this->ControllerContactType($app);
+        }
+    }
+
+    protected function getContactDialog($data, $order)
+    {
+        $form = $this->getContactForm($data, $order);
+        return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+            '@phpManufaktur/miniShop/Template', 'command/basket/order.twig',
             $this->getPreferredTemplateStyle()),
             array(
+                'basic' => $this->getBasicSettings(),
                 'alert' => $this->getAlert(),
                 'config' => self::$config,
                 'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
@@ -147,14 +179,6 @@ class Order extends CommandBasic
                 'order' => $order,
                 'shop_url' => CMS_URL.$order['base']['target_page_link']
             ));
-
-        // get the params to autoload jQuery and CSS
-        $params = $this->getResponseParameter();
-
-        return $this->app->json(array(
-            'parameter' => $params,
-            'response' => $result
-        ));
     }
 
     /**
@@ -163,106 +187,124 @@ class Order extends CommandBasic
      *
      * @return JsonResponse
      */
-    protected function CheckContact()
+    //protected function CheckContact()
+    public function ControllerContactCheck(Application $app)
     {
-        // get submitted form data
-        $query = $this->getCMSgetParameters();
+        $this->initParameters($app);
 
         // get the current order from the basket
         $order = $this->Basket->CreateOrderDataFromBasket();
 
-        $ContactForm = new ContactForm($this->app);
-        $validation_errors = array();
-        if (false === ($contact = $ContactForm->checkData($query['order'], self::$config['contact']['field'], true, $validation_errors))) {
-            // the contact pattern will set an alert - go back to the first dialog
-            return $this->selectAddressType();
-        }
+        $form = $this->getContactForm(array(), $order);
+        $form->bind($this->app['request']);
 
-        $contact_id = $contact['contact']['contact_id'];
+        if ($form->isValid()) {
+            // the form is valid
+            $data = $form->getData();
 
-        if (!empty($validation_errors)) {
-            // one or more values have not passed the validation
-            return $this->CheckAddressType($query['order']);
-        }
-
-        if (($contact_id > 0) && ($contact['contact']['contact_status'] === 'LOCKED')) {
-            // this contact record is LOCKED!
-            $this->setAlert('Sorry, but we have a problem. Please contact the webmaster and tell him to check the status of the email address %email%.',
-                array('%email%' => $query['order']['communication_email']), self::ALERT_TYPE_DANGER);
-            return $this->selectAddressType();
-        }
-
-        // check if the tag #minishop exists
-        if (!$this->app['contact']->existsTagName('MINISHOP')) {
-            $this->app['contact']->createTagName('MINISHOP', 'Indicate that the contact has used the miniShop');
-        }
-
-        if (!isset($contact['category'][0]['category_name']) || ($contact['category'][0]['category_name'] === 'UNCHECKED') ||
-            ($contact['category'][0]['category_name'] === 'NO_CATEGORY')) {
-            // set the category CUSTOMER for this contact
-            $dataCategoryType = new CategoryType($this->app);
-            if (false !== ($category_type = $dataCategoryType->selectByName('CUSTOMER'))) {
-                $contact['category'][0] = array(
-                    'category_id' => -1,
-                    'contact_id' => $contact_id,
-                    'category_type_id' => $category_type['category_type_id'],
-                    'category_type_name' => $category_type['category_type_name']
-                );
-            }
-        }
-
-        if ($contact_id > 0) {
-            // update an existing contact record
-            if (false === ($this->app['contact']->update($contact, $contact_id))) {
-                return $this->CheckAddressType($query['order']);
+            $ContactForm = new ContactForm($this->app);
+            $validation_errors = array();
+            if (false === ($contact = $ContactForm->checkData($data, self::$config['contact']['field'], true, $validation_errors))) {
+                // the contact pattern will set an alert - go back to the first dialog
+                return $this->ControllerContactType($app);
             }
 
+            $contact_id = $contact['contact']['contact_id'];
+
+            if (!empty($validation_errors)) {
+                // one or more values have not passed the validation
+                return $this->getContactDialog($data, $order);
+            }
+
+            if (($contact_id > 0) && ($contact['contact']['contact_status'] === 'LOCKED')) {
+                // this contact record is LOCKED!
+                $this->setAlert('Sorry, but we have a problem. Please contact the webmaster and tell him to check the status of the email address %email%.',
+                    array('%email%' => $data['communication_email']), self::ALERT_TYPE_DANGER);
+                return $this->ControllerContactType($app);
+            }
+
+            // check if the tag #minishop exists
+            if (!$this->app['contact']->existsTagName('MINISHOP')) {
+                $this->app['contact']->createTagName('MINISHOP', 'Indicate that the contact has used the miniShop');
+            }
+
+            if (!isset($contact['category'][0]['category_name']) || ($contact['category'][0]['category_name'] === 'UNCHECKED') ||
+                ($contact['category'][0]['category_name'] === 'NO_CATEGORY')) {
+                // set the category CUSTOMER for this contact
+                $dataCategoryType = new CategoryType($this->app);
+                if (false !== ($category_type = $dataCategoryType->selectByName('CUSTOMER'))) {
+                    $contact['category'][0] = array(
+                        'category_id' => -1,
+                        'contact_id' => $contact_id,
+                        'category_type_id' => $category_type['category_type_id'],
+                        'category_type_name' => $category_type['category_type_name']
+                    );
+                }
+            }
+
+            if ($contact_id > 0) {
+                // update an existing contact record
+                if (false === ($this->app['contact']->update($contact, $contact_id))) {
+                    return $this->getContactDialog($data, $order);
+                }
+
+            }
+            else {
+                // insert a new contact record - important, set the status to PENDING
+                $contact['contact']['contact_status'] = 'PENDING';
+                if (!$this->app['contact']->insert($contact, $contact_id)) {
+                    // problem insert the record - go back to the first dialog
+                    return $this->getContactDialog($data, $order);
+                }
+            }
+
+            if (!$this->app['contact']->issetContactTag('MINISHOP', $contact_id)) {
+                // set the tag #miniShop for this contact
+                $this->app['contact']->setContactTag('MINISHOP', $contact_id);
+            }
+
+            if (!isset($data['payment_method'])) {
+                throw new \Exception('Missing the payment method!');
+            }
+
+            switch ($data['payment_method']) {
+                case 'ADVANCE_PAYMENT':
+                    $Payment = new AdvancePayment($this->app);
+                    return $Payment->startPayment($contact_id);
+                case 'ON_ACCOUNT':
+                    $Payment = new OnAccount($this->app);
+                    return $Payment->startPayment($contact_id);
+                case 'PAYPAL':
+                    $Payment = new PayPal($this->app);
+                    return $Payment->startPayment($contact_id);
+                default:
+                    throw new \Exception('Unknown payment method '.$data['payment']);
+            }
         }
         else {
-            // insert a new contact record - important, set the status to PENDING
-            $contact['contact']['contact_status'] = 'PENDING';
-            if (!$this->app['contact']->insert($contact, $contact_id)) {
-                // problem insert the record - go back to the first dialog
-                return $this->checkAddressType($query['order']);
-            }
+            // general error (timeout, CSFR ...)
+            $this->setAlert('The form is not valid, please check your input and try again!', array(),
+                self::ALERT_TYPE_DANGER, true, array('form_errors' => $form->getErrorsAsString(),
+                    'method' => __METHOD__, 'line' => __LINE__));
+            return $this->getContactDialog(array(), $order);
         }
-
-        if (!$this->app['contact']->issetContactTag('MINISHOP', $contact_id)) {
-            // set the tag #miniShop for this contact
-            $this->app['contact']->setContactTag('MINISHOP', $contact_id);
-        }
-
-        if (!isset($query['order']['payment_method'])) {
-            throw new \Exception('Missing the payment method!');
-        }
-
-        switch ($query['order']['payment_method']) {
-            case 'ADVANCE_PAYMENT':
-                $Payment = new AdvancePayment($this->app);
-                return $Payment->startPayment($contact_id);
-            case 'ON_ACCOUNT':
-                $Payment = new OnAccount($this->app);
-                return $Payment->startPayment($contact_id);
-            case 'PAYPAL':
-                $Payment = new PayPal($this->app);
-                return $Payment->startPayment($contact_id);
-            default:
-                throw new \Exception('Unknown payment method '.$query['order']['payment']);
-        }
-
     }
 
-    protected function selectAddressType()
+    //protected function selectAddressType()
+    public function ControllerContactType(Application $app)
     {
+        $this->initParameters($app);
+
         // get the current order from the basket
         $order = $this->Basket->CreateOrderDataFromBasket();
 
-        $form = $this->getAddressTypeForm();
+        $form = $this->getContactTypeForm();
 
-        $result = $this->app['twig']->render($this->app['utils']->getTemplateFile(
-            '@phpManufaktur/miniShop/Template', 'command/order.twig',
+        return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+            '@phpManufaktur/miniShop/Template', 'command/basket/order.twig',
             $this->getPreferredTemplateStyle()),
             array(
+                'basic' => $this->getBasicSettings(),
                 'alert' => $this->getAlert(),
                 'config' => self::$config,
                 'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
@@ -270,14 +312,6 @@ class Order extends CommandBasic
                 'order' => $order,
                 'shop_url' => CMS_URL.$order['base']['target_page_link']
             ));
-
-        // get the params to autoload jQuery and CSS
-        $params = $this->getResponseParameter();
-
-        return $this->app->json(array(
-            'parameter' => $params,
-            'response' => $result
-        ));
     }
 
     /**
@@ -287,7 +321,7 @@ class Order extends CommandBasic
      * @param Application $app
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function ControllerOrder(Application $app)
+    /*public function ControllerOrder(Application $app)
     {
         $this->initParameters($app);
 
@@ -310,7 +344,7 @@ class Order extends CommandBasic
         // start the order by selecting the address type
         return $this->selectAddressType();
     }
-
+*/
     /**
      * Controller check the submitted GUID, redirect to the desired
      * payment method and handle the order

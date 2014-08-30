@@ -58,17 +58,6 @@
   color: #da251d;
   font-weight: bold;
 }
-
-#minishop input#form_quantity {
-  width: 50px;
-  text-align: right;
-} 
-#minishop select#form_article_variant_values,
-#minishop select#form_article_variant_values_2,
-#minishop .order-container button {
-  margin-left: 5px;
-}
-
 #minishop .order-container .info {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -89,59 +78,16 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
-#minishop .basket {
-  margin-bottom: 5px;
-  text-align: right;
+
+#minishop .basket-container.basket {
+  max-height: 30px;
+  margin: 0;
 }
-#minishop .basket.inactive {
-  color: #777;
+#minishop .basket-container.control {
+  margin: 0;
+  max-height: 30px;
 }
 
-#minishop .basket-summary {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-#minishop td.sum-total,
-#minishop td.shipping,
-#minishop td.vat-total,
-#minishop th.price,
-#minishop td.price,
-#minishop td.sub-total,
-#minishop th.sub-total {
-  text-align: right;
-}
-#minishop td.sum-total {
-  font-weight: bold;
-}
-
-#minishop td.no-border {
-  border: none !important;
-}
-#minishop td.quantity input {
-  width: 50px;
-  text-align: right;
-}
-
-#minishop td.article .variant .name {
-  font-weight: bold;
-}
-#minishop td.article .variant .value {
-  margin-right: 5px;
-  font-style: italic;
-}
-
-#minishop .hint.vat-total {
-  margin-top: 20px;
-  text-align: right;
-  color: #777;
-  font-size: smaller;
-}
-
-#minishop .order-now {
-  text-align: right;
-  margin-bottom: 10px;
-}
 
 #minishop .rating-container {
   max-height: 20px;
