@@ -95,7 +95,7 @@ class ActionList extends CommandBasic
         }
 
         $result = $this->app['twig']->render($this->app['utils']->getTemplateFile(
-            '@phpManufaktur/miniShop/Template', 'command/list.article.twig',
+            '@phpManufaktur/miniShop/Template', 'command/list.twig',
             $this->getPreferredTemplateStyle()),
             array(
                 'basic' => $this->getBasicSettings(),

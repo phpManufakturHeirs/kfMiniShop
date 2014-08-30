@@ -199,7 +199,7 @@ class ActionArticle extends CommandBasic
         $form = $this->getOrderForm($article);
 
         $result = $this->app['twig']->render($this->app['utils']->getTemplateFile(
-            '@phpManufaktur/miniShop/Template', 'command/view.article.twig',
+            '@phpManufaktur/miniShop/Template', 'command/view.twig',
             $this->getPreferredTemplateStyle()),
             array(
                 'basic' => $this->getBasicSettings(),

@@ -113,14 +113,26 @@ return array(
     => 'Die Kontakt ID <strong>%contact_id%</strong>, die der Bestellung mit der ID <strong>%order_id%</strong> zugeordnet ist, existiert nicht mehr!',
   'Contact ID <strong>%contact_id%</strong> assigned to order ID <strong>%order_id%</strong> is marked as <strong>DELETED</strong>.'
     => 'Die Kontakt ID <strong>%contact_id%</strong>, die der Bestellung mit der ID <strong>%order_id%</strong> zugeordnet ist, ist als <strong>GELÖSCHT</strong> markiert,',
+  'Create a new article'
+    => 'Einen neuen Artikel anlegen',
   'Create a new article group'
     => 'Eine neue Artikelgruppe erstellen',
+  'Create a new category'
+    => 'Eine neue Kategorie anlegen',
+  'Create a new extra field'
+    => 'Ein neues Zusatzfeld anlegen',
   'Create a new miniShop base'
     => 'Neue Basis Einstellung anlegen',
+  'Create a new tag'
+    => 'Einen neuen #Hashtag anlegen',
+  'Create a new title'
+    => 'Eine neue Anrede anlegen',
   'Currency'
     => 'Währung',
   'Currency iso'
     => 'Währung',
+  'Currently are no articles available.'
+    => 'Momentan befinden sich keine Artikel im Shop.',
   'Customer list'
     => 'Kundenliste',
   'Define and edit base configurations for the miniShop'
@@ -129,6 +141,10 @@ return array(
     => 'Erstellen und Bearbeiten von Artikelgruppen für den miniShop',
   'Define and edit the articles for the miniShop'
     => 'Erstellen und Bearbeiten von Artikeln für den miniShop',
+  'Description long'
+    => 'Beschreibung',
+  'Description short'
+    => 'Anreisser',
   'Determined by each article'
     => 'Festlegung durch jeden Artikel',
   'Each value in a separate line, use <key>SHIFT</key>+<key>ENTER</key>'
@@ -163,6 +179,8 @@ return array(
     => 'miniShop Bestellung - Vorauszahlung',
   'miniShop order by on account payment'
     => 'miniShop Bestellung - auf Rechung',
+  'Missing the parameter <em>action</em>!'
+    => 'Vermisse den Parameter <em>action</em>!',
   'Net price'
     => 'Nettopreis',
   'net price without tax'
@@ -219,6 +237,8 @@ return array(
     => 'Bitte erstellen Sie eine Basis Einstellung um mit Ihrem miniShop zu starten!',
   'Please define a permanent link for this article!'
     => 'Bitte definieren Sie einen permanenten Link für diesen Artikel!',
+  'Please fill in all requested fields before submitting the form!'
+    => 'Bitte füllen Sie alle erforderlichen Felder aus, bevor Sie das Formular übermitteln!',
   'Please submit a article ID!'
     => 'Bitte übermitteln Sie eine Artikel ID!',
   'Price'
@@ -233,10 +253,14 @@ return array(
     => 'Verwendungszweck',
   'Refresh the shopping basket'
     => 'Den Warenkorb aktualisieren',
+  'Remove image'
+    => 'Abbildung entfernen',
   'Removed article <strong>%article%</strong> from your shopping basket'
     => 'Der Artikel <strong>%article%</strong> wurde aus dem Warenkorb entfernt.',
   'Removed the article <strong>%article%</strong> from the basket.'
     => 'Der Artikel <strong>%article%</strong>wurde aus dem Warenkorb entfernt.',
+  'Save'
+    => 'Speichern',
   'Select article image'
     => 'Abbildung auswählen',
   'select the highest shipping cost'
@@ -283,6 +307,8 @@ return array(
     => 'Zur Artikelliste wechseln',
   'Target page link'
     => 'Zielseite im CMS',
+  'Teaser'
+    => 'Anreisser',
   'Terms conditions link'
     => 'AGB, Seite im CMS',
   'Thank you for the order, we have send you a confirmation mail.'
@@ -305,6 +331,10 @@ return array(
     => 'Die Basis Einstellung mit der ID %id% wurde erfolgreich gelöscht.',
   'The contact with the ID %contact_id% does no longer exists!'
     => 'Der Kontakt mit der ID %contact_id% existiert nicht mehr!',
+  'The image %image% was successfull inserted.'
+    => 'Die Abbildung %image% wurde eingefügt.',
+  'The image was successfull removed.'
+    => 'Die Abbildung wurde entfernt.',
   'The miniShop Base has successful updated.'
     => 'Die miniShop Basis Einstellung wurde erfolgreich aktualisiert.',
   'The name <strong>%name%</strong> is already in use, please select another one.'
@@ -321,6 +351,8 @@ return array(
     => 'Es existiert mehr als eine Basis Einstellung, Sie müssen eine Basis oder eine Gruppe als Parameter festlegen!',
   'There exists no order with the ID %order_id%!'
     => 'Es existiert keine Bestellung mit der ID %order_id%!',
+  'There was no image selected.'
+    => 'Es wurde keine Abbildung ausgewählt.',
   'Timestamp'
     => 'Zeitstempel',
   'Total amount'
@@ -335,8 +367,8 @@ return array(
     => 'Übersicht der Bestellungen die Sie erhalten haben',
   'View Order'
     => 'Bestellung',
-  '<p>We are sorry, but there exists already a pending order of date <strong>%date%</strong>. Please confirm or discard this order before creating a new one.</p><p>We can <a href="%link%">send you again the confirmation mail</a>.</p>'
-    => '<p>Entschuldigung, aber es existiert noch eine unbestätigte Bestellung vom <strong>%date%</strong>. Bitte bestätigen oder verwerfen Sie diese Bestellung bevor Sie eine neue aufgeben.</p><p>Wir können Ihnen die <a href="%link%">Bestätigungsmail erneut zusenden</a>.</p>',
+  '<p>We are sorry, but there exists already a pending order of date <strong>%date%</strong>. Please confirm or discard this order before creating a new one.</p><p>We can <a href="%link%" target="_parent">send you again the confirmation mail</a>.</p>'
+    => '<p>Entschuldigung, aber es existiert noch eine unbestätigte Bestellung vom <strong>%date%</strong>. Bitte bestätigen oder verwerfen Sie diese Bestellung bevor Sie eine neue aufgeben.</p><p>Wir können Ihnen die <a href="%link%" target="_parent">Bestätigungsmail erneut zusenden</a>.</p>',
   'Your basket contain %count% articles'
     => 'Ihr Warenkorb enthält %count% Artikel',
   'Your basket contain one article'
@@ -345,6 +377,8 @@ return array(
     => 'Ihr Warenkorb ist leer',
   'Your miniShop order'
     => 'Ihre miniShop Bestellung',
+  'Your order'
+    => 'Ihre Bestellung',
   'Your shopping basket'
     => 'Ihr Warenkorb',
   'Your shopping basket has not changed.'

@@ -236,6 +236,9 @@ class Base extends Admin
             }
 
             $data['payment_methods'] = implode(',', $data['payment_methods']);
+            if (is_null($data['terms_conditions_link'])) {
+                $data['terms_conditions_link'] = '';
+            }
 
             if (empty($data['payment_methods'])) {
                 // missing the payment method

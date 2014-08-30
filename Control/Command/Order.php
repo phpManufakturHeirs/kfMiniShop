@@ -56,6 +56,14 @@ class Order extends CommandBasic
             ->getForm();
     }
 
+    /**
+     * Get the form to create / edit a contact
+     * 
+     * @param array $data
+     * @param array $order
+     * @throws \Exception
+     * @return Ambigous <\phpManufaktur\Contact\Control\Pattern\Form\mixed, boolean>
+     */
     protected function getContactForm($data=array(), $order)
     {
         // create a contact form
@@ -164,6 +172,12 @@ class Order extends CommandBasic
         }
     }
 
+    /**
+     * Get the rendered contact dialog
+     * 
+     * @param array $data
+     * @param array $order
+     */
     protected function getContactDialog($data, $order)
     {
         $form = $this->getContactForm($data, $order);
@@ -270,16 +284,21 @@ class Order extends CommandBasic
             switch ($data['payment_method']) {
                 case 'ADVANCE_PAYMENT':
                     $Payment = new AdvancePayment($this->app);
-                    return $Payment->startPayment($contact_id);
+                    $Payment->startPayment($contact_id);
+                    break;
                 case 'ON_ACCOUNT':
                     $Payment = new OnAccount($this->app);
-                    return $Payment->startPayment($contact_id);
+                    $Payment->startPayment($contact_id);
+                    break;
                 case 'PAYPAL':
                     $Payment = new PayPal($this->app);
-                    return $Payment->startPayment($contact_id);
+                    $Payment->startPayment($contact_id);
+                    break;
                 default:
                     throw new \Exception('Unknown payment method '.$data['payment']);
             }
+            
+            return $this->promptAlert();
         }
         else {
             // general error (timeout, CSFR ...)
@@ -290,7 +309,11 @@ class Order extends CommandBasic
         }
     }
 
-    //protected function selectAddressType()
+    /**
+     * Controller to select the contact type and start the order
+     * 
+     * @param Application $app
+     */
     public function ControllerContactType(Application $app)
     {
         $this->initParameters($app);
@@ -314,37 +337,6 @@ class Order extends CommandBasic
             ));
     }
 
-    /**
-     * General Controller for the order form - check the submitted form actions
-     * and return the desired control
-     *
-     * @param Application $app
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    /*public function ControllerOrder(Application $app)
-    {
-        $this->initParameters($app);
-
-        // get submitted form data
-        $query = $this->getCMSgetParameters();
-        if (isset($query['order']['form_action'])) {
-            // a form was submitted, call the desired function
-            switch ($query['order']['form_action']) {
-                case 'address_type':
-                    return $this->CheckAddressType();
-                case 'check_contact':
-                    return $this->CheckContact();
-                default:
-                    $this->setAlert('Ooops, unknown form action: %action%',
-                        array('%action%' => $query['order']['form_action']), self::ALERT_TYPE_DANGER,
-                        array(__METHOD__, __LINE__));
-            }
-        }
-
-        // start the order by selecting the address type
-        return $this->selectAddressType();
-    }
-*/
     /**
      * Controller check the submitted GUID, redirect to the desired
      * payment method and handle the order
@@ -400,6 +392,12 @@ class Order extends CommandBasic
         ));
     }
 
+    /**
+     * Controller to send an activation GUID
+     * 
+     * @param Application $app
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
     public function ControllerSendGUID(Application $app)
     {
         $this->initParameters($app);
@@ -418,14 +416,21 @@ class Order extends CommandBasic
             $this->setAlert('Thank you for the order. We have send you a email with a confirmation link, please use this link to finish your order.',
                 array(), self::ALERT_TYPE_SUCCESS);
         }
+        
+        // unserialize the order data to enable access
+        $data = unserialize($order['data']);
 
-        // get the params to autoload jQuery and CSS
-        $params = $this->getResponseParameter();
-
-        return $this->app->json(array(
-            'parameter' => $params,
-            'response' => $this->getAlert()
-        ));
+        return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+            '@phpManufaktur/miniShop/Template', 'command/basket/finish.twig',
+            $this->getPreferredTemplateStyle()),
+            array(
+                'basic' => $this->getBasicSettings(),
+                'alert' => $this->getAlert(),
+                'config' => self::$config,
+                'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
+                'shop_url' => CMS_URL.$data['base']['target_page_link']
+            ));
+        
     }
 
     /**
@@ -458,7 +463,7 @@ class Order extends CommandBasic
         // send a email to the customer
         $message = \Swift_Message::newInstance()
             ->setSubject($this->app['translator']->trans('Your miniShop order'))
-            ->setFrom(array(SERVER_EMAIL_ADDRESS => SERVER_EMAIL_NAME))
+            ->setFrom(SERVER_EMAIL_ADDRESS, SERVER_EMAIL_NAME)
             ->setTo($contact['communication_email'])
             ->setBody($body)
             ->setContentType('text/html');

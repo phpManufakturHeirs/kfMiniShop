@@ -117,7 +117,7 @@ class AdvancePayment extends Payment
             $this->setAlert('Sorry, but we have a problem. Please contact the webmaster and tell him to check the status of the email address %email%.',
                 array('%email%' => $this->app['contact']->getPrimaryEMailAddress($contact_id)),
                 self::ALERT_TYPE_DANGER, true, array(__METHOD__, __LINE__));
-            return $this->promptAlert();
+            return false;
         }
 
         if (false !== ($pending = $this->dataOrder->existsPendingForContactID($contact_id))) {
@@ -125,9 +125,9 @@ class AdvancePayment extends Payment
             $this->Basket->removeBasket();
             $date = date($this->app['translator']->trans('DATETIME_FORMAT'), strtotime($pending['order_timestamp']));
             $link = CMS_URL.self::$config['permanentlink']['directory'].'/order/send/'.$pending['id'];
-            $this->setAlert('<p>We are sorry, but there exists already a pending order of date <strong>%date%</strong>. Please confirm or discard this order before creating a new one.</p><p>We can <a href="%link%">send you again the confirmation mail</a>.</p>',
+            $this->setAlert('<p>We are sorry, but there exists already a pending order of date <strong>%date%</strong>. Please confirm or discard this order before creating a new one.</p><p>We can <a href="%link%" target="_parent">send you again the confirmation mail</a>.</p>',
                 array('%date%' => $date, '%link%' => $link), self::ALERT_TYPE_WARNING);
-            return $this->promptAlert();
+            return false;
         }
 
         // create a order data record
@@ -149,6 +149,6 @@ class AdvancePayment extends Payment
             }
         }
 
-        return $this->promptAlert();
+        return true;
     }
 }

@@ -77,7 +77,7 @@ class Payment extends Basic
      *
      * @return array
      */
-    protected function getResponseParameter()
+  /*  protected function getResponseParameter()
     {
         // set the parameters for jQuery and CSS
         $params = array();
@@ -113,13 +113,13 @@ class Payment extends Basic
 
         return $params;
     }
-
+*/
     /**
      * Override the default promptAlert() function!
      *
      * @see \phpManufaktur\Basic\Control\Pattern\Alert::promptAlert()
      */
-    public function promptAlert()
+   /* public function promptAlert()
     {
         // get the params to autoload jQuery and CSS
         $params = $this->getResponseParameter();
@@ -128,7 +128,7 @@ class Payment extends Basic
             'parameter' => $params,
             'response' => $this->getAlert()
         ));
-    }
+    }*/
 
     protected function createOrderRecord($contact_id, $status)
     {
