@@ -137,7 +137,7 @@ class Article extends Admin
         $form->add('permanent_link', 'text', array(
             'data' => $permanent_link,
             'attr' => array(
-                'help' => FRAMEWORK_URL.'/shop/'.$permanent_link
+                'help' => CMS_URL.'/shop/'.$permanent_link
             )
         ))
         ->add('article_image', 'hidden', array(
