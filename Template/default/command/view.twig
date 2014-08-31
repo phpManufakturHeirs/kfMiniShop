@@ -27,7 +27,7 @@
     
     {% if article|length > 0 %}
       <div class="article-container">
-        {% if article.article_image|length > 0 %}
+        {% if article.article_image|length > 0 and parameter.image_max_width > 0 %}
           {% set img = image(article.article_image, parameter.image_max_width, parameter.image_max_height) %}
           <a href="{{ FRAMEWORK_URL ~ article.article_image }}" data-title="{{ article.article_name }}" data-lightbox="{{ article.permanent_link }}">
             <img class="img-responsive img-rounded article-image-left" src="{{ img.src }}" alt="{{ article.article_name }}" title="{{ article.article_name }}" />
