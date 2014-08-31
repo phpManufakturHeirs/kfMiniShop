@@ -18,6 +18,9 @@ class Update
     protected $app = null;
     protected $Configuration = null;
 
+    /**
+     * Release 0.12
+     */
     protected function release_012()
     {
         $files = array(
