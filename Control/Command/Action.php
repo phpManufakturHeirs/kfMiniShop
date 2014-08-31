@@ -85,15 +85,12 @@ class Action extends Basic
             case 'basket':
                 $Basket = new Basket();
                 return $Basket->ControllerBasketView($app);
-            case 'order':
-                $Order = new Order();
-                return $Order->ControllerOrder($app);
             case 'guid':
                 $Order = new Order();
                 return $Order->ControllerGUID($app);
             case 'send-guid':
                 $Order = new Order();
-                return $Order->ControllerSendGUID($app);
+                return $Order->ControllerSendGUID($app, true);
             default:
                 $this->setAlert('The parameter <code>%parameter%[%value%]</code> for the kitCommand <code>~~ %command% ~~</code> is unknown, please check the parameter and the given value!',
                     array('%parameter%' => 'action', '%value%' => $parameter['action'], '%command%' => 'miniShop'), self::ALERT_TYPE_DANGER);

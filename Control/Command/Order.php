@@ -58,7 +58,7 @@ class Order extends CommandBasic
 
     /**
      * Get the form to create / edit a contact
-     * 
+     *
      * @param array $data
      * @param array $order
      * @throws \Exception
@@ -174,7 +174,7 @@ class Order extends CommandBasic
 
     /**
      * Get the rendered contact dialog
-     * 
+     *
      * @param array $data
      * @param array $order
      */
@@ -209,7 +209,10 @@ class Order extends CommandBasic
         // get the current order from the basket
         $order = $this->Basket->CreateOrderDataFromBasket();
 
-        $form = $this->getContactForm(array(), $order);
+        $request = $app['request']->get('form');
+        $data = isset($request['contact_type']) ? $data = array('contact_type' => $request['contact_type']) : array();
+
+        $form = $this->getContactForm($data, $order);
         $form->bind($this->app['request']);
 
         if ($form->isValid()) {
@@ -297,8 +300,17 @@ class Order extends CommandBasic
                 default:
                     throw new \Exception('Unknown payment method '.$data['payment']);
             }
-            
-            return $this->promptAlert();
+
+            return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+                '@phpManufaktur/miniShop/Template', 'command/basket/prompt.twig',
+                $this->getPreferredTemplateStyle()),
+                array(
+                    'basic' => $this->getBasicSettings(),
+                    'alert' => $this->getAlert(),
+                    'config' => self::$config,
+                    'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
+                    'shop_url' => CMS_URL.$order['base']['target_page_link']
+                ));
         }
         else {
             // general error (timeout, CSFR ...)
@@ -311,7 +323,7 @@ class Order extends CommandBasic
 
     /**
      * Controller to select the contact type and start the order
-     * 
+     *
      * @param Application $app
      */
     public function ControllerContactType(Application $app)
@@ -394,11 +406,11 @@ class Order extends CommandBasic
 
     /**
      * Controller to send an activation GUID
-     * 
+     *
      * @param Application $app
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function ControllerSendGUID(Application $app)
+    public function ControllerSendGUID(Application $app, $jsonResponse=false)
     {
         $this->initParameters($app);
 
@@ -416,22 +428,34 @@ class Order extends CommandBasic
             $this->setAlert('Thank you for the order. We have send you a email with a confirmation link, please use this link to finish your order.',
                 array(), self::ALERT_TYPE_SUCCESS);
         }
-        
-        // unserialize the order data to enable access
-        $data = unserialize($order['data']);
 
-        return $this->app['twig']->render($this->app['utils']->getTemplateFile(
-            '@phpManufaktur/miniShop/Template', 'command/basket/finish.twig',
-            $this->getPreferredTemplateStyle()),
-            array(
-                'basic' => $this->getBasicSettings(),
-                'alert' => $this->getAlert(),
-                'config' => self::$config,
-                'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
-                'shop_url' => CMS_URL.$data['base']['target_page_link']
+        if ($jsonResponse) {
+            // get the params to autoload jQuery and CSS
+            $params = $this->getResponseParameter();
+
+            return $this->app->json(array(
+                'parameter' => $params,
+                'response' => $this->getAlert()
             ));
-        
+        }
+        else {
+            // unserialize the order data to enable access
+            $data = unserialize($order['data']);
+
+            return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+                '@phpManufaktur/miniShop/Template', 'command/basket/prompt.twig',
+                $this->getPreferredTemplateStyle()),
+                array(
+                    'basic' => $this->getBasicSettings(),
+                    'alert' => $this->getAlert(),
+                    'config' => self::$config,
+                    'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
+                    'shop_url' => CMS_URL.$data['base']['target_page_link']
+                ));
+        }
     }
+
+
 
     /**
      * Send a mail to confirm the account
