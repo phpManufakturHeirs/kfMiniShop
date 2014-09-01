@@ -29,3 +29,6 @@ $app->get('%subdirectory%%permanentlink%/order/send/{order_id}',
     ->assert('order_id', '\d+');
 $app->get('%subdirectory%%permanentlink%/order/confirm/{guid}',
     'phpManufaktur\miniShop\Control\PermanentLink::ControllerDoubleOptIn');
+
+// routes for PayPal
+

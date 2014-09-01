@@ -147,7 +147,7 @@ class Article extends Admin
             'data' => number_format($article_price, 2, $decimal_separator, $thousand_separator)
         ))
         /*
-        ->add('article_limit', 'number', array(
+        ->add('article_limit', 'text', array(
             'data' => isset($data['article_limit']) ? $data['article_limit'] : -1
         ))
         */

@@ -148,7 +148,7 @@ class Base extends Admin
             'empty_value' => false,
             'data' => isset($data['article_price_type']) ? $data['article_price_type'] : 'GROSS_PRICE'
         ))
-        ->add('article_limit', 'number', array(
+        ->add('article_limit', 'text', array(
             'data' => isset($data['article_limit']) ? $data['article_limit'] : 99
         ))
         ->add('order_minimum_price', 'text', array(

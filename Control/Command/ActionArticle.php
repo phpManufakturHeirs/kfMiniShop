@@ -70,7 +70,7 @@ class ActionArticle extends CommandBasic
         ->add('permanent_link', 'hidden', array(
             'data' => isset($data['permanent_link']) ? $data['permanent_link'] : ''
         ))
-        ->add('quantity', 'number', array(
+        ->add('quantity', 'text', array(
             'data' => isset($data['quantity']) ? $data['quantity'] : 1,
             'label' => 'Quantity',
             'attr' => array(

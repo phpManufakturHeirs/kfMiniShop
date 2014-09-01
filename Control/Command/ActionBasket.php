@@ -58,7 +58,7 @@ class ActionBasket extends Basic
         ->add('permanent_link', 'hidden', array(
             'data' => isset($data['permanent_link']) ? $data['permanent_link'] : ''
         ))
-        ->add('quantity', 'number', array(
+        ->add('quantity', 'text', array(
             'data' => isset($data['quantity']) ? $data['quantity'] : 1,
             'label' => 'Quantity',
             'attr' => array(
@@ -300,7 +300,7 @@ class ActionBasket extends Basic
         $form = $this->app['form.factory']->createBuilder('form', null, array('csrf_protection' => false));
         $Basket = $this->Basket;
         foreach ($Basket::basket as $key => $item) {
-            $form->add($key, 'number', array(
+            $form->add($key, 'text', array(
                 'data' => $item['quantity']
             ));
         }

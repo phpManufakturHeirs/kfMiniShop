@@ -159,7 +159,7 @@ class Basket extends CommandBasic
         $form = $this->app['form.factory']->createBuilder('form', null, array('csrf_protection' => false));
 
         foreach (self::$basket as $key => $item) {
-            $form->add($key, 'number', array(
+            $form->add($key, 'text', array(
                 'data' => $item['quantity']
             ));
         }
