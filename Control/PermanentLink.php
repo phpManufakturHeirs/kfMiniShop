@@ -72,7 +72,7 @@ class PermanentLink extends Alert
         // set the general cURL options
         $options = array(
             CURLOPT_HEADER => false,
-            CURLOPT_FOLLOWLOCATION => true, // follow redirects!
+            //CURLOPT_FOLLOWLOCATION => false, // follow redirects!
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_USERAGENT => 'kitFramework::miniShop',
             CURLOPT_TIMEOUT => 30,
