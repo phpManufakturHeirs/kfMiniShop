@@ -23,6 +23,9 @@ class Payment extends Basic
     protected static $parameter = null;
     protected static $payment_method = null;
 
+    protected static $usage = null;
+    protected static $usage_param = null;
+
     protected $Basket = null;
     protected $dataOrder = null;
 
@@ -33,6 +36,14 @@ class Payment extends Basic
     protected function initParameters(Application $app, $parameter_id=-1)
     {
         parent::initParameters($app, $parameter_id);
+
+        $cms = $this->app['request']->get('usage');
+        self::$usage = is_null($cms) ? 'framework' : $cms;
+        self::$usage_param = (self::$usage != 'framework') ? '?usage='.self::$usage : '';
+        // set the locale from the CMS locale
+        if (self::$usage != 'framework') {
+            $app['translator']->setLocale($this->app['session']->get('CMS_LOCALE', 'en'));
+        }
 
         $Configuration = new Configuration($app);
         self::$config = $Configuration->getConfiguration();
@@ -70,65 +81,6 @@ class Payment extends Basic
 
     }
 
-    /**
-     * Build the default parameter array for the JSON repsonse to enable autoload
-     * of jQuery and CSS. Responding functions can extend the returned array
-     * with settings i.e. for robots or canonical links
-     *
-     * @return array
-     */
-  /*  protected function getResponseParameter()
-    {
-        // set the parameters for jQuery and CSS
-        $params = array();
-        $params['library'] = null;
-        if (self::$parameter['check_jquery']) {
-            if (self::$config['libraries']['enabled'] &&
-                !empty(self::$config['libraries']['jquery'])) {
-                // load all predefined jQuery files for the miniShop
-                foreach (self::$config['libraries']['jquery'] as $library) {
-                    if (!empty($params['library'])) {
-                        $params['library'] .= ',';
-                    }
-                    $params['library'] .= $library;
-                }
-            }
-        }
-        if (self::$parameter['load_css']) {
-            if (self::$config['libraries']['enabled'] &&
-            !empty(self::$config['libraries']['css'])) {
-                // load all predefined CSS files for the miniShop
-                foreach (self::$config['libraries']['css'] as $library) {
-                    if (!empty($params['library'])) {
-                        $params['library'] .= ',';
-                    }
-                    // attach to 'library' not to 'css' !!!
-                    $params['library'] .= $library;
-                }
-            }
-
-            // set the CSS parameter
-            $params['css'] = 'miniShop,css/minishop.min.css,'.$this->getPreferredTemplateStyle();
-        }
-
-        return $params;
-    }
-*/
-    /**
-     * Override the default promptAlert() function!
-     *
-     * @see \phpManufaktur\Basic\Control\Pattern\Alert::promptAlert()
-     */
-   /* public function promptAlert()
-    {
-        // get the params to autoload jQuery and CSS
-        $params = $this->getResponseParameter();
-
-        return $this->app->json(array(
-            'parameter' => $params,
-            'response' => $this->getAlert()
-        ));
-    }*/
 
     protected function createOrderRecord($contact_id, $status)
     {

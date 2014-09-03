@@ -11,12 +11,298 @@
 
 namespace phpManufaktur\miniShop\Control\Payment;
 
+use Silex\Application;
+use phpManufaktur\miniShop\Control\Admin\Base;
+use phpManufaktur\miniShop\Control\Configuration;
 
 class PayPal extends Payment
 {
 
+    /**
+     * (non-PHPdoc)
+     * @see \phpManufaktur\miniShop\Control\Payment\Payment::initParameters()
+     */
+    protected function initParameters(Application $app, $parameter_id=-1)
+    {
+        parent::initParameters($app, $parameter_id);
+
+        self::$payment_method = 'PAYPAL';
+    }
+
     public function startPayment($contact_id)
     {
-        return __METHOD__;
+        if (false === ($contact_status = $this->app['contact']->getStatus($contact_id))) {
+            throw new \Exception('Can not get the status for the contact ID '.$contact_id);
+        }
+
+        if ($contact_status === 'ACTIVE') {
+            $status = 'CONFIRMED';
+        }
+        elseif ($contact_status === 'PENDING') {
+            $status = 'PENDING';
+        }
+        else {
+            $this->setAlert('Sorry, but we have a problem. Please contact the webmaster and tell him to check the status of the email address %email%.',
+                array('%email%' => $this->app['contact']->getPrimaryEMailAddress($contact_id)),
+                self::ALERT_TYPE_DANGER, true, array(__METHOD__, __LINE__));
+            return false;
+        }
+
+        if (false !== ($pending = $this->dataOrder->existsPendingForContactID($contact_id))) {
+            // still delete the existing order
+            $this->dataOrder->update($pending['id'], array('status' => 'DELETED'));
+            $this->app['monolog']->addDebug("Deleted pending order {$pending['id']} because of an new order and payment via PayPal");
+        }
+
+        // create a order data record
+        $order_id = $this->createOrderRecord($contact_id, $status);
+
+        // remove the current basket
+//        $this->Basket->removeBasket();
+
+        $order = $this->dataOrder->select($order_id);
+        $order['data'] = unserialize($order['data']);
+
+        $contact = $this->app['contact']->selectOverview($contact_id);
+
+        return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+                '@phpManufaktur/miniShop/Template', 'command/basket/paypal.twig',
+                $this->getPreferredTemplateStyle()),
+                array(
+                    'basic' => $this->getBasicSettings(),
+                    'alert' => $this->getAlert(),
+                    'config' => self::$config,
+                    'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
+                    'order' => $order,
+                    'contact' => $contact
+                ));
+    }
+
+    /**
+     * Get the PayPal account settings form
+     *
+     * @param array $data
+     */
+    protected function getConfigForm($data=array())
+    {
+        return $this->app['form.factory']->createBuilder('form')
+            ->add('sandbox', 'checkbox', array(
+                'data' => isset($data['sandbox']) ? $data['sandbox'] : false,
+                'required' => false,
+                'label' => $this->app['translator']->trans('Sandbox mode')
+            ))
+            ->add('email', 'email', array(
+                'data' => isset($data['email']) ? $data['email'] : '',
+                'required' => false
+            ))
+            ->add('token', 'text', array(
+                'data' => isset($data['token']) ? $data['token'] : '',
+                'required' => false
+            ))
+            ->add('logo', 'text', array(
+                'data' => isset($data['logo']) ? $data['logo'] : '',
+                'required' => false
+            ))
+            ->getForm();
+    }
+
+    /**
+     * Controller to view and change the PayPal account settings
+     *
+     * @param Application $app
+     */
+    public function ControllerConfig(Application $app)
+    {
+        $this->initParameters($app);
+
+        $Base = new Base($app);
+
+        $form = $this->getConfigForm(self::$config['paypal']);
+
+        return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+            '@phpManufaktur/miniShop/Template', 'admin/edit.paypal.twig'),
+            array(
+                'usage' => self::$usage,
+                'usage_param' => self::$usage_param,
+                'toolbar' => $Base->getToolbar('base'),
+                'base_toolbar' => $Base->getBaseToolbar('paypal'),
+                'alert' => $this->getAlert(),
+                'form' => $form->createView()
+            ));
+    }
+
+    /**
+     * Controller to check the settings of the banking account
+     *
+     * @param Application $app
+     */
+    public function ControllerConfigCheck(Application $app)
+    {
+        $this->initParameters($app);
+
+        $form = $this->getConfigForm();
+        $form->bind($this->app['request']);
+
+        if ($form->isValid()) {
+            // the form is valid
+            $data = $form->getData();
+
+            $changed = false;
+            foreach (self::$config['paypal'] as $key => $value) {
+                if (isset($data[$key]) && ($data[$key] !== $value)) {
+                    self::$config['paypal'][$key] = $data[$key];
+                    $changed = true;
+                }
+            }
+
+            if ($changed) {
+                $Configuration = new Configuration($app);
+                $Configuration->setConfiguration(self::$config);
+                $Configuration->saveConfiguration();
+                $this->setAlert('The PayPal settings has updated', array(), self::ALERT_TYPE_SUCCESS);
+            }
+            else {
+                $this->setAlert('The PayPal settings has not changed.', array(), self::ALERT_TYPE_INFO);
+            }
+        }
+        else {
+            // general error (timeout, CSFR ...)
+            $this->setAlert('The form is not valid, please check your input and try again!', array(),
+                self::ALERT_TYPE_DANGER, true, array('form_errors' => $form->getErrorsAsString(),
+                    'method' => __METHOD__, 'line' => __LINE__));
+        }
+
+        $Base = new Base($app);
+
+        return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+            '@phpManufaktur/miniShop/Template', 'admin/edit.paypal.twig'),
+            array(
+                'usage' => self::$usage,
+                'usage_param' => self::$usage_param,
+                'toolbar' => $Base->getToolbar('base'),
+                'base_toolbar' => $Base->getBaseToolbar('paypal'),
+                'alert' => $this->getAlert(),
+                'form' => $form->createView()
+            ));
+    }
+
+    public function ControllerCancel(Application $app, $order_id)
+    {
+        $this->initParameters($app);
+
+        if (false === ($order = $this->dataOrder->select($order_id))) {
+            $this->setAlert('The record with the ID %id% does not exists!',
+                array('%id%' => $order_id), self::ALERT_TYPE_DANGER);
+            return $this->promptAlert();
+        }
+
+        $this->setAlert('The payment at PayPal was canceled', array(), self::ALERT_TYPE_WARNING);
+        return $this->promptAlert();
+    }
+
+    public function ControllerSuccess(Application $app, $order_id)
+    {
+        $this->initParameters($app);
+
+        if (false === ($order = $this->dataOrder->select($order_id))) {
+            $this->setAlert('The record with the ID %id% does not exists!',
+                array('%id%' => $order_id), self::ALERT_TYPE_DANGER);
+            return $this->promptAlert();
+        }
+
+        $this->setAlert('The payment at PayPal was successful', array(), self::ALERT_TYPE_SUCCESS);
+        return $this->promptAlert();
+    }
+
+    /**
+     * Controller for PayPal IPN
+     *
+     * @param Application $app
+     * @see https://github.com/paypal/ipn-code-samples/blob/master/paypal_ipn.php
+     */
+    public function ControllerIPN(Application $app)
+    {
+        // dont use initParameters() because we wont init the BASIC class here!
+
+        $Configuration = new Configuration($app);
+        self::$config = $Configuration->getConfiguration();
+
+        self::$payment_method = 'PAYPAL';
+
+
+        // Read POST data as proposed at PayPal IPN example
+        $raw_post_data = file_get_contents('php://input');
+        $raw_post_array = explode('&', $raw_post_data);
+        $myPost = array();
+        foreach ($raw_post_array as $keyval) {
+            $keyval = explode ('=', $keyval);
+            if (count($keyval) == 2)
+                $myPost[$keyval[0]] = urldecode($keyval[1]);
+        }
+
+        // read the post from PayPal system and add 'cmd'
+        $request = 'cmd=_notify-validate';
+        if (function_exists('get_magic_quotes_gpc')) {
+            $get_magic_quotes_exists = true;
+        }
+
+        foreach ($myPost as $key => $value) {
+            if (($get_magic_quotes_exists == true) && (get_magic_quotes_gpc() == 1)) {
+                $value = urlencode(stripslashes($value));
+            }
+            else {
+                $value = urlencode($value);
+            }
+            $request .= "&$key=$value";
+        }
+
+        if (self::$config['paypal']['sandbox']) {
+            $paypal_url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+        }
+        else {
+            $paypal_url = "https://www.paypal.com/cgi-bin/webscr";
+        }
+
+        // init cURL
+        if (false === ($ch = curl_init($paypal_url))) {
+            $app['monolog']->addDebug('Got no handle for cURL!');
+            $app->abort(500);
+        }
+
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+
+        // set proxy if needed
+        $app['utils']->setCURLproxy($ch);
+
+        // execute cURL
+        $res = curl_exec($ch);
+
+        if (curl_errno($ch) != 0) {
+            // cURL error - abort
+            $app['monolog']->addDebug("Can't connect to PayPal to validate IPN message: " . curl_error($ch));
+            curl_close($ch);
+            $app->abort(500, 'Connection error');
+        }
+
+        $app['monolog']->addDebug("HTTP request of validation request:". curl_getinfo($ch, CURLINFO_HEADER_OUT) ." for IPN payload: $request");
+        curl_close($ch);
+
+        // Inspect IPN validation result and act accordingly
+        if (strcmp($res, "VERIFIED") == 0) {
+
+            $app['monolog']->addDebug('Received PayPal payment');
+            return 'OK';
+        }
+        elseif (strcmp($res, "INVALID") == 0) {
+            $app['monolog']->addDebug("Invalid IPN: $request");
+        }
+
+        $app->abort(500, 'Invalid IPN');
     }
 }

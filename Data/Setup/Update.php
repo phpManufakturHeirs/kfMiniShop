@@ -12,6 +12,7 @@
 namespace phpManufaktur\miniShop\Data\Setup;
 
 use Silex\Application;
+use phpManufaktur\miniShop\Control\Configuration;
 
 class Update
 {
@@ -41,6 +42,28 @@ class Update
     }
 
     /**
+     * Release 0.13
+     */
+    protected function release_013()
+    {
+        $config = $this->Configuration->getConfiguration();
+        if (!isset($config['paypal'])) {
+            $default = $this->Configuration->getDefaultConfigArray();
+            $config['paypal'] = $default['paypal'];
+            $this->Configuration->setConfiguration($config);
+            $this->Configuration->saveConfiguration();
+        }
+
+        if (!$this->app['db.utils']->columnExists(FRAMEWORK_TABLE_PREFIX.'minishop_order', 'tansaction_id')) {
+            // add column redirect_target
+            $SQL = "ALTER TABLE `".FRAMEWORK_TABLE_PREFIX."minishop_order` ADD ".
+                "`transaction_id` VARCHAR(256) NOT NULL DEFAULT 'NONE' AFTER `payment_method`";
+            $this->app['db']->query($SQL);
+            $this->app['monolog']->addInfo('[miniShop Update] Add field `transaction_id` to table `minishop_order`');
+        }
+    }
+
+    /**
      * Execute the update for the miniShop
      *
      * @param Application $app
@@ -48,9 +71,12 @@ class Update
     public function Controller(Application $app)
     {
         $this->app = $app;
+        $this->Configuration = new Configuration($app);
 
         // Release 0.12
         $this->release_012();
+        // Release 0.13
+        $this->release_013();
 
         return $app['translator']->trans('Successfull updated the extension %extension%.',
             array('%extension%' => 'miniShop'));

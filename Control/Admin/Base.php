@@ -30,6 +30,49 @@ class Base extends Admin
         $this->dataBase = new DataBase($app);
     }
 
+/**
+     * Get the toolbar for all backend dialogs
+     *
+     * @param string $active dialog
+     * @return array
+     */
+    public function getBaseToolbar($active) {
+        $toolbar = array();
+        $base_tabs = array('base', 'banking_account', 'paypal');
+        foreach ($base_tabs as $tab) {
+            switch ($tab) {
+                case 'base':
+                    $toolbar[$tab] = array(
+                        'name' => 'base',
+                        'text' => $this->app['translator']->trans('Base configurations'),
+                        'hint' => $this->app['translator']->trans('Define and edit base configurations for the miniShop'),
+                        'link' => FRAMEWORK_URL.'/admin/minishop/base/list'.self::$usage_param,
+                        'active' => ($active == 'base')
+                    );
+                    break;
+                case 'banking_account':
+                    $toolbar[$tab] = array(
+                        'name' => 'banking_account',
+                        'text' => $this->app['translator']->trans('Banking account'),
+                        'hint' => $this->app['translator']->trans('Specify your banking account for the usage with advance payment'),
+                        'link' => FRAMEWORK_URL.'/admin/minishop/payment/advance_payment/config'.self::$usage_param,
+                        'active' => ($active == 'banking_account')
+                    );
+                    break;
+                case 'paypal':
+                    $toolbar[$tab] = array(
+                        'name' => 'paypal',
+                        'text' => $this->app['translator']->trans('PayPal'),
+                        'hint' => $this->app['translator']->trans('Configure your PayPal account'),
+                        'link' => FRAMEWORK_URL.'/admin/minishop/payment/paypal/config'.self::$usage_param,
+                        'active' => ($active == 'paypal')
+                    );
+                    break;
+            }
+        }
+        return $toolbar;
+    }
+
     /**
      * Get the form for the miniShop Base definition
      *
@@ -229,10 +272,21 @@ class Base extends Admin
             $data['shipping_flatrate'] = $this->app['utils']->str2float($data['shipping_flatrate']);
             //$data['shipping_value_added_tax'] = $this->app['utils']->str2float($data['shipping_value_added_tax']);
 
-            // @todo enable PayPal!
-            if (in_array('PAYPAL', $data['payment_methods'])) {
+            if (in_array('ADVANCE_PAYMENT', $data['payment_methods']) && (
+                empty(self::$config['banking_account']['bank_name']) ||
+                empty(self::$config['banking_account']['iban']))) {
+                // missing the banking account information
+                $this->setAlert('Please configure your banking account before using the payment method <em>Advance Payment</em>.',
+                    array(), self::ALERT_TYPE_WARNING);
+                unset($data['payment_methods'][array_search('ADVANCE_PAYMENT', $data['payment_methods'])]);
+            }
+
+            if (in_array('PAYPAL', $data['payment_methods']) && (
+                empty(self::$config['paypal']['email']) || empty(self::$config['paypal']['token']))) {
+                // missing the paypal information
+                $this->setAlert('Please configure your paypal account before using the payment method <em>PayPal</em>',
+                    array(), self::ALERT_TYPE_WARNING);
                 unset($data['payment_methods'][array_search('PAYPAL', $data['payment_methods'])]);
-                $this->setAlert('PayPal will be enabled in a coming miniShop release, please test using other payment methods!');
             }
 
             $data['payment_methods'] = implode(',', $data['payment_methods']);
@@ -283,6 +337,7 @@ class Base extends Admin
                 'usage' => self::$usage,
                 'usage_param' => self::$usage_param,
                 'toolbar' => $this->getToolbar('base'),
+                'base_toolbar' => $this->getBaseToolbar('base'),
                 'alert' => $this->getAlert(),
                 'form' => $form->createView()
             ));
@@ -313,6 +368,7 @@ class Base extends Admin
                 'usage' => self::$usage,
                 'usage_param' => self::$usage_param,
                 'toolbar' => $this->getToolbar('base'),
+                'base_toolbar' => $this->getBaseToolbar('base'),
                 'alert' => $this->getAlert(),
                 'form' => $form->createView()
             ));
@@ -335,6 +391,7 @@ class Base extends Admin
                 'usage' => self::$usage,
                 'usage_param' => self::$usage_param,
                 'toolbar' => $this->getToolbar('base'),
+                'base_toolbar' => $this->getBaseToolbar('base'),
                 'alert' => $this->getAlert(),
                 'config' => self::$config,
                 'bases' => $bases

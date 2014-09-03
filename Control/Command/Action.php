@@ -16,6 +16,7 @@ use Silex\Application;
 use phpManufaktur\miniShop\Control\Configuration;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
+use phpManufaktur\miniShop\Control\Payment\PayPal;
 
 class Action extends Basic
 {
@@ -64,7 +65,8 @@ class Action extends Basic
             (($GET['action'] == 'basket') && ($parameter['action'] == 'list')) ||
             (($GET['action'] == 'order') && ($parameter['action'] == 'list')) ||
             (($GET['action'] == 'guid') && ($parameter['action'] == 'list')) ||
-            (($GET['action'] == 'send-guid') && ($parameter['action'] == 'list')))) {
+            (($GET['action'] == 'send-guid') && ($parameter['action'] == 'list')) ||
+            (($GET['action'] == 'paypal') && ($parameter['action'] == 'list')))) {
             // the command and parameters are set as GET from the CMS
             foreach ($GET as $key => $value) {
                 if (strtolower($key) == 'command') continue;
@@ -91,6 +93,25 @@ class Action extends Basic
             case 'send-guid':
                 $Order = new Order();
                 return $Order->ControllerSendGUID($app, true);
+            case 'paypal':
+                if (isset($parameter['sub_action'])) {
+                    switch ($parameter['sub_action']) {
+                        case 'cancel':
+                            $PayPal = new PayPal();
+                            return $PayPal->ControllerCancel($app, $parameter['order_id']);
+                        case 'success':
+                            $PayPal = new PayPal();
+                            return $PayPal->ControllerSuccess($app, $parameter['order_id']);
+                        default:
+                            $this->setAlert('Unknown <var>sub_action</var>: <strong>%sub_action%</strong>!',
+                                array('%sub_action%' => $parameter['sub_action']), self::ALERT_TYPE_DANGER);
+                            return $this->promptAlert();
+                    }
+                }
+                else {
+                    $this->setAlert('Missing the parameter <var>sub_action</var>!', array(), self::ALERT_TYPE_DANGER);
+                    return $this->promptAlert();
+                }
             default:
                 $this->setAlert('The parameter <code>%parameter%[%value%]</code> for the kitCommand <code>~~ %command% ~~</code> is unknown, please check the parameter and the given value!',
                     array('%parameter%' => 'action', '%value%' => $parameter['action'], '%command%' => 'miniShop'), self::ALERT_TYPE_DANGER);

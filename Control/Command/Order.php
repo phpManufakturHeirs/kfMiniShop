@@ -294,9 +294,9 @@ class Order extends CommandBasic
                     $Payment->startPayment($contact_id);
                     break;
                 case 'PAYPAL':
+                    // submit the control to the paypal extension
                     $Payment = new PayPal($this->app);
-                    $Payment->startPayment($contact_id);
-                    break;
+                    return $Payment->startPayment($contact_id);
                 default:
                     throw new \Exception('Unknown payment method '.$data['payment']);
             }

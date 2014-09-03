@@ -101,6 +101,13 @@ class OnAccount extends Payment
         return true;
     }
 
+    /**
+     * Start the payment method On Account
+     *
+     * @param integer $contact_id
+     * @throws \Exception
+     * @return boolean
+     */
     public function startPayment($contact_id)
     {
         if (false === ($contact_status = $this->app['contact']->getStatus($contact_id))) {

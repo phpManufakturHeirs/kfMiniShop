@@ -13,6 +13,9 @@ namespace phpManufaktur\miniShop\Control\Payment;
 
 use Silex\Application;
 use phpManufaktur\miniShop\Control\Command\Order;
+use phpManufaktur\miniShop\Control\Admin\Admin;
+use phpManufaktur\miniShop\Control\Admin\Base;
+use phpManufaktur\miniShop\Control\Configuration;
 
 class AdvancePayment extends Payment
 {
@@ -101,6 +104,13 @@ class AdvancePayment extends Payment
         return true;
     }
 
+    /**
+     * Start the payment method Advance Payment
+     *
+     * @param integer $contact_id
+     * @throws \Exception
+     * @return boolean
+     */
     public function startPayment($contact_id)
     {
         if (false === ($contact_status = $this->app['contact']->getStatus($contact_id))) {
@@ -150,5 +160,116 @@ class AdvancePayment extends Payment
         }
 
         return true;
+    }
+
+    /**
+     * Get the form for the settings of the banking account
+     *
+     * @param array $data
+     */
+    protected function getConfigForm($data=array())
+    {
+        return $this->app['form.factory']->createBuilder('form')
+            ->add('owner', 'text', array(
+                'data' => isset($data['owner']) ? $data['owner'] : '',
+                'required' => false
+            ))
+            ->add('bank_name', 'text', array(
+                'data' => isset($data['bank_name']) ? $data['bank_name'] : '',
+                'required' => false
+            ))
+            ->add('iban', 'text', array(
+                'data' => isset($data['iban']) ? $data['iban'] : '',
+                'required' => false
+            ))
+            ->add('bic', 'text', array(
+                'data' => isset($data['bic']) ? $data['bic'] : '',
+                'required' => false
+            ))
+            ->add('reason', 'text', array(
+                'data' => isset($data['reason']) ? $data['reason'] : '',
+                'required' => false
+            ))
+            ->getForm();
+    }
+
+    /**
+     * Controller to change the settings of the banking account
+     *
+     * @param Application $app
+     */
+    public function ControllerConfig(Application $app)
+    {
+        $this->initParameters($app);
+
+        $Base = new Base($app);
+
+        $form = $this->getConfigForm(self::$config['banking_account']);
+
+        return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+            '@phpManufaktur/miniShop/Template', 'admin/edit.banking.twig'),
+            array(
+                'usage' => self::$usage,
+                'usage_param' => self::$usage_param,
+                'toolbar' => $Base->getToolbar('base'),
+                'base_toolbar' => $Base->getBaseToolbar('banking_account'),
+                'alert' => $this->getAlert(),
+                'form' => $form->createView()
+            ));
+    }
+
+    /**
+     * Controller to check the settings of the banking account
+     *
+     * @param Application $app
+     */
+    public function ControllerConfigCheck(Application $app)
+    {
+        $this->initParameters($app);
+
+        $form = $this->getConfigForm();
+        $form->bind($this->app['request']);
+
+        if ($form->isValid()) {
+            // the form is valid
+            $data = $form->getData();
+
+            $changed = false;
+            foreach (self::$config['banking_account'] as $key => $value) {
+                if (isset($data[$key]) && ($data[$key] !== $value)) {
+                    self::$config['banking_account'][$key] = $data[$key];
+                    $changed = true;
+                }
+            }
+
+            if ($changed) {
+                $Configuration = new Configuration($app);
+                $Configuration->setConfiguration(self::$config);
+                $Configuration->saveConfiguration();
+                $this->setAlert('The banking account information has updated', array(), self::ALERT_TYPE_SUCCESS);
+            }
+            else {
+                $this->setAlert('The banking account information has not changed.', array(), self::ALERT_TYPE_INFO);
+            }
+        }
+        else {
+            // general error (timeout, CSFR ...)
+            $this->setAlert('The form is not valid, please check your input and try again!', array(),
+                self::ALERT_TYPE_DANGER, true, array('form_errors' => $form->getErrorsAsString(),
+                    'method' => __METHOD__, 'line' => __LINE__));
+        }
+
+        $Base = new Base($app);
+
+        return $this->app['twig']->render($this->app['utils']->getTemplateFile(
+            '@phpManufaktur/miniShop/Template', 'admin/edit.banking.twig'),
+            array(
+                'usage' => self::$usage,
+                'usage_param' => self::$usage_param,
+                'toolbar' => $Base->getToolbar('base'),
+                'base_toolbar' => $Base->getBaseToolbar('banking_account'),
+                'alert' => $this->getAlert(),
+                'form' => $form->createView()
+            ));
     }
 }

@@ -96,6 +96,16 @@ $app->get('/admin/minishop/base/edit/id/{base_id}',
 $app->post('/admin/minishop/base/edit/check',
     'phpManufaktur\miniShop\Control\Admin\Base::ControllerEditCheck');
 
+$app->get('/admin/minishop/payment/advance_payment/config',
+    'phpManufaktur\miniShop\Control\Payment\AdvancePayment::ControllerConfig');
+$app->post('/admin/minishop/payment/advance_payment/config/check',
+    'phpManufaktur\miniShop\Control\Payment\AdvancePayment::ControllerConfigCheck');
+
+$app->get('/admin/minishop/payment/paypal/config',
+    'phpManufaktur\miniShop\Control\Payment\PayPal::ControllerConfig');
+$app->post('/admin/minishop/payment/paypal/config/check',
+    'phpManufaktur\miniShop\Control\Payment\PayPal::ControllerConfigCheck');
+
 $app->get('/admin/minishop/group/list',
     'phpManufaktur\miniShop\Control\Admin\Group::Controller');
 $app->get('/admin/minishop/group/edit/id/{group_id}',
@@ -220,3 +230,7 @@ $app->post('/minishop/order/check/type',
     'phpManufaktur\miniShop\Control\Command\Order::ControllerContactTypeCheck');
 $app->post('/minishop/order/check/contact',
     'phpManufaktur\miniShop\Control\Command\Order::ControllerContactCheck');
+
+$app->post('/minishop/paypal/ipn',
+    'phpManufaktur\miniShop\Control\Payment\PayPal::ControllerIPN');
+    //'phpManufaktur\miniShop\Control\Payment\PayPalIPN::Controller');

@@ -48,6 +48,7 @@ class Order
         `confirmation_timestamp` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
         `order_total` FLOAT(11) NOT NULL DEFAULT 0,
         `payment_method` VARCHAR(64) NOT NULL DEFAULT 'UNKNOWN',
+        `transaction_id` VARCHAR(256) NOT NULl DEFAULT 'NONE',
         `status` ENUM('PENDING','CONFIRMED','DELETED') NOT NULL DEFAULT 'PENDING',
         `timestamp` TIMESTAMP,
         PRIMARY KEY (`id`),

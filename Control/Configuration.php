@@ -119,6 +119,12 @@ class Configuration
                 'bic' => '',
                 'reason' => 'miniShop Order #%order_id%/%date%'
             ),
+            'paypal' => array(
+                'sandbox' => false,
+                'email' => '',
+                'token' => '',
+                'logo_url' => ''
+            ),
             'basket' => array(
                 'lifetime_hours' => 6
             ),
