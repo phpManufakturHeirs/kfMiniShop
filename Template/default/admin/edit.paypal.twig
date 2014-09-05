@@ -56,6 +56,26 @@
       </div>
       <div class="col-sm-6">
         {# missing hint for the PayPal account settings #}
+        {% if app.translator.locale == 'de' %}
+          {# GERMAN TRANSLATION #}
+          <p><strong>Geschäftskonto konfigurieren</strong></p>
+          <p>Wechseln Sie in Ihrem PayPal Geschäftskonto zu <var>Profil</var> --> <var>Verkäufer/Händler</var> --> <var>Website Einstellungen</var> --> <var>Aktualisieren</var>.</p>
+          <p>Setzen Sie <var>Automatische Rückleitung</var> auf <var>Aktiviert</var>.</p>
+          <p>Geben Sie bei <var>Rückleitungs-URL</var> bitte <var>{{ CMS_URL }}</var> ein.</p>
+          <p>Setzen Sie <var>Übertragung der Zahlungsdaten</var> auf <var>Aktiviert</var>.</p>
+          <p>Klicken Sie auf Speichern.</p>
+          <p>Tragen Sie den <var>Identitäts-Token</var> der Ihnen angezeigt wird im Dialog unter <var>Token</var> ein.</p>
+          <p>Wechseln Sie in Ihrem PayPal Geschäftskonto zu <var>Profil</var> --> <var>Verkäufer/Händler</var> --> <var>Benachrichtigungen über Sofortzahlungen</var> --> <var>Aktualisieren</var>.</p>
+          <p>Wählen Sie <var>Einstellungen bearbeiten</var>.</p>
+          <p>Tragen Sie unter <var>Benachrichtigungs-URL</var> bitte <strong>{{ FRAMEWORK_URL ~ '/minishop/paypal/ipn' }}</strong> ein.</p>
+          <p>Wählen Sie <var>Sofortige Zahlungsbestätigungen erhalten (aktiviert)</var>.</p>
+          <p>Speichern Sie die Einstellungen.</p>
+          <p>Tragen Sie links im Dialog unter <var>E-Mail</var> die E-Mail Adresse Ihres PayPal Kontos ein.</p>
+          <p>Speichern Sie die PayPal Einstellungen.</p>
+        {% else %}
+          {# ENGLISH TRANSLATION #}
+          <p>- not available -</p>
+        {% endif %}
       </div>
     </div>    
   </div>
