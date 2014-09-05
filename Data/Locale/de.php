@@ -87,6 +87,8 @@ return array(
     => 'Zurück zum Warenkorb',
   'Bank name'
     => 'Bankname',
+  'Banking account'
+    => 'Bankkonto',
   'Base configuration'
     => 'Basis Einstellungen',
   'Base configuration delete checkbox'
@@ -101,10 +103,14 @@ return array(
     => 'Warenkorb',
   'BIC'
     => 'BIC',
+  'Bic'
+    => 'BIC',
   'Changed quantity for the article <strong>%article%</strong> to <strong>%quantity%</strong>.'
     => 'Die Bestellmenge für den Artikel <strong>%article%</strong> wurde auf <strong>%quantity%</strong> geändert.',
   'Changed the quantity for article <strong>%article%</strong> from <strong>%old_quantity%</strong> to <strong>%new_quantity%</strong>.'
     => 'Für den Artikel <strong>%article%</strong> wurde die Anzahl von <strong>%old_quantity%</strong> zu <strong>%new_quantity%</strong> geändert.',
+  'Configure your PayPal account'
+    => 'PayPal Konto konfigurieren',
   'Confirm order now'
     => 'Ich bestelle hiermit diese(n) Artikel',
   'Confirmation timestamp'
@@ -163,12 +169,16 @@ return array(
     => 'Ich habe die <a href="%url%" target="_blank">Allgemeinen Geschäftsbedingungen</a> gelesen und akzeptiert',
   'IBAN'
     => 'IBAN',
+  'Iban'
+    => 'IBAN',
   'Indicate that the contact has used the miniShop'
     => 'Der Kontakt hat den miniShop verwendet',
   'Information about the miniShop extension'
     => 'Informationen über die miniShop Erweiterung',
   'Invalid quantity, ignored article.'
     => 'Ungültige Mengenangabe, Artikel ignoriert.',
+  'Logo'
+    => 'Logo',
   'Minishop'
     => 'miniShop',
   'miniShop - About'
@@ -181,6 +191,8 @@ return array(
     => 'miniShop Bestellung - auf Rechung',
   'Missing the parameter <em>action</em>!'
     => 'Vermisse den Parameter <em>action</em>!',
+  'Missing the parameter <var>sub_action</var>!'
+    => 'Vermisse den Parameter <var>sub_action</var>!',
   'Net price'
     => 'Nettopreis',
   'net price without tax'
@@ -219,16 +231,26 @@ return array(
     => 'Gesamtbetrag',
   'Orders'
     => 'Bestellungen',
+  'Owner'
+    => 'Inhaber',
   'Payment method'
     => 'Zahlungsweise',
   'Payment methods'
     => 'Zahlungsmethoden',
+  'PayPal'
+    => 'PayPal',
   'Paypal'
     => 'PayPal',
+  'Paypal Settings'
+    => 'PayPal Einstellungen',
   'Permanent link'
     => 'Permanenter Link',
   'Pickup by the customer'
     => 'Selbstabholer',
+  'Please configure your banking account before using the payment method <em>Advance Payment</em>.'
+    => 'Bitte richten Sie Ihr Bankkonto ein bevor Sie die Zahlungsmethode <em>Vorkasse</em> verwenden.',
+  'Please configure your paypal account before using the payment method <em>PayPal</em>'
+    => 'Bitte richten Sie Ihr PayPal Konto ein bevor Sie die Zahlungsmethode <em>PayPal</em> verwenden.',
   'Please create a article group to start with your miniShop!'
     => 'Bitte erstellen Sie eine Artikelgruppe um mit Ihrem miniShop zu starten!',
   'Please create a article to start with your miniShop!'
@@ -259,6 +281,10 @@ return array(
     => 'Der Artikel <strong>%article%</strong> wurde aus dem Warenkorb entfernt.',
   'Removed the article <strong>%article%</strong> from the basket.'
     => 'Der Artikel <strong>%article%</strong>wurde aus dem Warenkorb entfernt.',
+  'Sandbox'
+    => 'Sandbox',
+  'Sandbox mode'
+    => 'Sandbox Modus',
   'Save'
     => 'Speichern',
   'Select article image'
@@ -287,6 +313,8 @@ return array(
     => 'Versandkostentyp',
   'Shipping value added tax'
     => 'Umsatzsteuer (Versandkosten)',
+  'Specify your banking account for the usage with advance payment'
+    => 'Richten Sie Ihr Bankkonto für die Verwendung mit Vorkasse ein',
   'Subtotal'
     => 'Zwischensumme',
   'Succesful created a new article group'
@@ -325,6 +353,10 @@ return array(
     => 'Der Artikel wurde nicht geändert.',
   'The article with the ID %id% has successfull deleted'
     => 'Der Artikel mit der ID %id% wurde erfolgreich gelöscht',
+  'The banking account information has not changed.'
+    => 'Die Informationen zu dem Bankkonto wurden nicht geändert.',
+  'The banking account information has updated'
+    => 'Die Informationen zum Bankkonto wurden aktualisiert.',
   'The base configuration <strong>%base%</strong> does not exists, please check the kitCommand!'
     => 'Die Basis Einstellung <strong>%base%</strong> existiert nicht, bitte prüfen Sie das kitCommand!',
   'The base configuration with the ID %id% has successfull deleted'
@@ -341,6 +373,14 @@ return array(
     => 'Der Bezeichner <strong>%name%</strong> wird bereits verwendet, bitte wählen Sie einen anderen Bezeichner.',
   'The order list is empty!'
     => 'Es liegen keine Bestellungen vor.',
+  'The payment at PayPal was canceled'
+    => 'Die Zahlung über PayPal wurde abgebrochen.',
+  'The payment at PayPal was successful'
+    => 'Die Zahlung über PayPal war erfolgreich.',
+  'The PayPal settings has not changed.'
+    => 'Die PayPal Einstellungen wurden nicht geändert.',
+  'The PayPal settings has updated'
+    => 'Die PayPal Einstellungen wurden aktualisiert.',
   'The permanent link <strong>/%link%</strong> is already in use by another article, please select an alternate one.'
     => 'Der permanente Link <strong>/%link%</strong> wird bereits von einem anderen Artikel verwendet, bitte legen Sie einen anderen Link fest.',
   'The selected article is already in your basket.'
@@ -355,8 +395,12 @@ return array(
     => 'Es wurde keine Abbildung ausgewählt.',
   'Timestamp'
     => 'Zeitstempel',
+  'Token'
+    => 'Token',
   'Total amount'
     => 'Gesamtbetrag',
+  'Unknown <var>sub_action</var>: <strong>%sub_action%</strong>!'
+    => 'Unbekannte <var>sub_action</var>: <strong>%sub_action%</strong>!',
   'Updated your shopping basket'
     => 'Ihr Warenkorb wurde aktualisiert.',
   'value add tax %vat%%'

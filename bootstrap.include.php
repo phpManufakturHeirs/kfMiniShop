@@ -231,6 +231,6 @@ $app->post('/minishop/order/check/type',
 $app->post('/minishop/order/check/contact',
     'phpManufaktur\miniShop\Control\Command\Order::ControllerContactCheck');
 
-$app->post('/minishop/paypal/ipn',
-    'phpManufaktur\miniShop\Control\Payment\PayPal::ControllerIPN');
-    //'phpManufaktur\miniShop\Control\Payment\PayPalIPN::Controller');
+$app->post('/minishop/paypal/ipn/{order_id}',
+    'phpManufaktur\miniShop\Control\Payment\PayPal::ControllerIPN')
+    ->assert('order_id', '\d+');

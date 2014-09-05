@@ -20,8 +20,21 @@
   <h1>{{ 'PayPal'|trans }}</h1>  
     
     {{ alert }}
+           
+    <div class="panel panel-default">
+      <div class="panel-body">
+        {% if app.translator.locale == 'de' %}
+          {# GERMAN TRANSLATION #}
+          <p>Vielen Dank für Ihre Bestellung.</p>
+          <p>Nach Abschluß des Bezahlvorgang über PayPal werden Sie zum Shop zurückgeleitet und erhalten eine Bestätigung.</p>
+        {% else %}
+          {# ENGLISH TRANSLATION #}
+          <p>Thank you for the order.</p>
+          <p>After finishing the payment process at PayPal you will be redirected back to the shop and get a confirmation.</p>
+        {% endif %}
+      </div>
+    </div>
     
-       
     <form action="https://www.{% if config.paypal.sandbox %}sandbox.{% endif %}paypal.com/cgi-bin/webscr" class="form-horizontal" method="post" role="form" target="_parent">
       <input type="hidden" name="cmd" value="_ext-enter" />
       <input type="hidden" name="redirect_cmd" value="_xclick" />
@@ -46,8 +59,8 @@
       <input type="hidden" name="zip" value="{{ contact.address_zip }}" />
       <input type="hidden" name="country" value="{{ contact.address_country_code }}" />
       <input type="hidden" name="return" value="{{ permalink_base_url ~ '/payment/paypal/success/id/' ~ order.id }}" />
-      <input type="hidden" name="notify_url" value="http://blackcat.kitbase.de/kit2/minishop/paypal/ipn" />
+      <input type="hidden" name="notify_url" value="{{ FRAMEWORK_URL ~ '/minishop/paypal/ipn/' ~ order.id }}" />
       <input type="hidden" name="cancel_return" value="{{ permalink_base_url ~ '/payment/paypal/cancel/id/' ~ order.id }}" />
-      <button class="btn btn-default" type="submit">{{ 'Submit'|trans }}</button>
+      <button class="btn btn-default" type="submit">{{ 'Pay now'|trans }}</button>
     </form>
 {% endblock content %}

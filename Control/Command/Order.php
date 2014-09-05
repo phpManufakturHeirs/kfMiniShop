@@ -376,6 +376,17 @@ class Order extends CommandBasic
         );
         $this->dataOrder->update($order['id'], $data);
 
+        $status = $app['contact']->getStatus($order['contact_id']);
+        if ($status === 'PENDING') {
+            $data = array(
+                'contact' => array(
+                    'contact_status' => 'ACTIVE'
+                )
+            );
+            // change the status to ACTIVE
+            $app['contact']->update($data, $order['contact_id']);
+        }
+
         switch ($order['payment_method']) {
             case 'ADVANCE_PAYMENT':
                 $AdvancePayment = new AdvancePayment($app);

@@ -13,7 +13,6 @@ namespace phpManufaktur\miniShop\Control\Payment;
 
 use Silex\Application;
 use phpManufaktur\miniShop\Control\Command\Order;
-use phpManufaktur\miniShop\Control\Admin\Admin;
 use phpManufaktur\miniShop\Control\Admin\Base;
 use phpManufaktur\miniShop\Control\Configuration;
 

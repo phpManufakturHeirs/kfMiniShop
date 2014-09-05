@@ -14,6 +14,7 @@ namespace phpManufaktur\miniShop\Control\Payment;
 use Silex\Application;
 use phpManufaktur\miniShop\Control\Admin\Base;
 use phpManufaktur\miniShop\Control\Configuration;
+use phpManufaktur\miniShop\Data\Shop\Order;
 
 class PayPal extends Payment
 {
@@ -58,7 +59,7 @@ class PayPal extends Payment
         $order_id = $this->createOrderRecord($contact_id, $status);
 
         // remove the current basket
-//        $this->Basket->removeBasket();
+        $this->Basket->removeBasket();
 
         $order = $this->dataOrder->select($order_id);
         $order['data'] = unserialize($order['data']);
@@ -186,6 +187,7 @@ class PayPal extends Payment
             ));
     }
 
+
     public function ControllerCancel(Application $app, $order_id)
     {
         $this->initParameters($app);
@@ -196,8 +198,85 @@ class PayPal extends Payment
             return $this->promptAlert();
         }
 
+        // delete the order
+        $data = array(
+            'status' => 'DELETED'
+        );
+        $this->dataOrder->update($order_id, $data);
+
         $this->setAlert('The payment at PayPal was canceled', array(), self::ALERT_TYPE_WARNING);
         return $this->promptAlert();
+    }
+
+    /**
+     * Send the confirmation mails to the customer and the dealer
+     *
+     * @param integer $order_id
+     * @throws \Exception
+     */
+    public function sendOrderConfirmation($order_id)
+    {
+        // get the order
+        if (false === ($order = $this->dataOrder->select($order_id))) {
+            throw new \Exception("The order with the ID $order_id does not exists!");
+        }
+        // and the desired contact
+        $contact = $this->app['contact']->selectOverview($order['contact_id']);
+
+        // send a confirmation
+        $body = $this->app['twig']->render($this->app['utils']->getTemplateFile(
+            '@phpManufaktur/miniShop/Template', 'command/mail/customer/paypal.twig',
+            $this->getPreferredTemplateStyle()),
+            array(
+                'order_data' => unserialize($order['data']),
+                'order' => $order,
+                'config' => self::$config,
+                'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
+                'contact' => $contact
+            ));
+
+        // send a email to the customer
+        $message = \Swift_Message::newInstance()
+            ->setSubject($this->app['translator']->trans('Your miniShop order'))
+            ->setFrom(array(SERVER_EMAIL_ADDRESS => SERVER_EMAIL_NAME))
+            ->setTo($contact['communication_email'])
+            ->setBody($body)
+            ->setContentType('text/html');
+
+        // send the message
+        $failedRecipients = null;
+        if (!$this->app['mailer']->send($message, $failedRecipients))  {
+            $this->app['monolog']->addError("Can't send mail to ", implode(',', $failedRecipients));
+            return false;
+        }
+
+        // send a email to the dealer
+        $body = $this->app['twig']->render($this->app['utils']->getTemplateFile(
+            '@phpManufaktur/miniShop/Template', 'command/mail/dealer/paypal.twig',
+            $this->getPreferredTemplateStyle()),
+            array(
+                'order_data' => unserialize($order['data']),
+                'order' => $order,
+                'config' => self::$config,
+                'permalink_base_url' => CMS_URL.self::$config['permanentlink']['directory'],
+                'contact' => $contact
+            ));
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($this->app['translator']->trans('miniShop order by PayPal'))
+            ->setFrom(array(SERVER_EMAIL_ADDRESS => SERVER_EMAIL_NAME))
+            ->setTo(SERVER_EMAIL_ADDRESS)
+            ->setReplyTo($contact['communication_email'])
+            ->setBody($body)
+            ->setContentType('text/html');
+
+        // send the message
+        $failedRecipients = null;
+        if (!$this->app['mailer']->send($message, $failedRecipients))  {
+            $this->app['monolog']->addError("Can't send mail to ", implode(',', $failedRecipients));
+            return false;
+        }
+        return true;
     }
 
     public function ControllerSuccess(Application $app, $order_id)
@@ -210,7 +289,11 @@ class PayPal extends Payment
             return $this->promptAlert();
         }
 
-        $this->setAlert('The payment at PayPal was successful', array(), self::ALERT_TYPE_SUCCESS);
+        if (false === ($order = $this->dataOrder->select($order_id))) {
+            throw new \Exception("Invalid order ID: $order_id");
+        }
+
+        $this->setAlert('The PayPal payment was successfull. We will send you a confirmation mail as soon we receive the automated confirmation from PayPal.');
         return $this->promptAlert();
     }
 
@@ -220,9 +303,10 @@ class PayPal extends Payment
      * @param Application $app
      * @see https://github.com/paypal/ipn-code-samples/blob/master/paypal_ipn.php
      */
-    public function ControllerIPN(Application $app)
+    public function ControllerIPN(Application $app, $order_id)
     {
-        // dont use initParameters() because we wont init the BASIC class here!
+        // dont use initParameters() because we won't init the BASIC class here!
+        $this->app = $app;
 
         $Configuration = new Configuration($app);
         self::$config = $Configuration->getConfiguration();
@@ -238,6 +322,20 @@ class PayPal extends Payment
             $keyval = explode ('=', $keyval);
             if (count($keyval) == 2)
                 $myPost[$keyval[0]] = urldecode($keyval[1]);
+        }
+
+        $this->dataOrder = new Order($app);
+        if (false === ($order = $dataOrder->select($order_id))) {
+            // the order ID does not exists!
+            $app['monolog']->addError("The order with the ID $order_id does not exists!");
+            $app->abort(500, 'Invalid order ID!');
+        }
+        else {
+            if ($order['transaction_id'] !== 'NONE') {
+                // this transaction was already handled
+                $app['monolog']->addError("The order with the ID $order_id was already handled with the transaction ID {$order['transaction_id']}!");
+                $app->abort(500, 'Transaction was already handled!');
+            }
         }
 
         // read the post from PayPal system and add 'cmd'
@@ -295,12 +393,58 @@ class PayPal extends Payment
 
         // Inspect IPN validation result and act accordingly
         if (strcmp($res, "VERIFIED") == 0) {
+            $verfied = true;
 
-            $app['monolog']->addDebug('Received PayPal payment');
-            return 'OK';
+            if (!isset($myPost['payment_status']) || ($myPost['payment_status'] !== 'Completed')) {
+                $app['monolog']->addError("Incorrect payment status: {$myPost['payment_status']} - expected: Completed.", $myPost);
+                $verfied = false;
+            }
+
+            if (!isset($myPost['txn_id']) ||
+                (($myPost['txn_id'] != $order['transaction_id']) &&
+                 ($order['transaction_id'] !== 'NONE'))) {
+                $app['monolog']->addError("The transaction ID mismatch!", $myPost);
+                $verfied = false;
+            }
+
+            if (!isset($myPost['business'])) {
+                $app['monolog']->addError('Missing the business email address!');
+                $verified = false;
+            }
+
+            if (strtolower(self::$config['paypal']['email']) !== strtolower($myPost['business'])) {
+                $app['monolog']->addError("Invalid business email address: {$myPost['business']}");
+                $verified = false;
+            }
+
+            if ($verfied) {
+                // transaction is OK - update order record
+                $data = array(
+                    'transaction_id' => $myPost['txn_id'],
+                    'status' => 'CONFIRMED'
+                );
+                $this->dataOrder->update($order_id, $data);
+
+                $status = $app['contact']->getStatus($order['contact_id']);
+                if ($status === 'PENDING') {
+                    $data = array(
+                        'contact' => array(
+                            'contact_status' => 'ACTIVE'
+                        )
+                    );
+                    // change the contact status to ACTIVE
+                    $app['contact']->update($data, $order['contact_id']);
+                }
+
+                // send the confirmation mails to the customer and the provider
+                $this->sendOrderConfirmation($order_id);
+
+                $app['monolog']->addDebug('Received PayPal payment');
+                return 'OK';
+            }
         }
         elseif (strcmp($res, "INVALID") == 0) {
-            $app['monolog']->addDebug("Invalid IPN: $request");
+            $app['monolog']->addError("Invalid IPN: $request");
         }
 
         $app->abort(500, 'Invalid IPN');
