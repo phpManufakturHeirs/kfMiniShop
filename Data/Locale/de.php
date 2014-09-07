@@ -133,6 +133,12 @@ return array(
     => 'Einen neuen #Hashtag anlegen',
   'Create a new title'
     => 'Eine neue Anrede anlegen',
+  'Create customer'
+    => 'Kunde anlegen',
+  'Create or edit a customer record'
+    => 'Kunden Datensatz anlegen oder bearbeiten',
+  'Create or edit article for the miniShop'
+    => 'Artikel anlegen oder bearbeiten',
   'Currency'
     => 'Währung',
   'Currency iso'
@@ -155,6 +161,8 @@ return array(
     => 'Festlegung durch jeden Artikel',
   'Each value in a separate line, use <key>SHIFT</key>+<key>ENTER</key>'
     => 'Jeder Wert in einer eigenen Zeile, verwenden Sie <key>UMSCHALT</key>+<key>EINGABE</key>',
+  'Edit customer'
+    => 'Kunde bearbeiten',
   'Flatrate for shipping and handling'
     => 'Versandkostenpauschale',
   'Form action'
@@ -189,6 +197,8 @@ return array(
     => 'miniShop Bestellung - Vorauszahlung',
   'miniShop order by on account payment'
     => 'miniShop Bestellung - auf Rechung',
+  'miniShop order by PayPal'
+    => 'miniShop Bestellung über PayPal',
   'Missing the parameter <em>action</em>!'
     => 'Vermisse den Parameter <em>action</em>!',
   'Missing the parameter <var>sub_action</var>!'
@@ -215,6 +225,8 @@ return array(
     => 'Bestellung durch Vorauszahlung',
   'Order by on account payment'
     => 'Bestellung auf Rechnung',
+  'Order by PayPal'
+    => 'Bestellung über PayPal',
   'Order for'
     => 'Bestellung für',
   'Order list'
@@ -233,13 +245,15 @@ return array(
     => 'Bestellungen',
   'Owner'
     => 'Inhaber',
+  'Pay now'
+    => 'Jetzt bezahlen',
   'Payment method'
     => 'Zahlungsweise',
   'Payment methods'
     => 'Zahlungsmethoden',
-  'PayPal'
-    => 'PayPal',
   'Paypal'
+    => 'PayPal',
+  'PayPal'
     => 'PayPal',
   'Paypal Settings'
     => 'PayPal Einstellungen',
@@ -377,6 +391,8 @@ return array(
     => 'Die Zahlung über PayPal wurde abgebrochen.',
   'The payment at PayPal was successful'
     => 'Die Zahlung über PayPal war erfolgreich.',
+  'The PayPal payment was successfull. We will send you a confirmation mail as soon we receive the automated confirmation from PayPal.'
+    => 'Die Bezahlung über PayPal war erfolgreich. Wir senden Ihnen eine Bestätigung per E-Mail sobald wir die automatische Zahlungsinformation von PayPal erhalten haben.',
   'The PayPal settings has not changed.'
     => 'Die PayPal Einstellungen wurden nicht geändert.',
   'The PayPal settings has updated'
