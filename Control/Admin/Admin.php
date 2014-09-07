@@ -59,7 +59,7 @@ class Admin extends Alert
                         'name' => 'about',
                         'text' => $this->app['translator']->trans('About'),
                         'hint' => $this->app['translator']->trans('Information about the miniShop extension'),
-                        'link' => FRAMEWORK_URL.'/admin/minishop/about'.self::$usage_param,
+                        'link' => FRAMEWORK_URL.'/admin/minishop/about',
                         'active' => ($active == 'about')
                     );
                     break;
@@ -68,7 +68,7 @@ class Admin extends Alert
                         'name' => 'base',
                         'text' => $this->app['translator']->trans('Base configurations'),
                         'hint' => $this->app['translator']->trans('Define and edit base configurations for the miniShop'),
-                        'link' => FRAMEWORK_URL.'/admin/minishop/base/list'.self::$usage_param,
+                        'link' => FRAMEWORK_URL.'/admin/minishop/base/list',
                         'active' => ($active == 'base')
                     );
                     break;
@@ -77,17 +77,17 @@ class Admin extends Alert
                         'name' => 'group',
                         'text' => $this->app['translator']->trans('Article groups'),
                         'hint' => $this->app['translator']->trans('Define and edit the article groups for the miniShop'),
-                        'link' => FRAMEWORK_URL.'/admin/minishop/group/list'.self::$usage_param,
+                        'link' => FRAMEWORK_URL.'/admin/minishop/group/list',
                         'active' => ($active == 'group')
                     );
                     break;
                 case 'article':
                     $toolbar[$tab] = array(
                         'name' => 'article',
-                        'text' => $this->app['translator']->trans('Articles'),
-                        'hint' => $this->app['translator']->trans('Define and edit the articles for the miniShop'),
-                        'link' => FRAMEWORK_URL.'/admin/minishop/article/list'.self::$usage_param,
-                        'active' => ($active == 'article')
+                        'text' => $this->app['translator']->trans('Article'),
+                        'hint' => $this->app['translator']->trans('Create or edit article for the miniShop'),
+                        'link' => FRAMEWORK_URL.'/admin/minishop/article/list',
+                        'active' => ($active === 'article')
                     );
                     break;
                 case 'orders':
@@ -95,7 +95,7 @@ class Admin extends Alert
                         'name' => 'orders',
                         'text' => $this->app['translator']->trans('Orders'),
                         'hint' => $this->app['translator']->trans('View all orders you have received'),
-                        'link' => FRAMEWORK_URL.'/admin/minishop/order/list'.self::$usage_param,
+                        'link' => FRAMEWORK_URL.'/admin/minishop/order/list',
                         'active' => ($active == 'orders')
                     );
                     break;
@@ -104,16 +104,16 @@ class Admin extends Alert
                         'name' => 'contact_list',
                         'text' => $this->app['translator']->trans('Customer list'),
                         'hint' => $this->app['translator']->trans('List of all available contacts'),
-                        'link' => FRAMEWORK_URL.'/admin/minishop/contact/list'.self::$usage_param,
+                        'link' => FRAMEWORK_URL.'/admin/minishop/contact/list',
                         'active' => ($active == 'contact_list')
                     );
                     break;
                 case 'contact_edit':
                     $toolbar[$tab] = array(
                         'name' => 'contact_edit',
-                        'text' => $this->app['translator']->trans('Customer'),
-                        'hint' => $this->app['translator']->trans('Create a new contact'),
-                        'link' => FRAMEWORK_URL.'/admin/minishop/contact/select'.self::$usage_param,
+                        'text' => ($active === 'contact_edit') ? $this->app['translator']->trans('Edit customer') : $this->app['translator']->trans('Create customer'),
+                        'hint' => $this->app['translator']->trans('Create or edit a customer record'),
+                        'link' => FRAMEWORK_URL.'/admin/minishop/contact/select',
                         'active' => ($active == 'contact_edit')
                     );
                     break;
