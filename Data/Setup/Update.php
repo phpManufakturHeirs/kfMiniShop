@@ -54,7 +54,7 @@ class Update
             $this->Configuration->saveConfiguration();
         }
 
-        if (!$this->app['db.utils']->columnExists(FRAMEWORK_TABLE_PREFIX.'minishop_order', 'tansaction_id')) {
+        if (!$this->app['db.utils']->columnExists(FRAMEWORK_TABLE_PREFIX.'minishop_order', 'transaction_id')) {
             // add column redirect_target
             $SQL = "ALTER TABLE `".FRAMEWORK_TABLE_PREFIX."minishop_order` ADD ".
                 "`transaction_id` VARCHAR(256) NOT NULL DEFAULT 'NONE' AFTER `payment_method`";
