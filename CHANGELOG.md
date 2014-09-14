@@ -6,6 +6,14 @@ MIT License (MIT) - <http://www.opensource.org/licenses/MIT>
 
 kitFramework - <https://kit2.phpmanufaktur.de>
 
+**0.14** - 2014-09-14
+
+* fixed wrong release date
+* changed toolbar handling
+* fixed a strong typo which causes an exception in update
+* updated info URL
+* added URL for the changelog in CMS Tool
+
 **0.13** - 2014-09-05
 
 * changed form field types from 'number' to 'text' to grant downward compatibility < PHP 5.5
