@@ -31,16 +31,19 @@ class Setup
      *
      * @param Application $app
      * @param array $config load config only if needed!
+     * @param string $subdirectory calculate subdirectory only if needed
      * @throws \Exception
      */
-    public function createPermalinkRoutes(Application $app, $config=null)
+    public function createPermalinkRoutes(Application $app, $config=null, $subdirectory=null)
     {
         if (is_null($config)) {
             $Configuration = new  Configuration($app);
             $config = $Configuration->getConfiguration();
         }
 
-        $subdirectory = parse_url(CMS_URL, PHP_URL_PATH);
+        if (is_null($subdirectory)) {
+            $subdirectory = parse_url(CMS_URL, PHP_URL_PATH);
+        }
 
         // always remove an existing include
         $app['filesystem']->remove(MANUFAKTUR_PATH.'/miniShop/bootstrap.include.inc');
@@ -67,25 +70,33 @@ class Setup
      *
      * @param Application $app
      * @param array $config load config only if needed!
+     * @param string $subdirectory calculate subdirectory only if needed
+     * @param string $CMS_PATH use instead of constant CMS_PATH
      * @throws \Exception
      */
-    public function createPermalinkDirectories(Application $app, $config=null)
+    public function createPermalinkDirectories(Application $app, $config=null, $subdirectory=null, $CMS_PATH=null)
     {
         if (is_null($config)) {
             $Configuration = new Configuration($app);
             $config = $Configuration->getConfiguration();
         }
 
-        $subdirectory = parse_url(CMS_URL, PHP_URL_PATH);
+        if (is_null($subdirectory)) {
+            $subdirectory = parse_url(CMS_URL, PHP_URL_PATH);
+        }
+
+        if (is_null($CMS_PATH)) {
+            $CMS_PATH = CMS_PATH;
+        }
 
         $path = $config['permanentlink']['directory'];
-        $app['filesystem']->mkdir(CMS_PATH.$path);
+        $app['filesystem']->mkdir($CMS_PATH.$path);
         if (false === ($include = file_get_contents(MANUFAKTUR_PATH.'/miniShop/Data/Setup/PermanentLink/.htaccess'))) {
             throw new \Exception('Missing /miniShop/Data/Setup/PermanentLink/.htaccess!');
         }
         $include = str_replace(array('%subdirectory%'), array($subdirectory), $include);
 
-        if (false === (file_put_contents(CMS_PATH.$path.'/.htaccess', $include))) {
+        if (false === (file_put_contents($CMS_PATH.$path.'/.htaccess', $include))) {
             throw new \Exception("Can't create $path/.htaccess!");
         }
         $app['monolog']->addDebug('Create '.'/'.$config['permanentlink']['directory'].'/.htaccess');
