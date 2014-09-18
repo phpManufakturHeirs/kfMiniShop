@@ -6,6 +6,10 @@ MIT License (MIT) - <http://www.opensource.org/licenses/MIT>
 
 kitFramework - <https://kit2.phpmanufaktur.de>
 
+**0.15** - 2014-09-18
+
+* enable setting of `$subdirectory` and `$CMS_PATH` for usage with the BASIC migration tool
+
 **0.14** - 2014-09-14
 
 * fixed wrong release date
