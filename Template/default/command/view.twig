@@ -56,7 +56,7 @@
             <strong>{{ article.article_price|number_format(2, decimal_separator, thousand_separator) }} {{ currency_symbol }}</strong>{% if base.article_price_type == 'NET_PRICE' %} {{ 'net price without tax'|trans }}{% endif %}
           </div>
           <div class="status{% if article.status == 'AVAILABLE_SOON' or article.status == 'NOT_AVAILABLE' %} locked{% endif %}">
-            {{ article.status|humanize|trans }}{% if article.status == 'AVAILABLE_DATE' or article.status == 'AVAILABLE_DATE_ORDER' %} {{ article.available_date|date('DATE_FORMAT'|trans({},'messages',base.locale|lower)) }}{% endif %}
+            {{ article.status|lower|humanize|trans }}{% if article.status == 'AVAILABLE_DATE' or article.status == 'AVAILABLE_DATE_ORDER' %} {{ article.available_date|date('DATE_FORMAT'|trans({},'messages',base.locale|lower)) }}{% endif %}
           </div>
           <div class="shipping">
             {% if base.shipping_type == 'NONE' %}

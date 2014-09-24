@@ -57,9 +57,9 @@
           <tbody>
             {% for item in groups %}
               <tr>
-                <td><a href="{{ FRAMEWORK_URL ~ '/admin/minishop/group/edit/id/' ~ item.id ~ usage_param }}">{{ item.name|humanize|trans }}</a></td>
-                <td><a href="{{ FRAMEWORK_URL ~ '/admin/minishop/base/edit/id/' ~ item.base_id ~ usage_param }}">{{ item.base_name|humanize|trans }}</a></td>
-                <td>{{ item.status|humanize|trans }}</td>
+                <td><a href="{{ FRAMEWORK_URL ~ '/admin/minishop/group/edit/id/' ~ item.id ~ usage_param }}">{{ item.name|lower|humanize|trans }}</a></td>
+                <td><a href="{{ FRAMEWORK_URL ~ '/admin/minishop/base/edit/id/' ~ item.base_id ~ usage_param }}">{{ item.base_name|lower|humanize|trans }}</a></td>
+                <td>{{ item.status|lower|humanize|trans }}</td>
               </tr>
             {% endfor %}
           </tbody>

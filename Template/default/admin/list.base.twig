@@ -57,11 +57,11 @@
           <tbody>
             {% for item in bases %}
               <tr>
-                <td><a href="{{ FRAMEWORK_URL ~ '/admin/minishop/base/edit/id/' ~ item.id ~ usage_param }}">{{ item.name|trans }}</a></td>
+                <td><a href="{{ FRAMEWORK_URL ~ '/admin/minishop/base/edit/id/' ~ item.id ~ usage_param }}">{{ item.name|lower|humanize|trans }}</a></td>
                 <td>{{ item.locale }}</td>
                 <td>{{ attribute(config.currency, item.currency_iso).name|trans }}</td>
                 <td>{{ item.article_value_added_tax|number_format(2, 'DECIMAL_SEPARATOR'|trans, 'THOUSAND_SEPARATOR'|trans) }}</td>
-                <td>{{ item.status|humanize|trans }}</td>
+                <td>{{ item.status|lower|humanize|trans }}</td>
               </tr>
             {% endfor %}
           </tbody>

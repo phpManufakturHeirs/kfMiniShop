@@ -30,10 +30,12 @@
 
       {% for article in articles %}
         <div class="media article-list">
-          <a class="pull-left" href="{{ permalink_base_url ~ '/article/' ~ article.permanent_link }}">
-            {% set img = image(article.article_image, parameter.thumbnail_max_width, parameter.thumbnail_max_height) %}
-            <img class="media-object" src="{{ img.src }}" alt="{{ article.article_name }}">
-          </a>
+          {% if article.article_image|length > 0 %}
+            <a class="pull-left" href="{{ permalink_base_url ~ '/article/' ~ article.permanent_link }}">
+              {% set img = image(article.article_image, parameter.thumbnail_max_width, parameter.thumbnail_max_height) %}
+              <img class="media-object" src="{{ img.src }}" alt="{{ article.article_name }}">
+            </a>
+          {% endif %}
           <div class="media-body">
             <a href="{{ permalink_base_url ~ '/article/' ~ article.permanent_link }}"><h2 class="media-heading">{{ article.article_name }}</h2></a>
             {% if parameter.rating %}
