@@ -47,8 +47,8 @@
               <th>{{ 'Name'|trans }}</th>
               <th>{{ 'Email'|trans }}</th>
               <th>{{ 'Timestamp'|trans }}</th>
-              <th class="text-right">{{ 'order_total'|humanize|trans }}</th>
-              <th>{{ 'payment_method'|humanize|trans }}</th>
+              <th class="text-right">{{ 'order_total'|lower|humanize|trans }}</th>
+              <th>{{ 'payment_method'|lower|humanize|trans }}</th>
               <th>{{ 'Status'|trans }}</th>
             </tr>
           </thead>
@@ -63,8 +63,8 @@
                 <td><a href="mailto:{{ order.contact.communication_email }}">{{ order.contact.communication_email }}</a></td>
                 <td>{{ order.order_timestamp|date('DATETIME_FORMAT'|trans) }}</td>
                 <td class="text-right">{{ order.order_total|number_format(2, decimal_separator, thousand_separator) }} {{ currency_symbol }}</td>
-                <td>{{ order.payment_method|humanize|trans }}</td>
-                <td>{{ order.status|humanize|trans }}</td>
+                <td>{{ order.payment_method|lower|humanize|trans }}</td>
+                <td>{{ order.status|lower|humanize|trans }}</td>
               </tr>
             {% endfor %}
           </tbody>
