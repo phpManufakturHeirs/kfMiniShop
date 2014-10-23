@@ -62,6 +62,9 @@ class PermanentLink extends Alert
     {
         // init cURL
         $ch = curl_init();
+        $this->app['monolog']->addDebug(
+            sprintf('calling URL [%s]',$url),
+            array(__METHOD__, __LINE__));
 
         if (is_null($this->app['session']->get('MINISHOP_COOKIE_FILE')) ||
             !$this->app['filesystem']->exists($this->app['session']->get('MINISHOP_COOKIE_FILE'))) {
@@ -107,6 +110,8 @@ class PermanentLink extends Alert
         $this->app['utils']->setCURLproxy($ch);
 
         if (false === ($result = curl_exec($ch))) {
+            // write debug info
+            $this->app['monolog']->addDebug(var_export(curl_getinfo($ch),1), array(__METHOD__, __LINE__));
             // cURL error
             $error = 'cURL error: '.curl_error($ch);
             $this->app['monolog']->addError($error, array(__METHOD__, __LINE__));
@@ -425,6 +430,7 @@ class PermanentLink extends Alert
         $parameter = array(
             'command' => 'minishop',
             'action' => 'guid',
+            'sub_action' => 'success',
             'robots' => 'noindex,follow',
             'guid' => $guid
         );
@@ -504,7 +510,7 @@ class PermanentLink extends Alert
 
         if (false === ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
             // the CMS page does not exists!
-            $message = str_ireplace('%link%', $data['base']['target_page_link'], 'The CMS page <strong>%link%</strong> does not exists!');
+            $message = str_ireplace('%link%', $data['base']['target_page_link'], 'The CMS page <strong>%link%</strong> does not exist!');
             $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
             $app->abort(404, $message);
         }

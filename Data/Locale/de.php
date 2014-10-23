@@ -353,6 +353,8 @@ return array(
     => 'Anreisser',
   'Terms conditions link'
     => 'AGB, Seite im CMS',
+  'Thank you for confirming your email address. Your order will be processed as soon as possible.'
+      => 'Vielen Dank für die Bestätigung Ihrer eMail Adresse. Ihre Bestellung wird baldmöglichst bearbeitet.',
   'Thank you for the order, we have send you a confirmation mail.'
     => 'Vielen Dank für Ihre Bestellung, wir haben Ihnen eine Bestätigung zugesendet.',
   'Thank you for the order. We have send you a email with a confirmation link, please use this link to finish your order.'

@@ -89,6 +89,17 @@ class Action extends Basic
                 return $Basket->ControllerBasketView($app);
             case 'guid':
                 $Order = new Order();
+                if (isset($parameter['sub_action'])) {
+                    switch ($parameter['sub_action']) {
+                        case 'success':
+                            $this->setAlert('Thank you for confirming your email address. Your order will be processed as soon as possible.', array(), self::ALERT_TYPE_SUCCESS);
+                            return $this->promptAlert();
+                        default:
+                            $this->setAlert('Unknown <var>sub_action</var>: <strong>%sub_action%</strong>!',
+                                array('%sub_action%' => $parameter['sub_action']), self::ALERT_TYPE_DANGER);
+                            return $this->promptAlert();
+                    }
+                }
                 return $Order->ControllerGUID($app);
             case 'send-guid':
                 $Order = new Order();
