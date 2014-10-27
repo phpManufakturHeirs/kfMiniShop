@@ -178,7 +178,7 @@ class Group extends Admin
         $data = array();
         if ($group_id > 0) {
             if (false === ($data = $this->dataGroup->select($group_id))) {
-                $this->setAlert('The record with the ID %id% does not exists!',
+                $this->setAlert('The record with the ID %id% does not exist!',
                     array('%id%' => $group_id), self::ALERT_TYPE_DANGER);
             }
         }

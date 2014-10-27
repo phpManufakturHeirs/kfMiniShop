@@ -265,7 +265,7 @@ class Article extends Admin
         $data = array();
         if ($article_id > 0) {
             if (false === ($data = $this->dataArticle->select($article_id))) {
-                $this->setAlert('The record with the ID %id% does not exists!',
+                $this->setAlert('The record with the ID %id% does not exist!',
                     array('%id%' => $article_id), self::ALERT_TYPE_DANGER);
             }
         }
@@ -510,7 +510,7 @@ class Article extends Admin
         }
 
         if (false === ($data = $this->dataArticle->select($article_id))) {
-            $this->setAlert('The record with the ID %id% does not exists!',
+            $this->setAlert('The record with the ID %id% does not exist!',
                 array('%id%' => $article_id), self::ALERT_TYPE_DANGER);
         }
         $form = $this->getArticleForm($data);
@@ -534,7 +534,7 @@ class Article extends Admin
         $this->setAlert('The image was successfull removed.', array(), self::ALERT_TYPE_SUCCESS);
 
         if (false === ($data = $this->dataArticle->select($article_id))) {
-            $this->setAlert('The record with the ID %id% does not exists!',
+            $this->setAlert('The record with the ID %id% does not exist!',
                 array('%id%' => $article_id), self::ALERT_TYPE_DANGER);
         }
         $form = $this->getArticleForm($data);

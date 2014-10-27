@@ -115,6 +115,10 @@ return array(
     => 'Ich bestelle hiermit diese(n) Artikel',
   'Confirmation timestamp'
     => 'Bestätigung',
+  'Confirmed'
+    => 'Bestätigt',
+  'contact_id'
+    => 'Kontakt ID',
   'Contact ID <strong>%contact_id%</strong> assigned to order ID <strong>%order_id%</strong> does no longer exists!'
     => 'Die Kontakt ID <strong>%contact_id%</strong>, die der Bestellung mit der ID <strong>%order_id%</strong> zugeordnet ist, existiert nicht mehr!',
   'Contact ID <strong>%contact_id%</strong> assigned to order ID <strong>%order_id%</strong> is marked as <strong>DELETED</strong>.'
@@ -359,7 +363,7 @@ return array(
     => 'Vielen Dank für Ihre Bestellung, wir haben Ihnen eine Bestätigung zugesendet.',
   'Thank you for the order. We have send you a email with a confirmation link, please use this link to finish your order.'
     => 'Vielen Dank für Ihre Bestellung. Wir haben Ihnen eine E-Mail mit einem Bestätigungslink zugesendet, bitte verwenden Sie diesen Link um Ihre Bestellung abzuschließen.',
-  'The article group <strong>%group%</strong> does not exists, please check the kitCommand!'
+  'The article group <strong>%group%</strong> does not exist, please check the kitCommand!'
     => 'Die Artikelgruppe <strong>%group%</strong> existiert nicht, bitte prüfen Sie das kitCommand!',
   'The article group has successful updated.'
     => 'Die Artikelgruppe wurde erfolgreich aktualisiert.',
@@ -373,7 +377,7 @@ return array(
     => 'Die Informationen zu dem Bankkonto wurden nicht geändert.',
   'The banking account information has updated'
     => 'Die Informationen zum Bankkonto wurden aktualisiert.',
-  'The base configuration <strong>%base%</strong> does not exists, please check the kitCommand!'
+  'The base configuration <strong>%base%</strong> does not exist, please check the kitCommand!'
     => 'Die Basis Einstellung <strong>%base%</strong> existiert nicht, bitte prüfen Sie das kitCommand!',
   'The base configuration with the ID %id% has successfull deleted'
     => 'Die Basis Einstellung mit der ID %id% wurde erfolgreich gelöscht.',

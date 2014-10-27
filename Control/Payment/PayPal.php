@@ -193,7 +193,7 @@ class PayPal extends Payment
         $this->initParameters($app);
 
         if (false === ($order = $this->dataOrder->select($order_id))) {
-            $this->setAlert('The record with the ID %id% does not exists!',
+            $this->setAlert('The record with the ID %id% does not exist!',
                 array('%id%' => $order_id), self::ALERT_TYPE_DANGER);
             return $this->promptAlert();
         }
@@ -218,7 +218,7 @@ class PayPal extends Payment
     {
         // get the order
         if (false === ($order = $this->dataOrder->select($order_id))) {
-            throw new \Exception("The order with the ID $order_id does not exists!");
+            throw new \Exception("The order with the ID $order_id does not exist!");
         }
         // and the desired contact
         $contact = $this->app['contact']->selectOverview($order['contact_id']);
@@ -284,13 +284,9 @@ class PayPal extends Payment
         $this->initParameters($app);
 
         if (false === ($order = $this->dataOrder->select($order_id))) {
-            $this->setAlert('The record with the ID %id% does not exists!',
+            $this->setAlert('The record with the ID %id% does not exist!',
                 array('%id%' => $order_id), self::ALERT_TYPE_DANGER);
             return $this->promptAlert();
-        }
-
-        if (false === ($order = $this->dataOrder->select($order_id))) {
-            throw new \Exception("Invalid order ID: $order_id");
         }
 
         $this->setAlert('The PayPal payment was successfull. We will send you a confirmation mail as soon we receive the automated confirmation from PayPal.');
@@ -313,6 +309,7 @@ class PayPal extends Payment
 
         self::$payment_method = 'PAYPAL';
 
+        $this->app['monolog']->addDebug(sprintf('Handling PayPal OrderID [%s]',$order_id),array(__METHOD__, __LINE__));
 
         // Read POST data as proposed at PayPal IPN example
         $raw_post_data = file_get_contents('php://input');
@@ -324,13 +321,17 @@ class PayPal extends Payment
                 $myPost[$keyval[0]] = urldecode($keyval[1]);
         }
 
+        $this->app['monolog']->addDebug(var_export($myPost,1),array(__METHOD__, __LINE__));
+
         $this->dataOrder = new Order($app);
-        if (false === ($order = $dataOrder->select($order_id))) {
-            // the order ID does not exists!
-            $app['monolog']->addError("The order with the ID $order_id does not exists!");
+
+        if (false === ($order = $this->dataOrder->select($order_id))) {
+            // the order ID does not exist!
+            $app['monolog']->addError("The order with the ID $order_id does not exist!");
             $app->abort(500, 'Invalid order ID!');
         }
         else {
+            $this->app['monolog']->addDebug('Order details: '.var_export($order,1),array(__METHOD__, __LINE__));
             if ($order['transaction_id'] !== 'NONE') {
                 // this transaction was already handled
                 $app['monolog']->addError("The order with the ID $order_id was already handled with the transaction ID {$order['transaction_id']}!");
@@ -361,6 +362,8 @@ class PayPal extends Payment
             $paypal_url = "https://www.paypal.com/cgi-bin/webscr";
         }
 
+        $this->app['monolog']->addDebug('URL to call: '.$paypal_url);
+
         // init cURL
         if (false === ($ch = curl_init($paypal_url))) {
             $app['monolog']->addDebug('Got no handle for cURL!');
@@ -386,6 +389,10 @@ class PayPal extends Payment
             $app['monolog']->addDebug("Can't connect to PayPal to validate IPN message: " . curl_error($ch));
             curl_close($ch);
             $app->abort(500, 'Connection error');
+        }
+        else
+        {
+            $this->app['monolog']->addDebug('curl_exec() result: '.var_export($res,1));
         }
 
         $app['monolog']->addDebug("HTTP request of validation request:". curl_getinfo($ch, CURLINFO_HEADER_OUT) ." for IPN payload: $request");
@@ -439,7 +446,7 @@ class PayPal extends Payment
                 // send the confirmation mails to the customer and the provider
                 $this->sendOrderConfirmation($order_id);
 
-                $app['monolog']->addDebug('Received PayPal payment');
+                $app['monolog']->addDebug('Received PayPal payment',array(__METHOD__, __LINE__));
                 return 'OK';
             }
         }

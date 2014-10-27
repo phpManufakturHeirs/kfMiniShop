@@ -28,7 +28,7 @@ class getCanonicalLink
     {
         $dataArticle = new Article($app);
         if (false === ($article = $dataArticle->select($article_id))) {
-            return $app->json(array('status' => "The miniShop article ID $article_id does not exists!"), 404);
+            return $app->json(array('status' => "The miniShop article ID $article_id does not exist!"), 404);
         }
 
         return $app->json(array(

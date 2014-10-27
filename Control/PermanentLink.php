@@ -133,7 +133,7 @@ class PermanentLink extends Alert
         if (false === ($article = $this->dataArticle->selectByPermanentLink($name))) {
             $message = str_ireplace(array('%directory%','%action%','%name%'),
                 array(self::$config['permanentlink']['directory'], 'article', $name),
-                'The permanent link <strong>%directory%/%action%/%name%</strong> does not exists!');
+                'The permanent link <strong>%directory%/%action%/%name%</strong> does not exist!');
             $this->app['monolog']->addDebug(strip_tags($message), array(__METHOD__, __LINE__));
             $app->abort(404, $message);
         }
@@ -169,8 +169,8 @@ class PermanentLink extends Alert
         $link = substr($base['target_page_link'], strlen($this->dataPage->getPageDirectory()), (strlen($this->dataPage->getPageExtension()) * -1));
 
         if (false === ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
-            // the CMS page does not exists!
-            $message = str_ireplace('%link%', $base['target_page_link'], 'The CMS page <strong>%link%</strong> does not exists!');
+            // the CMS page does not exist!
+            $message = str_ireplace('%link%', $base['target_page_link'], 'The CMS page <strong>%link%</strong> does not exist!');
             $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
             $app->abort(404, $message);
         }
@@ -239,8 +239,8 @@ class PermanentLink extends Alert
         $link = substr($base['target_page_link'], strlen($this->dataPage->getPageDirectory()), (strlen($this->dataPage->getPageExtension()) * -1));
 
         if (false === ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
-            // the CMS page does not exists!
-            $message = str_ireplace('%link%', $base['target_page_link'], 'The CMS page <strong>%link%</strong> does not exists!');
+            // the CMS page does not exist!
+            $message = str_ireplace('%link%', $base['target_page_link'], 'The CMS page <strong>%link%</strong> does not exist!');
             $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
             $app->abort(404, $message);
         }
@@ -322,8 +322,8 @@ class PermanentLink extends Alert
         $link = substr($base['target_page_link'], strlen($this->dataPage->getPageDirectory()), (strlen($this->dataPage->getPageExtension()) * -1));
 
         if (false === ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
-            // the CMS page does not exists!
-            $message = str_ireplace('%link%', $base['target_page_link'], 'The CMS page <strong>%link%</strong> does not exists!');
+            // the CMS page does not exist!
+            $message = str_ireplace('%link%', $base['target_page_link'], 'The CMS page <strong>%link%</strong> does not exist!');
             $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
             $app->abort(404, $message);
         }
@@ -360,7 +360,7 @@ class PermanentLink extends Alert
         $this->initialize($app);
 
         if (false === ($order = $this->dataOrder->select($order_id))) {
-            $app->abort(404, 'The submitted order ID does not exists.');
+            $app->abort(404, 'The submitted order ID does not exist.');
         }
 
         if ($order['status'] !== 'PENDING') {
@@ -372,8 +372,8 @@ class PermanentLink extends Alert
         $link = substr($data['base']['target_page_link'], strlen($this->dataPage->getPageDirectory()), (strlen($this->dataPage->getPageExtension()) * -1));
 
         if (false === ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
-            // the CMS page does not exists!
-            $message = str_ireplace('%link%', $data['base']['target_page_link'], 'The CMS page <strong>%link%</strong> does not exists!');
+            // the CMS page does not exist!
+            $message = str_ireplace('%link%', $data['base']['target_page_link'], 'The CMS page <strong>%link%</strong> does not exist!');
             $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
             $app->abort(404, $message);
         }
@@ -409,7 +409,7 @@ class PermanentLink extends Alert
         $this->initialize($app);
 
         if (false === ($order = $this->dataOrder->selectByGUID($guid))) {
-            $app->abort(404, 'The submitted GUID does not exists.');
+            $app->abort(404, 'The submitted GUID does not exist.');
         }
 
         if ($order['status'] !== 'PENDING') {
@@ -421,8 +421,8 @@ class PermanentLink extends Alert
         $link = substr($data['base']['target_page_link'], strlen($this->dataPage->getPageDirectory()), (strlen($this->dataPage->getPageExtension()) * -1));
 
         if (false === ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
-            // the CMS page does not exists!
-            $message = str_ireplace('%link%', $data['base']['target_page_link'], 'The CMS page <strong>%link%</strong> does not exists!');
+            // the CMS page does not exist!
+            $message = str_ireplace('%link%', $data['base']['target_page_link'], 'The CMS page <strong>%link%</strong> does not exist!');
             $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
             $app->abort(404, $message);
         }
@@ -453,7 +453,7 @@ class PermanentLink extends Alert
         $this->initialize($app);
 
         if (false === ($order = $this->dataOrder->select($order_id))) {
-            $app->abort(404, 'The submitted Order ID does not exists.');
+            $app->abort(404, 'The submitted Order ID does not exist.');
         }
 
         if ($order['status'] !== 'PENDING') {
@@ -465,8 +465,8 @@ class PermanentLink extends Alert
         $link = substr($data['base']['target_page_link'], strlen($this->dataPage->getPageDirectory()), (strlen($this->dataPage->getPageExtension()) * -1));
 
         if (false === ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
-            // the CMS page does not exists!
-            $message = str_ireplace('%link%', $data['base']['target_page_link'], 'The CMS page <strong>%link%</strong> does not exists!');
+            // the CMS page does not exist!
+            $message = str_ireplace('%link%', $data['base']['target_page_link'], 'The CMS page <strong>%link%</strong> does not exist!');
             $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
             $app->abort(404, $message);
         }
@@ -497,10 +497,10 @@ class PermanentLink extends Alert
         $this->initialize($app);
 
         if (false === ($order = $this->dataOrder->select($order_id))) {
-            $app->abort(404, 'The submitted Order ID does not exists.');
+            $app->abort(404, 'The submitted Order ID does not exist.');
         }
 
-        if ($order['status'] !== 'PENDING') {
+        if ($order['status'] !== 'PENDING' && $order['status'] !== 'CONFIRMED') {
             $app->abort(410, 'The submitted Order ID is no longer valid.');
         }
 
@@ -509,7 +509,7 @@ class PermanentLink extends Alert
         $link = substr($data['base']['target_page_link'], strlen($this->dataPage->getPageDirectory()), (strlen($this->dataPage->getPageExtension()) * -1));
 
         if (false === ($page_id = $this->dataPage->getPageIDbyPageLink($link))) {
-            // the CMS page does not exists!
+            // the CMS page does not exist!
             $message = str_ireplace('%link%', $data['base']['target_page_link'], 'The CMS page <strong>%link%</strong> does not exist!');
             $this->app['monolog']->addError(strip_tags($message), array(__METHOD__, __LINE__));
             $app->abort(404, $message);

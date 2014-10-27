@@ -47,7 +47,7 @@ class ActionList extends CommandBasic
             foreach ($checks as $check) {
                 $check = trim($check);
                 if (!$this->dataGroup->existsName($check)) {
-                    $this->setAlert('The article group <strong>%group%</strong> does not exists, please check the kitCommand!',
+                    $this->setAlert('The article group <strong>%group%</strong> does not exist, please check the kitCommand!',
                         array('%group%' => $check), self::ALERT_TYPE_DANGER);
                     continue;
                 }
@@ -59,7 +59,7 @@ class ActionList extends CommandBasic
 
         if (!is_null(self::$parameter['base'])) {
             if (!$this->dataBase->existsName(self::$parameter)) {
-                $this->setAlert('The base configuration <strong>%base%</strong> does not exists, please check the kitCommand!',
+                $this->setAlert('The base configuration <strong>%base%</strong> does not exist, please check the kitCommand!',
                     array('%base%', self::$parameter['base']));
             }
             else {

@@ -40,7 +40,7 @@ class AdvancePayment extends Payment
     {
         // get the order
         if (false === ($order = $this->dataOrder->select($order_id))) {
-            throw new \Exception("The order with the ID $order_id does not exists!");
+            throw new \Exception("The order with the ID $order_id does not exist!");
         }
         // and the desired contact
         $contact = $this->app['contact']->selectOverview($order['contact_id']);

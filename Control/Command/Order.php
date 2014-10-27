@@ -363,7 +363,7 @@ class Order extends CommandBasic
         $query = $this->getCMSgetParameters();
 
         if (!isset($query['guid']) || (false === ($order = $this->dataOrder->selectByGUID($query['guid'])))) {
-            $app->abort(404, 'The submitted GUID does not exists.');
+            $app->abort(404, 'The submitted GUID does not exist.');
         }
 
         if ($order['status'] !== 'PENDING') {
@@ -428,7 +428,7 @@ class Order extends CommandBasic
         $query = $this->getCMSgetParameters();
 
         if (!isset($query['order_id']) || (false === ($order = $this->dataOrder->select($query['order_id'])))) {
-            $app->abort(404, 'The submitted order ID does not exists.');
+            $app->abort(404, 'The submitted order ID does not exist.');
         }
 
         if ($order['status'] !== 'PENDING') {
@@ -479,7 +479,7 @@ class Order extends CommandBasic
     {
         // get the order
         if (false === ($order = $this->dataOrder->select($order_id))) {
-            throw new \Exception("The order with the ID $order_id does not exists!");
+            throw new \Exception("The order with the ID $order_id does not exist!");
         }
         // and the desired contact
         $contact = $this->app['contact']->selectOverview($order['contact_id']);

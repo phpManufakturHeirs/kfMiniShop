@@ -160,7 +160,7 @@ class ActionArticle extends CommandBasic
             $this->setAlert('Please submit a article ID!', array(), self::ALERT_TYPE_DANGER);
         }
         elseif (false === ($article = $this->dataArticle->select(self::$parameter['id']))) {
-            $this->setAlert('The record with the ID %id% does not exists!',
+            $this->setAlert('The record with the ID %id% does not exist!',
                 array('%id%' => self::$parameter['id']), self::ALERT_TYPE_DANGER);
         }
 

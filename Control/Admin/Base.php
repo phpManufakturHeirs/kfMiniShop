@@ -356,7 +356,7 @@ class Base extends Admin
         $data = array();
         if ($base_id > 0) {
             if (false === ($data = $this->dataBase->select($base_id))) {
-                $this->setAlert('The record with the ID %id% does not exists!',
+                $this->setAlert('The record with the ID %id% does not exist!',
                     array('%id%' => $base_id), self::ALERT_TYPE_DANGER);
             }
         }

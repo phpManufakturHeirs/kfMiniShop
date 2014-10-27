@@ -157,7 +157,7 @@ class ActionBasket extends Basic
             return $this->promptAlert();
         }
         elseif (false === ($article = $this->dataArticle->select(self::$parameter['article_id']))) {
-            $this->setAlert('The record with the ID %id% does not exists!',
+            $this->setAlert('The record with the ID %id% does not exist!',
                 array('%id%' => self::$parameter['id']), self::ALERT_TYPE_DANGER);
             return $this->promptAlert();
         }
