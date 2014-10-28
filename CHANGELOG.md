@@ -6,6 +6,18 @@ MIT License (MIT) - <http://www.opensource.org/licenses/MIT>
 
 kitFramework - <https://kit2.phpmanufaktur.de>
 
+**0.17** - 2014-10-28
+
+* updated CHANGELOG (this file)
+* fixed extension.json to point to new maintenance repository
+
+**0.16** - 2014-10-27
+
+* fixed some occurences of `humanize` in templates
+* fixed PayPal payment method
+* fixed location of search field
+* fixed some translations
+
 **0.15** - 2014-09-18
 
 * enable setting of `$subdirectory` and `$CMS_PATH` for usage with the BASIC migration tool
