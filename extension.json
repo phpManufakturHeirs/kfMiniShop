@@ -22,8 +22,8 @@
     "about":"\/minishop\/about"
   },
   "release":{
-    "number":"0.15",
-    "date":"2014-09-18",
+    "number":"0.17",
+    "date":"2014-10-28",
     "status":"beta",
     "changelog":"https:\/\/github.com\/phpManufaktur\/kfMiniShop\/blob\/master\/CHANGELOG.md"
   },
@@ -85,9 +85,9 @@
     "availability":"public",
     "agreement":"free",
     "github":{
-      "organization":"phpManufaktur",
+      "organization":"webbird",
       "repository":"kfMiniShop"
     },
-    "url":"https:\/\/github.com\/phpManufaktur\/kfMiniShop"
+    "url":"https:\/\/github.com\/webbird\/kfMiniShop"
   }
 }
