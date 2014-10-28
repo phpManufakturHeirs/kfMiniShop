@@ -427,6 +427,13 @@ class PermanentLink extends Alert
             $app->abort(404, $message);
         }
 
+        // update order
+        $orderdata = array(
+            'status' => 'CONFIRMED',
+            'confirmation_timestamp' => date('Y-m-d H:i:s')
+        );
+        $this->dataOrder->update($order['id'], $orderdata);
+
         $parameter = array(
             'command' => 'minishop',
             'action' => 'guid',

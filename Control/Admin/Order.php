@@ -14,10 +14,20 @@ namespace phpManufaktur\miniShop\Control\Admin;
 use Silex\Application;
 use phpManufaktur\miniShop\Data\Shop\Order as DataOrder;
 
+/**
+ * miniShop admin order class
+ **/
 class Order extends Admin
 {
     protected $dataOrder = null;
 
+    /**
+     * initializes the order class
+     *
+     * @access protected
+     * @param  object    $app
+     * @return void
+     **/
     protected function initialize(Application $app)
     {
         parent::initialize($app);
@@ -25,6 +35,12 @@ class Order extends Admin
         $this->dataOrder = new DataOrder($app);
     }
 
+    /**
+     * view controller
+     *
+     * @access public
+     * @return HTML   (renders template)
+     **/
     public function ControllerView(Application $app, $order_id)
     {
         $this->initialize($app);
